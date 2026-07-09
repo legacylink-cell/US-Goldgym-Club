@@ -1,0 +1,43 @@
+{
+  "summary": "Comprehensive backend + frontend testing for US Gold Gymnastics site. 21/21 pytest backend tests pass and 12/12 UI flows pass end-to-end (auth, quote/lead, contact, birthday booking with waiver, calendar with filters, admin dashboard tabs showing real submitted data).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/me", "issue": "Returns 401 (expected) on unauthenticated page loads; surfaces as red console errors on public pages. Consider swallowing in AuthContext or checking cookie presence before calling."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Global <head>", "issues": ["public/index.html <title> is still 'Emergent | Fullstack App' instead of the gym brand"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml",
+    "/app/test_reports/frontend_final.png"
+  ],
+  "action_items": [
+    "Update public/index.html <title> to gym-branded name (e.g., 'US Gold Gymnastics & Cheer Academy').",
+    "(Optional) Silence expected 401 from /api/auth/me by not logging as error in axios interceptor, or by skipping the call when no auth cookie exists."
+  ],
+  "critical_code_review_comments": [
+    "server.py: uses deprecated @app.on_event('startup'/'shutdown'). Migrate to FastAPI lifespan context manager for future compatibility.",
+    "server.py: CORS allow_origins only includes FRONTEND_URL + localhost. Good, but backend/.env still keeps unused CORS_ORIGINS='*' variable — remove to avoid confusion.",
+    "Auth cookies use SameSite=None; Secure=True which is required for cross-origin cookies over HTTPS — correct for the preview URL. Ensure production is served over HTTPS or logins will silently fail.",
+    "No rate limiting / brute-force lockout implemented on /api/auth/login (playbook mentions 5-attempt lockout). If required by spec, add a simple counter or use slowapi.",
+    "Bookings do not validate 'date' format (accepts any string). Consider using date type or validator.",
+    "Admin dashboard lists all bookings but does not paginate — fine at MVP scale, will need pagination beyond a few hundred records."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py (new)"
+  ],
+  "success_rate": {"backend": "100% (21/21)", "frontend": "100% (12/12)"},
+  "test_credentials": "Admin admin@usgoldgym.com / GymAdmin2026! (seeded on startup). Parents registered dynamically during tests with TEST_ / uitest_ email prefixes.",
+  "seed_data_creation": "Test suite creates timestamped parent accounts, leads, contacts and bookings. Events auto-seeded by backend for July/Aug 2026.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend seeds admin + 8 events on startup. bcrypt hash format is $2b$ (correct). httpOnly cookies work end-to-end. All critical data-testids exist. UI booking flow requires parent to be logged in — BookingDialog shows Log In/Register buttons when unauthenticated (works). Calendar defaults to current month (Jan 2026 empty); use cal-next to reach July/Aug 2026 where seeded events live.",
+  "rca of the issue": "N/A — no failing tests. All happy-path and permission (403/401/400 waiver) cases pass."
+}
