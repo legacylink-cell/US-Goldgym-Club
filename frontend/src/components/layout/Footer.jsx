@@ -62,6 +62,10 @@ export const Footer = () => (
       <div className="mt-14 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between gap-3 text-white/40 text-xs uppercase tracking-wide">
         <span>© {new Date().getFullYear()} {BUSINESS.name}. All rights reserved.</span>
         <span>Roanoke, TX • Serving DFW & surrounding towns</span>
+        <span>
+          Made by{" "}
+          <a href="https://mostudio.com" target="_blank" rel="noreferrer" className="text-lime hover:text-white transition-colors font-bold" data-testid="footer-credit">Mo Studio</a>
+        </span>
       </div>
     </div>
   </footer>
