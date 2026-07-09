@@ -1,0 +1,188 @@
+{
+  "theme": "dark",
+  "typography": {
+    "fonts": {
+      "heading": "Anton, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-5xl sm:text-6xl md:text-7xl uppercase tracking-tighter leading-none",
+      "h2": "text-4xl sm:text-5xl uppercase tracking-tight leading-tight",
+      "h3": "text-2xl sm:text-3xl uppercase tracking-tight",
+      "h4": "text-xl sm:text-2xl font-bold",
+      "body": "text-base md:text-lg leading-relaxed",
+      "small": "text-sm tracking-wide",
+      "overline": "text-xs md:text-sm uppercase tracking-[0.2em] font-bold"
+    },
+    "rules": [
+      "Headings must always use Anton, uppercase, with tight tracking.",
+      "Never use Inter for H1, H2, or H3.",
+      "Body text must use Inter with readable line height.",
+      "Overlines/labels should be wide-tracked uppercase."
+    ]
+  },
+  "colors": {
+    "archetype": "The Performance Pro",
+    "palette": {
+      "background": "#0E0E10",
+      "background_light": "#F5F4F0",
+      "foreground": "#FFFFFF",
+      "foreground_dark": "#0E0E10",
+      "primary": "#D4FF3F",
+      "primary_foreground": "#0A0A0A",
+      "secondary": "#FF4E4E",
+      "secondary_foreground": "#FFFFFF",
+      "muted": "#1F1F22",
+      "muted_foreground": "#A0A0A5",
+      "border": "#2A2A2D",
+      "glass": "rgba(14, 14, 16, 0.6)",
+      "glass_border": "rgba(255, 255, 255, 0.1)"
+    },
+    "rules": [
+      "Primary dark background (#0E0E10) is the default.",
+      "Use Off-white (#F5F4F0) for specific light sections (like About or Testimonials) to create strong contrast breaks.",
+      "Electric Lime (#D4FF3F) for primary CTAs and active states.",
+      "Coral-red (#FF4E4E) for secondary CTAs, warnings, or highlights.",
+      "No generic gradients. Use flat colors or subtle noise textures."
+    ]
+  },
+  "visual_enhancers": {
+    "textures": [
+      "Subtle noise/grain overlay on dark sections to kill digital flatness.",
+      "Diagonal section breaks using CSS clip-path or SVG shapes."
+    ],
+    "surfaces": [
+      "Glassmorphism for sticky nav and floating cards: backdrop-blur-xl bg-black/60 border border-white/10.",
+      "Solid off-white cards on light sections with sharp 2px black borders and brutalist hard shadows (e.g., 4px 4px 0px #0E0E10)."
+    ]
+  },
+  "grids": {
+    "bento_marketing": "grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6 lg:gap-8",
+    "dense_dashboard": "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4",
+    "rules": [
+      "Use asymmetric bento layouts for program tiles and feature highlights.",
+      "Never fill 100% perfectly symmetrically; leave negative space.",
+      "Use span logic: col-span-full md:col-span-8 for heroes, col-span-4 for supporting cards."
+    ]
+  },
+  "layouts": {
+    "spacing": [
+      "Generous spacing: py-20 md:py-32 for sections.",
+      "Internal padding for bordered cards: p-6 or p-8."
+    ],
+    "patterns": [
+      "Hero: Full-bleed image/video with heavy typography overlay. Dark overlay max bg-black/50.",
+      "Sticky Nav: Persistent 'Book Free Trial' CTA in Lime. Glassmorphic background.",
+      "Diagonal breaks: Transform skewY(-2deg) on section containers for dynamic athletic feel.",
+      "Dashboards: Sidebar navigation, clean grid, soft white backgrounds for readability."
+    ]
+  },
+  "motion": {
+    "libraries": ["framer-motion", "lucide-react"],
+    "interactions": [
+      "Magnetic hover effect on primary buttons.",
+      "Scroll-parallax on hero and diagonal section background images.",
+      "Animated stat counters (0 to X) on scroll into view.",
+      "Staggered entrance for bento grid cards."
+    ],
+    "rules": [
+      "Do not use 'transition: all'. Explicitly define transform/opacity transitions.",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+  "components": [
+    {
+      "name": "Navigation",
+      "rules": "Sticky top, glassmorphism, visible links on desktop, lime CTA button. NEVER fully transparent."
+    },
+    {
+      "name": "HeroSection",
+      "rules": "Full height or min-h-[80vh], parallax background, dark overlay (bg-black/50), oversized Anton typography."
+    },
+    {
+      "name": "ProgramTiles",
+      "rules": "Bento grid, hover zoom on images, diagonal accent lines."
+    },
+    {
+      "name": "TestimonialCarousel",
+      "rules": "Use framer-motion or a simple flex overflow-x-auto snap-x for mobile, grid for desktop."
+    },
+    {
+      "name": "InteractiveCalendar",
+      "rules": "Filterable by age/program. Color-coded (Lime = Open, Red = Full, White = Event)."
+    },
+    {
+      "name": "PricingCards",
+      "rules": "Two-tier (Tot Party vs Birthday Party). Highlight tier with lime border/shadow."
+    }
+  ],
+  "accessibility": {
+    "contrast": "Ensure text over images has sufficient contrast (use text-shadow or gradient underlays). Lime text on white must be checked, use dark text on lime backgrounds.",
+    "focus": "focus:ring-2 focus:ring-primary focus:outline-none",
+    "testing": "Add data-testid attributes to all interactive elements."
+  },
+  "media": {
+    "image_guidelines": [
+      "Max-h-[80vh] for mobile images.",
+      "Use object-cover for backgrounds.",
+      "Black overlay max 50% opacity."
+    ]
+  },
+  "3d_libraries": {
+    "usage": "Minimal. Focus on high-quality 2D imagery and Framer Motion for parallax and bento animations."
+  },
+  "image_urls": {
+    "hero": [
+      {
+        "url": "https://images.unsplash.com/photo-1655842556432-ece48a4f2c1a",
+        "category": "Hero Action / Gymnastics",
+        "description": "Girl jumping on trampoline, high energy."
+      }
+    ],
+    "programs": [
+      {
+        "url": "https://images.unsplash.com/photo-1655842556550-6809c404ce9c",
+        "category": "Preschool / Toddler",
+        "description": "Toddler on mat playing."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1639510478219-459967c2be92",
+        "category": "Cheerleading",
+        "description": "Cheerleader posing."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1589748239338-afe695e833d3",
+        "category": "Cheer Squad",
+        "description": "Squad performing."
+      }
+    ],
+    "facility": [
+      {
+        "url": "https://images.unsplash.com/photo-1621046590380-07b40b3ac6c3",
+        "category": "Facility/About",
+        "description": "Gymnastics facility equipment."
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Build a multi-page marketing site + dashboard.",
+    "Implement routing for Home, About, Preschool, Rec Classes, Competitive, Cheer, Camps, Events, Calendar, Parties, Recruits, Contact, and Dashboards (Parent/Admin).",
+    "Use Shadcn UI extensively for forms, tables, dialogs, and dashboards, but heavily customize the look to match the Athletic/Performance Pro archetype (sharp corners, minimal radius, high contrast).",
+    "For marketing pages, rely on raw Tailwind + HTML to build asymmetric bento layouts and diagonal sections.",
+    "Ensure the sticky navbar is always readable with a glassmorphic dark background, never fully transparent.",
+    "Add 'data-testid' to all buttons, links, and forms.",
+    "Include an interactive calendar and complex booking/pricing components as requested."
+  ],
+  "universal_guidelines_for_main_agent": [
+    "Avoid generic, 'on distribution' AI outputs. Be creative with layout and typography.",
+    "DO NOT use dark colors as gradients. Use solid dark colors.",
+    "DO NOT center align the app container (.App { text-align: center; } is forbidden).",
+    "Never use 'transition: all'. Apply transitions to specific properties like transform and opacity.",
+    "Use 2-3x more spacing than typical (p-8, p-12, py-24).",
+    "NEVER use placeholder image URLs. Use the provided image URLs.",
+    "Use modern pill-shaped or sharp-edged buttons with interaction animations.",
+    "Add micro-animations for hover states and page load.",
+    "Use `sonner` for toast notifications."
+  ]
+}
