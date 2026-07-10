@@ -63,7 +63,7 @@ export const Footer = () => (
         <span>© {new Date().getFullYear()} {BUSINESS.name}. All rights reserved.</span>
         <span>Roanoke, TX • Serving DFW & surrounding towns</span>
         <span>
-          Made by{" "}
+          Designed by{" "}
           <a href="https://mostudio.com" target="_blank" rel="noreferrer" className="text-lime hover:text-white transition-colors font-bold" data-testid="footer-credit">Mo Studio</a>
         </span>
       </div>
