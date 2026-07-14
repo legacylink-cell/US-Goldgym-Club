@@ -5,7 +5,7 @@ import { IMG, RECRUITS } from "@/data/site";
 import { GraduationCap, Trophy } from "lucide-react";
 
 const CollegeRecruits = () => (
-  <div data-testid="recruits-page">
+  <div data-testid="college-recruits-page">
     <PageHero
       overline="From our gym to the NCAA"
       title={<>College<br />Recruits</>}

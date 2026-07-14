@@ -37,8 +37,6 @@ const Protected = ({ children, admin = false }) => {
   return children;
 };
 
-const Page = ({ children }) => <Layout>{children}</Layout>;
-
 function App() {
   return (
     <div className="App">
@@ -47,22 +45,24 @@ function App() {
           <ScrollToTop />
           <Toaster position="top-right" theme="dark" richColors />
           <Routes>
-            <Route path="/" element={<Page><Home /></Page>} />
-            <Route path="/about" element={<Page><About /></Page>} />
-            <Route path="/preschool" element={<Page><Preschool /></Page>} />
-            <Route path="/recreational" element={<Page><Recreational /></Page>} />
-            <Route path="/competitive" element={<Page><Competitive /></Page>} />
-            <Route path="/cheer" element={<Page><Cheer /></Page>} />
-            <Route path="/camps" element={<Page><Camps /></Page>} />
-            <Route path="/special-events" element={<Page><SpecialEvents /></Page>} />
-            <Route path="/calendar" element={<Page><CalendarPage /></Page>} />
-            <Route path="/birthday-parties" element={<Page><BirthdayParties /></Page>} />
-            <Route path="/college-recruits" element={<Page><CollegeRecruits /></Page>} />
-            <Route path="/contact" element={<Page><Contact /></Page>} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/preschool" element={<Preschool />} />
+              <Route path="/recreational" element={<Recreational />} />
+              <Route path="/competitive" element={<Competitive />} />
+              <Route path="/cheer" element={<Cheer />} />
+              <Route path="/camps" element={<Camps />} />
+              <Route path="/special-events" element={<SpecialEvents />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/birthday-parties" element={<BirthdayParties />} />
+              <Route path="/college-recruits" element={<CollegeRecruits />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/dashboard" element={<Protected><ParentDashboard /></Protected>} />
+              <Route path="/admin" element={<Protected admin><AdminDashboard /></Protected>} />
+            </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/dashboard" element={<Protected><Page><ParentDashboard /></Page></Protected>} />
-            <Route path="/admin" element={<Protected admin><Page><AdminDashboard /></Page></Protected>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

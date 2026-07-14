@@ -5,7 +5,7 @@ import { IMG, PARTY_TIERS, PARTY_ADDONS, PARTY_INCLUDED } from "@/data/site";
 import { Check, Plus, ShieldCheck, Cake, Clock, Users } from "lucide-react";
 
 const BirthdayParties = () => (
-  <div data-testid="birthday-page">
+  <div data-testid="birthday-parties-page">
     <PageHero
       overline="Best party in town"
       title={<>Birthday<br />Parties</>}
