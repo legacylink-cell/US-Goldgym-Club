@@ -3,7 +3,7 @@ import { useInView } from "framer-motion";
 
 export const StatCounter = ({ value, suffix = "", label, numberClass = "text-lime", labelClass = "text-white/60" }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-80px", layoutEffect: false });
   const [count, setCount] = useState(0);
 
   useEffect(() => {

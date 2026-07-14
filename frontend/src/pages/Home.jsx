@@ -9,7 +9,7 @@ import { IMG, STATS, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
 
 const Home = () => {
   const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"], layoutEffect: false });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
 
