@@ -1,7 +1,7 @@
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
-import { IMG, REC_LEVELS } from "@/data/site";
+import { IMG, REC_LEVELS, TUMBLE_CLASSES } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Clock } from "lucide-react";
 
 const Recreational = () => (
@@ -52,6 +52,29 @@ const Recreational = () => (
             </div>
             <div className="h-64 md:h-auto relative">
               <img src={IMG.handstand} alt="Boys gymnastics" className="absolute inset-0 w-full h-full object-cover" />
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Tumble classes */}
+        <Reveal>
+          <div className="mt-8 border border-white/15 bg-white/[0.03] p-8 md:p-10" data-testid="tumble-section">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 mb-6">
+              <div>
+                <div className="text-lime text-xs uppercase tracking-[0.2em] font-bold mb-2">Also offered</div>
+                <h3 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">Tumble Classes</h3>
+              </div>
+              <p className="text-white/60 max-w-md md:text-right">
+                Tumble classes let students of different skill levels train alongside their peers — perfect for gymnastics and cheer athletes building standing and running tumbling.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {TUMBLE_CLASSES.map((t) => (
+                <div key={t.name} className="border border-white/10 p-5 flex items-center justify-between hover:border-lime transition-colors" data-testid={`tumble-${t.name}`}>
+                  <span className="font-display text-2xl uppercase text-white">{t.name}</span>
+                  <span className="text-lime text-xs uppercase tracking-wide font-bold">{t.level}</span>
+                </div>
+              ))}
             </div>
           </div>
         </Reveal>

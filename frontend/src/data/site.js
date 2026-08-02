@@ -18,7 +18,7 @@ export const IMG = {
 };
 
 export const BUSINESS = {
-  name: "US Gold Gymnastics & Cheer Academy",
+  name: "U.S. Gold Gymnastics & Cheer Academy",
   shortName: "US Gold",
   phone: "817.491.9996",
   phoneRaw: "+18174919996",
@@ -80,24 +80,30 @@ export const TESTIMONIALS = [
 ];
 
 export const PRESCHOOL_TIERS = [
-  { name: "Tots", age: "Walking – 3 yrs", length: "30 min", focus: "Parent-assisted movement, balance, and sensory play on soft equipment.", img: "preschoolPlay" },
-  { name: "Young 3", age: "3 yrs", length: "30 min", focus: "First independent class. Listening skills, shapes, and basic body positions.", img: "preschoolMat" },
-  { name: "Gym I", age: "3.5 – 4.5 yrs", length: "45 min", focus: "Rolls, jumps, hanging, and beam walks with structured stations.", img: "preschoolBeam" },
-  { name: "Gym II", age: "4.5 – 5.5 yrs", length: "45 min", focus: "Cartwheels, bar support, and confident beam and vault progressions.", img: "preschoolGroup" },
-  { name: "Gym III", age: "Afternoon equivalent", length: "55 min", focus: "Advanced preschool skills bridging into recreational classes.", img: "handstand" },
-  { name: "Boys Sport", age: "4 – 5 yrs", length: "45 min", focus: "High-energy boys-only class: strength, tumbling, and coordination.", img: "floorJump" },
+  { name: "Tots", age: "Walking – 3 yrs", length: "30 min", focus: "Adult-participation class introducing gymnastics through movement, balance, and play.", img: "preschoolPlay" },
+  { name: "Young 3", age: "3 yrs", length: "30 min", focus: "Gross motor skills, listening, following directions, and basic gymnastics skills.", img: "preschoolMat" },
+  { name: "Gym I", age: "3.5 – 4.5 yrs", length: "45 min", focus: "Gross motor skills, listening, following directions, and basic gymnastics skills.", img: "preschoolBeam" },
+  { name: "Gym II", age: "4.5 – 5.5 yrs", length: "45 min", focus: "Building on basic gymnastics skills with listening and following directions.", img: "preschoolGroup" },
+  { name: "Gym III", age: "4.5 – 5.5 yrs", length: "55 min", focus: "Afternoon class equivalent to Gym II, continuing to build gymnastics skills.", img: "handstand" },
+  { name: "Boys Sport", age: "4 – 5 yrs", length: "45 min", focus: "General strength, flexibility, and conditioning through gymnastics and other sports activities.", img: "floorJump" },
 ];
 
 export const PRESCHOOL_EXTRAS = [
-  { name: "Daytime Playtime", price: "Free (members) / $5 (non-members)", desc: "Open, supervised play on preschool equipment during daytime hours." },
-  { name: "Lunch & Learn", price: "$30 (members) / $35 (non-members)", desc: "Structured gym session plus a supervised lunch — a preschool favorite." },
+  { name: "Daytime Playtime", price: "Free (members) / $5 (non-members)", desc: "One hour of parent-supervised open gym for ages walking–6. Runs September through May, Mondays 11am–12pm." },
+  { name: "Lunch & Learn", price: "$30 (members) / $35 (non-members)", desc: "Three hours of gymnastics, games, crafts, and lunch for ages 3–5. 2nd & 4th Wednesdays, 11:30am–2:30pm. Must be fully potty trained." },
 ];
 
 export const REC_LEVELS = [
-  { name: "Beginner", length: "55 min", usag: "", desc: "New gymnasts learn foundational skills across all four events." },
-  { name: "Beginner 2", length: "55 min", usag: "USAG 1–2", desc: "Building on basics with cartwheels, pullovers, and beam confidence." },
-  { name: "Intermediate", length: "55 min", usag: "USAG 3–4", desc: "Back handsprings, kips, and more advanced routines." },
-  { name: "Advanced", length: "85 min", usag: "USAG 4–5", desc: "High-level skills and extended training for serious rec athletes." },
+  { name: "Beginner", length: "55 min", usag: "", desc: "For students new to gymnastics who want to learn the basic skills and terminology for fun and fitness." },
+  { name: "Beginner 2", length: "55 min", usag: "USAG 1–2", desc: "Gymnasts with a basic understanding, training USAG Level 1 & 2 skills." },
+  { name: "Intermediate", length: "55 min", usag: "USAG 3–4", desc: "Gymnasts who have mastered Levels 1 & 2 and are now working Level 3 & 4 skills." },
+  { name: "Advanced", length: "85 min", usag: "USAG 4–5", desc: "For the more serious or former team gymnast, working Level 4 & 5 skills." },
+];
+
+export const TUMBLE_CLASSES = [
+  { name: "Tumble 1", level: "Beginner" },
+  { name: "Tumble 2", level: "Intermediate" },
+  { name: "Tumble 3", level: "Advanced" },
 ];
 
 export const COMPETITIVE_PATH = [
@@ -108,16 +114,16 @@ export const COMPETITIVE_PATH = [
 ];
 
 export const CHEER_TRACKS = [
-  { name: "Cheer Tumble Classes", tag: "All Skill Levels", img: "cheerPose", points: ["Standing and running tumbling", "Jumps, motions, and technique", "Progressions from cartwheel to full", "Great add-on for all-star or school cheer"], cta: "quote" },
-  { name: "All-Star Competitive Cheer", tag: "Tryout Required", img: "cheerSquad", points: ["Teamwork, performance, and stunting", "Choreographed competition routines", "Travel to regional competitions", "Builds discipline and confidence"], cta: "tryout" },
+  { name: "Cheer Tumble Classes", tag: "All Skill Levels", img: "cheerPose", blurb: "The perfect way to build skills whether you're tumbling for fun or hoping to make a competitive or school squad. Skills are taught with proper progressions, giving each athlete a strong foundation to build on.", points: ["Standing and running tumbling", "Jumps, motions, and technique", "Progressions from cartwheel to full", "Great add-on for all-star or school cheer"], cta: "quote" },
+  { name: "All-Star Competitive Cheer", tag: "Tryout Required", img: "cheerSquad", blurb: "A great way for your child to grow as an individual and an athlete. All-star cheer encompasses teamwork, athleticism, dedication, and performance ability — building confidence and self-esteem in a loving, positive environment.", points: ["Teamwork, performance, and stunting", "Choreographed competition routines", "Travel to regional competitions", "Builds discipline and confidence"], cta: "tryout" },
 ];
 
 export const SPECIAL_EVENTS = [
-  { name: "Open Gym", price: "$5 members / $7 non-members", meta: "Ages 5+ • 24-hr signup", desc: "Free play on all equipment with staff supervision.", cat: "open_gym" },
-  { name: "Friday Night Fun", price: "See Calendar", meta: "Parents' night out • Ages 5+", desc: "Drop the kids for games, gym time, and pizza. Sign-up required.", cat: "special_event" },
-  { name: "Tumbling & Bar/Beam Clinics", price: "$25 members / $30 non-members", meta: "30 min", desc: "Focused skill clinics to break through plateaus.", cat: "clinic" },
-  { name: "Field Trips", price: "Request Pricing", meta: "School groups", desc: "Bring your class for a structured, active gym experience.", cat: "special_event" },
-  { name: "Girl Scout Events", price: "Contact for Details", meta: "Patches • Sleepovers • Fundraisers", desc: "Patch programs, overnight lock-ins, and troop fundraisers.", cat: "special_event" },
+  { name: "Open Gym", price: "$5 members / $7 non-members", meta: "Ages 5+ • 24-hr signup", desc: "Enjoy fun free time in the gym to play. Great any time of year, whatever the weather — bring your friends!", cat: "open_gym" },
+  { name: "Friday Night Fun", price: "See Calendar", meta: "Parents' night out • Ages 5+", desc: "The name says it all! Kids come over for a fun time while parents get 4 hours to have dinner, catch a movie, or whatever they choose. 24-hr signup.", cat: "special_event" },
+  { name: "Tumbling & Bar/Beam Clinics", price: "$25 members / $30 non-members", meta: "30 min each • 24-hr signup", desc: "Extra time to work on the skills you're learning in class. Great for gymnastics and cheer — both tumbling clinics and bar/beam combo clinics offered.", cat: "clinic" },
+  { name: "Field Trips", price: "Request Pricing", meta: "School groups", desc: "1.5 hours of gym time — an obstacle course, the trampoline, the foam pit, and all four gymnastics events!", cat: "special_event" },
+  { name: "Girl Scout Events", price: "Contact for Details", meta: "Patches • Sleepovers • Fundraisers", desc: "Fun and fitness for all ages and skill levels of Girl Scouts — daytime events, sleepovers, and fundraisers. Includes the U.S. Gold Patch on all 'Earn a Patch' and sleepover events.", cat: "special_event" },
 ];
 
 export const CAMPS = [

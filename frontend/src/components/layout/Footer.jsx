@@ -18,7 +18,7 @@ export const Footer = () => (
             <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-11 h-11 border border-white/20 flex items-center justify-center text-white hover:bg-lime hover:text-ink hover:border-lime transition-colors" data-testid="footer-instagram">
               <Instagram className="w-5 h-5" />
             </a>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-11 h-11 border border-white/20 flex items-center justify-center text-white hover:bg-lime hover:text-ink hover:border-lime transition-colors" data-testid="footer-facebook">
+            <a href="https://www.facebook.com/129891587058474" target="_blank" rel="noreferrer" className="w-11 h-11 border border-white/20 flex items-center justify-center text-white hover:bg-lime hover:text-ink hover:border-lime transition-colors" data-testid="footer-facebook">
               <Facebook className="w-5 h-5" />
             </a>
           </div>

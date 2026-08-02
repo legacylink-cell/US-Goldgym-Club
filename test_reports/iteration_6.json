@@ -1,0 +1,32 @@
+{
+  "summary": "Content-swap verification for U.S. Gold Gymnastics & Cheer Academy. All 9 requested content checks passed on the live preview URL. No ErrorBoundary appeared on any route (12 routes tested). All new real copy renders correctly: Preschool tiers (Gym III 4.5–5.5 yrs / 55 min) + Daytime Playtime + Lunch & Learn extras; Recreational USAG level blurbs + new Tumble Classes section with Tumble 1/2/3 cards; Cheer track blurbs; Special Events new descriptions; About mission copy; Footer Facebook href and business name copyright. Regression: all other pages load fine.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Minor: Console shows repeated 401 responses on every page load (likely an auth /me probe). Not user-visible and does not affect rendering, but noise in console – consider suppressing 401 for anonymous session checks."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only)", "frontend": "100%"},
+  "test_credentials": "Not used (frontend-only content check).",
+  "seed_data_creation": "None.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Content-swap verified end-to-end on preview URL. Detailed checks executed via Playwright on /, /preschool, /recreational, /cheer, /special-events, /about, /competitive, /camps, /calendar, /birthday-parties, /college-recruits, /contact. Footer text is uppercased via CSS but underlying string is 'U.S. Gold Gymnastics & Cheer Academy' which matches spec. Accordions on Preschool expandable (11 aria-expanded triggers detected).",
+  "detailed_results": {
+    "home": "OK - no ErrorBoundary",
+    "preschool": "OK - Gym III shows 4.5–5.5 yrs / 55 min; Daytime Playtime mentions Mondays 11am and September through May; Lunch & Learn mentions 2nd & 4th Wednesdays and potty trained; 11 tier accordions render and expand",
+    "recreational": "OK - USAG 1, USAG 3, 85 min all found; tumble-section testid present; tumble-Tumble 1/2/3 testids all present",
+    "cheer": "OK - 'proper progressions', 'teamwork', 'athleticism', 'dedication' all present",
+    "special-events": "OK - 'whatever the weather', '4 hours', 'foam pit', 'U.S. Gold Patch' all present",
+    "about": "OK - 'best professional instruction' and 'safe and friendly environment' present",
+    "footer-facebook": "OK - href = https://www.facebook.com/129891587058474",
+    "footer-business-name": "OK - copyright shows '© 2026 U.S. GOLD GYMNASTICS & CHEER ACADEMY. ALL RIGHTS RESERVED.'",
+    "regression": "competitive, camps, calendar, birthday-parties, college-recruits, contact all load without ErrorBoundary"
+  }
+}

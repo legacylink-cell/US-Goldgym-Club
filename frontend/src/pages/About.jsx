@@ -20,13 +20,12 @@ const About = () => (
           <SectionHeading overline="How we started" title={<>Built by coaches,<br />for kids</>} />
           <div className="mt-6 space-y-4 text-white/70 text-lg leading-relaxed">
             <p>
-              US Gold began with a simple belief: every child deserves a place to move, fall, get back up,
-              and discover what they're capable of. What started as a handful of preschool classes has grown
-              into a full academy serving recreational, competitive, and cheer athletes.
+              Our goal is to provide the best professional instruction for your child in a safe and friendly
+              environment. Your comfort and satisfaction with our programs and services is our primary concern.
             </p>
             <p>
-              Our coaches are former competitors and lifelong educators. They know that the beam and the bars
-              teach far more than skills — they teach grit, focus, and belief in yourself.
+              We continuously strive to enhance our academy while ensuring the best possible experience for every
+              family — from a preschooler's first cartwheel to competitive and cheer athletes chasing their goals.
             </p>
           </div>
           <div className="mt-8">

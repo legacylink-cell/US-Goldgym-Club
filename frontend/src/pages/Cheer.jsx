@@ -30,6 +30,7 @@ const Cheer = () => (
                   </div>
                 </div>
                 <div className="p-7 flex-1 flex flex-col">
+                  <p className="text-white/70 mb-5">{track.blurb}</p>
                   <ul className="space-y-3 flex-1">
                     {track.points.map((p) => (
                       <li key={p} className="flex items-start gap-3 text-white/75">
