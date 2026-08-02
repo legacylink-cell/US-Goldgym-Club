@@ -88,6 +88,8 @@ export const TESTIMONIALS = [
   { name: "Candice Eldred", role: "Gym parent · 8 years", quote: "We have been with US Gold for 8 years. My daughter has grown tremendously thanks to the coaches and teammates guiding her to be her best — it's been great for her confidence and self esteem." },
   { name: "Lindsey", role: "Former competitive gymnast · 10 years", quote: "I was a competitive gymnast at U.S. Gold for 10 years, and I truly cannot say enough positive things. The coaches are incredibly knowledgeable and genuinely care about helping each athlete." },
   { name: "Juli James", role: "Team parent since 2017", quote: "It's been one of the best decisions we've made for our daughter. She started in rec and has grown into the team program — more than gymnastics, the coaches have instilled real character." },
+  { name: "Sharon S", role: "Local Guide · 13 years", quote: "We love U.S. Gold! My daughter trained there for 13 years. She learned a lot about responsibility, discipline, commitment, and time management, and formed meaningful relationships with her teammates and coaches." },
+  { name: "Allison Bissell", role: "Team parent · 7 years", quote: "My daughter has been on the gymnastics team at US Gold for the past 7 years and has grown so much. The coaches helped her overcome physical and mental challenges — this gym has become her second home." },
 ];
 
 export const PRESCHOOL_TIERS = [

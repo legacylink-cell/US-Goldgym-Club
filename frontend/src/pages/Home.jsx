@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, Phone, MapPin, Star, Instagram } from "lucide-react";
@@ -6,6 +6,53 @@ import { MagneticButton } from "@/components/common/MagneticButton";
 import { StatCounter } from "@/components/common/StatCounter";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { IMG, STATS, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
+
+const TestimonialCard = ({ t }) => (
+  <div className="border border-white/15 bg-white/[0.03] p-7 h-full hover:border-lime transition-colors duration-300">
+    <div className="flex gap-1 mb-4">
+      {[...Array(5)].map((_, k) => <Star key={k} className="w-4 h-4 fill-lime text-lime" />)}
+    </div>
+    <p className="text-white/80 leading-relaxed mb-6">"{t.quote}"</p>
+    <div className="font-display uppercase text-lime text-lg">{t.name}</div>
+    <div className="text-white/50 text-xs uppercase tracking-wide">{t.role}</div>
+  </div>
+);
+
+const MobileTestimonials = ({ items }) => {
+  const ref = useRef(null);
+  const [active, setActive] = useState(0);
+  const onScroll = () => {
+    const el = ref.current;
+    if (!el) return;
+    setActive(Math.round(el.scrollLeft / el.clientWidth));
+  };
+  const go = (i) => {
+    const el = ref.current;
+    if (el) el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+  };
+  return (
+    <div className="md:hidden">
+      <div ref={ref} onScroll={onScroll} className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-5 px-5 pb-1" data-testid="testimonials-mobile">
+        {items.map((t) => (
+          <div key={t.name} className="snap-center shrink-0 w-[88%]">
+            <TestimonialCard t={t} />
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-center gap-2 mt-6">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => go(i)}
+            aria-label={`Go to review ${i + 1}`}
+            className={`h-2 rounded-full transition-all duration-300 ${active === i ? "w-6 bg-lime" : "w-2 bg-white/25"}`}
+            data-testid={`testimonial-dot-${i}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Home = () => {
   const heroRef = useRef(null);
@@ -143,17 +190,17 @@ const Home = () => {
               </span>
             </a>
           </div>
-          <div className="flex gap-6 overflow-x-auto snap-x pb-6 -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4">
+          <MobileTestimonials items={TESTIMONIALS} />
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {TESTIMONIALS.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.07} className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-auto">
-                <div className="border border-white/15 bg-white/[0.03] p-7 h-full hover:border-lime transition-colors duration-300">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, k) => <Star key={k} className="w-4 h-4 fill-lime text-lime" />)}
-                  </div>
-                  <p className="text-white/80 leading-relaxed mb-6">"{t.quote}"</p>
-                  <div className="font-display uppercase text-lime text-lg">{t.name}</div>
-                  <div className="text-white/50 text-xs uppercase tracking-wide">{t.role}</div>
-                </div>
+              <Reveal key={t.name} delay={(i % 4) * 0.08}>
+                <motion.div
+                  whileHover={{ y: -8 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="h-full"
+                >
+                  <TestimonialCard t={t} />
+                </motion.div>
               </Reveal>
             ))}
           </div>
