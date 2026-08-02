@@ -21,7 +21,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  useEffect(() => setOpen(false), [location.pathname]);
+  useEffect(() => { setOpen(false); }, [location.pathname]);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);

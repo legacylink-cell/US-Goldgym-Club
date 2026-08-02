@@ -1,0 +1,23 @@
+{
+  "summary": "Verified the 'destroy is not a function' crash regression fix (ScrollToTop + Navbar setOpen effects use block-body arrows returning undefined) and Parent Login hidden. Frontend-only testing per request. All routes render without the ErrorBoundary error screen (data-testid='error-reload-btn') across single visits AND repeated SPA back-and-forth navigation. Parent Login link & user-menu are correctly absent. Contact form submits successfully and shows sonner success toast. Scroll resets to top after navigation. No pageerrors, no /api/client-error POSTs. Only expected 401s from /api/auth/me.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ScrollToTop and Navbar useEffect callbacks now correctly use block-body arrows so they always return undefined; this is the proper fix for the extension-induced React 19 destroy-not-a-function crash. Consider adding an ESLint rule (react-hooks/exhaustive-deps + custom rule to disallow implicit-return arrows in useEffect) to prevent regressions.",
+    "AuthContext calls /api/auth/me on load producing expected 401s in console when unauthenticated -- harmless but noisy; could be silenced by treating 401 as an expected 'no session' state without logging."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only run)", "frontend": "100%"},
+  "test_credentials": "Admin: admin@usgoldgym.com / GymAdmin2026! (not exercised in this run; login is intentionally hidden in nav)",
+  "seed_data_creation": "None (contact form submission created a TEST contact record via /api/contact with name 'TEST User', email 'test_regression@example.com')",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Regression fix verified. Coverage this iteration: home hero (FLIP. FLY. FIND YOUR GREATNESS.), 4 program-tile testids present, nav to /about /preschool /recreational /competitive /cheer /camps /special-events /calendar /birthday-parties /college-recruits /contact and back home via logo, plus 12 SPA link-based transitions in stress loop (Home<->About<->Calendar) with zero crashes. Scroll reset: 1200 -> 0 confirmed. Contact form success toast: 'Message sent! We'll be in touch soon.' Navbar shows only Home/About/Programs/Events/Contact + Book Free Trial; no nav-login-link, no nav-user-menu. 0 pageerrors, 0 client-error POSTs.",
+  "rca of the issue": "Original crash was in App.js ScrollToTop: `useEffect(() => window.scrollTo(0,0), [pathname])` implicit-return arrow returned whatever window.scrollTo returned. A browser extension in the user's Chrome monkey-patched window.scrollTo to return an object. React 19 treated that object as an effect cleanup fn and called .destroy() on it on next unmount -> TypeError. Fix: convert to block-body `useEffect(() => { window.scrollTo(0,0); }, [pathname])` (returns undefined). Same fix applied to Navbar's setOpen effect. Verified: no crash across single + repeated SPA navigations."
+}
