@@ -36,9 +36,12 @@ export const Navbar = () => {
       data-testid="main-navbar"
     >
       <nav className="max-w-[1400px] mx-auto px-5 md:px-8 h-20 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group" data-testid="nav-logo">
+        <Link to="/" className="flex flex-col leading-none group" data-testid="nav-logo">
           <span className="font-display text-2xl md:text-3xl text-white uppercase leading-none">
             US<span className="text-lime">Gold</span>
+          </span>
+          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.18em] text-white/55 font-semibold mt-0.5">
+            Gymnastics &amp; Cheer Academy
           </span>
         </Link>
 

@@ -88,7 +88,7 @@ const About = () => (
               because we treat every athlete like our own. When your child walks in, they're home.
             </p>
           </div>
-          <div className="absolute -right-10 -bottom-10 opacity-10 font-display text-[12rem] text-lime leading-none select-none">USG</div>
+          <div className="pointer-events-none absolute right-4 md:right-10 bottom-2 md:bottom-4 opacity-[0.07] font-display text-[6rem] md:text-[10rem] text-lime leading-none select-none">USG</div>
         </div>
       </div>
     </section>
