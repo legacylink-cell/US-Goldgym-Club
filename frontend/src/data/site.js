@@ -23,13 +23,22 @@ export const BUSINESS = {
   phone: "817.491.9996",
   phoneRaw: "+18174919996",
   email: "staff@usgoldgymclub.com",
+  instagram: "https://www.instagram.com/usgoldgym/",
+  facebook: "https://www.facebook.com/129891587058474",
+  googleRating: "4.8",
+  googleReviews: 67,
+  googleReviewsUrl: "https://www.google.com/search?q=US+Gold+Gymnastics+and+Cheer+Academy+Roanoke+TX",
   address: "4000 Haslet-Roanoke Rd Ste 100, Roanoke, TX 76262",
   mapEmbed:
     "https://www.google.com/maps?q=4000+Haslet-Roanoke+Rd+Ste+100,+Roanoke,+TX+76262&output=embed",
   hours: [
-    { day: "Mon – Fri", time: "9:00 AM – 8:00 PM" },
-    { day: "Saturday", time: "9:00 AM – 2:00 PM" },
-    { day: "Sunday", time: "Closed / Private Events" },
+    { day: "Monday", time: "9:00 AM – 8:30 PM" },
+    { day: "Tuesday", time: "9:00 AM – 8:30 PM" },
+    { day: "Wednesday", time: "9:00 AM – 7:30 PM" },
+    { day: "Thursday", time: "9:00 AM – 8:30 PM" },
+    { day: "Friday", time: "2:30 PM – 6:30 PM" },
+    { day: "Saturday", time: "9:00 AM – 12:30 PM" },
+    { day: "Sunday", time: "Closed" },
   ],
 };
 
@@ -73,10 +82,12 @@ export const PROGRAM_TILES = [
 ];
 
 export const TESTIMONIALS = [
-  { name: "Amanda R.", role: "Gym parent, Roanoke", quote: "My daughter went from scared of the beam to competing Level 4 in one year. The coaches are absolutely phenomenal with the little ones." },
-  { name: "Marcus T.", role: "Boys program parent", quote: "The boys gymnastics track built real strength and confidence. Best decision we made for our son this year." },
-  { name: "Jenna P.", role: "All-Star Cheer mom", quote: "Team culture here is unreal. Discipline, teamwork, and so much fun. We drive 30 minutes and it's 100% worth it." },
-  { name: "Cole D.", role: "Optional Team athlete", quote: "Coaches pushed me to Level 9 and helped me get recruited. This gym changed my life." },
+  { name: "Bill Vincent", role: "Gym parent · 14 years", quote: "My daughter has been a gymnast at US Gold for 14 years. She started in recreational classes and later tried out and made the competitive team." },
+  { name: "Kerri Pfuehler", role: "Gym parent", quote: "We couldn't be happier with this facility. The coaches and staff are incredibly knowledgeable, supportive and truly care about every gymnast both inside and outside the gym." },
+  { name: "Sophie Schmitz", role: "Alumni · 18 years", quote: "US Gold has been my gym and home for the past 18 years! The coaches are always so supportive and want the best for you in and outside of gymnastics." },
+  { name: "Candice Eldred", role: "Gym parent · 8 years", quote: "We have been with US Gold for 8 years. My daughter has grown tremendously thanks to the coaches and teammates guiding her to be her best — it's been great for her confidence and self esteem." },
+  { name: "Lindsey", role: "Former competitive gymnast · 10 years", quote: "I was a competitive gymnast at U.S. Gold for 10 years, and I truly cannot say enough positive things. The coaches are incredibly knowledgeable and genuinely care about helping each athlete." },
+  { name: "Juli James", role: "Team parent since 2017", quote: "It's been one of the best decisions we've made for our daughter. She started in rec and has grown into the team program — more than gymnastics, the coaches have instilled real character." },
 ];
 
 export const PRESCHOOL_TIERS = [

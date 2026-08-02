@@ -133,7 +133,16 @@ const Home = () => {
       {/* TESTIMONIALS */}
       <section className="bg-ink py-20 md:py-32">
         <div className="max-w-[1400px] mx-auto px-5 md:px-8">
-          <SectionHeading overline="Loved by families" title="What parents say" className="mb-12" />
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-5 mb-12">
+            <SectionHeading overline="Loved by families" title="What parents say" />
+            <a href={BUSINESS.googleReviewsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-3 border border-white/15 px-5 py-3 hover:border-lime transition-colors self-start md:self-auto" data-testid="google-rating">
+              <span className="font-display text-4xl text-lime leading-none">{BUSINESS.googleRating}</span>
+              <span className="text-white/70 text-sm">
+                <span className="flex gap-0.5 text-lime mb-1">{[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-lime text-lime" />)}</span>
+                {BUSINESS.googleReviews} Google reviews
+              </span>
+            </a>
+          </div>
           <div className="flex gap-6 overflow-x-auto snap-x pb-6 -mx-5 px-5 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4">
             {TESTIMONIALS.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.07} className="snap-start shrink-0 w-[85%] sm:w-[60%] md:w-auto">
@@ -159,11 +168,11 @@ const Home = () => {
               <Instagram className="w-6 h-6 text-lime" />
               <span className="font-display text-2xl uppercase text-white">@usgoldgym</span>
             </div>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="text-lime text-sm uppercase tracking-wide font-bold hover:text-white" data-testid="ig-follow">Follow</a>
+            <a href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="text-lime text-sm uppercase tracking-wide font-bold hover:text-white" data-testid="ig-follow">Follow</a>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
             {[IMG.handstand, IMG.cheerJump, IMG.floorJump, IMG.beamHandstand, IMG.preschoolBeam, IMG.cheerSquad].map((src, i) => (
-              <a key={i} href="https://instagram.com" target="_blank" rel="noreferrer" className="relative aspect-square overflow-hidden group">
+              <a key={i} href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="relative aspect-square overflow-hidden group">
                 <img src={src} alt="Instagram" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-lime/0 group-hover:bg-lime/20 transition-colors" />
               </a>
