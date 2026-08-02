@@ -11,6 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// Set to true to bring back the Parent Login / dashboard entry points in the nav.
+const SHOW_PARENT_LOGIN = false;
+
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -78,7 +81,7 @@ export const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
-          {user ? (
+          {SHOW_PARENT_LOGIN && (user ? (
             <DropdownMenu>
               <DropdownMenuTrigger
                 className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white hover:border-lime"
@@ -112,7 +115,7 @@ export const Navbar = () => {
             >
               Parent Login
             </Link>
-          )}
+          ))}
           <MagneticButton as="link" to="/contact" variant="lime" className="px-6 py-3 text-base" data-testid="nav-book-trial">
             Book Free Trial
           </MagneticButton>
@@ -147,7 +150,7 @@ export const Navbar = () => {
             )
           )}
           <div className="mt-4 flex flex-col gap-3">
-            {user ? (
+            {SHOW_PARENT_LOGIN && (user ? (
               <>
                 <Link to="/dashboard" className="text-white font-semibold uppercase py-2" data-testid="m-nav-dashboard">Dashboard</Link>
                 {user.role === "admin" && <Link to="/admin" className="text-white font-semibold uppercase py-2" data-testid="m-nav-admin">Admin</Link>}
@@ -155,7 +158,7 @@ export const Navbar = () => {
               </>
             ) : (
               <Link to="/login" className="text-white font-semibold uppercase py-2" data-testid="m-nav-login">Parent Login</Link>
-            )}
+            ))}
             <Link to="/contact" className="bg-lime text-ink font-display uppercase text-center py-4" data-testid="m-nav-book">Book Free Trial</Link>
             <a href={`tel:${BUSINESS.phoneRaw}`} className="text-white/70 text-center py-2 text-sm">{BUSINESS.phone}</a>
           </div>

@@ -4,6 +4,15 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0E0E10" />
+        <script>
+          // Safety net: remove any stale service worker so the browser never
+          // serves an outdated app bundle (prevents stuck / blank screens).
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations()
+              .then(function (rs) { rs.forEach(function (r) { r.unregister(); }); })
+              .catch(function () {});
+          }
+        </script>
         <meta name="description" content="US Gold Gymnastics & Cheer Academy in Roanoke, TX — youth gymnastics, cheer, preschool, competitive teams, camps, and birthday parties. Book a free trial today." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
