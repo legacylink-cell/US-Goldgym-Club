@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import { Users, Ticket, MessageSquare, Inbox } from "lucide-react";
+import { Users, Ticket, MessageSquare, Inbox, Mail } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const AdminDashboard = () => {
-  const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, parents: 0 });
+  const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, parents: 0, subscribers: 0 });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [subscribers, setSubscribers] = useState([]);
 
   useEffect(() => {
     api.get("/admin/stats").then(({ data }) => setStats(data));
     api.get("/admin/leads").then(({ data }) => setLeads(data));
     api.get("/admin/contacts").then(({ data }) => setContacts(data));
     api.get("/admin/bookings").then(({ data }) => setBookings(data));
+    api.get("/admin/newsletter").then(({ data }) => setSubscribers(data));
   }, []);
 
   return (
@@ -22,11 +24,12 @@ const AdminDashboard = () => {
         <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold mb-2">Admin Control</div>
         <h1 className="font-display text-5xl uppercase text-white leading-none mb-10">Dashboard<span className="text-lime">.</span></h1>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
           <StatBox icon={Inbox} label="Pricing Requests" value={stats.leads} />
           <StatBox icon={MessageSquare} label="Contact Messages" value={stats.contacts} />
           <StatBox icon={Ticket} label="Bookings" value={stats.bookings} />
           <StatBox icon={Users} label="Parent Accounts" value={stats.parents} />
+          <StatBox icon={Mail} label="Email Subscribers" value={stats.subscribers} />
         </div>
 
         <Tabs defaultValue="leads">
@@ -34,6 +37,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="leads" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-leads">Pricing Requests</TabsTrigger>
             <TabsTrigger value="contacts" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-contacts">Messages</TabsTrigger>
             <TabsTrigger value="bookings" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-bookings">Bookings</TabsTrigger>
+            <TabsTrigger value="subscribers" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-subscribers">Email List</TabsTrigger>
           </TabsList>
 
           <TabsContent value="leads" className="mt-6">
@@ -64,6 +68,14 @@ const AdminDashboard = () => {
               b.num_kids,
               <span className="text-green-400">{b.waiver_signed_name}</span>,
             ])} testid="admin-bookings-table" empty="No bookings yet." />
+          </TabsContent>
+
+          <TabsContent value="subscribers" className="mt-6">
+            <Table headers={["Email", "Name", "Joined"]} rows={subscribers.map((s) => [
+              s.email,
+              s.name || "—",
+              s.created_at ? new Date(s.created_at).toLocaleDateString() : "—",
+            ])} testid="admin-subscribers-table" empty="No email subscribers yet." />
           </TabsContent>
         </Tabs>
       </div>

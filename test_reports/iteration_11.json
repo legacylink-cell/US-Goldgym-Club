@@ -1,0 +1,41 @@
+{
+  "summary": "End-to-end validation of new batch: newsletter DB persistence + admin surface, Careers/Baseball/Camps pages, moving announcement bar, PDF links, admin subscribers tab/stat. Backend: 27/27 pytest passing (added 5 new newsletter tests + 1 stats.subscribers test). Frontend: all new pages render with expected data-testids and toast/dedupe flow works.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verified": {
+    "newsletter_subscribe_new": "POST /api/newsletter -> {already:false} + persisted",
+    "newsletter_dedupe": "second POST same email -> {already:true}",
+    "newsletter_invalid_email": "422 pydantic validation",
+    "admin_newsletter_auth": "401 without cookie, 403 for parent, 200 for admin, includes newly added emails",
+    "admin_stats_subscribers": "int field 'subscribers' present in /api/admin/stats",
+    "footer_newsletter_form": "sonner toast 'You're on the list!' on new, 'You're already on the list!' on dedupe",
+    "announcement_bar": "data-testid=announcement-bar visible at top on Home/Careers/Baseball/Camps/Contact",
+    "careers_page": "/careers renders 4 career-card-{i} + careers-apply-btn (mailto)",
+    "baseball_page": "/baseball renders 3 baseball-track-{i}, baseball-request-btn (QuoteRequestDialog), baseball-trial-btn (-> /contact); Baseball appears in Programs nav",
+    "camps_page": "/camps renders 9 camp-week-{i}, camp-registration-btn, camp-policies-btn, little-dog-signup-btn all linking to PDF URLs; little-dog-price shows '$120 MEMBERS / $130 NON-MEMBERS PER SESSION'",
+    "admin_dashboard": "5 stat boxes including 'Email Subscribers' (8), Email List tab (admin-tab-subscribers) opens admin-subscribers-table with subscriber rows",
+    "regression": "Contact page + form still load; Home unchanged; auth/leads/contact/bookings/events tests all pass"
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Newsletter uniqueness enforced only via find_one race window; consider a unique index on newsletter_subscribers.email to make dedupe atomic under concurrency.",
+    "get_current_user still uses ObjectId(payload['sub']) inside try that only catches jwt exceptions; a malformed sub would raise InvalidId (bson) -> 500. Minor.",
+    "No rate limiting on /api/newsletter — susceptible to abuse. Consider IP throttling.",
+    "CORS uses samesite='none'+secure=True which is correct for cross-origin cookies, but FRONTEND_URL env not set will fall back to localhost:3000 only; production preview URL is not in allow_origins — currently only affects browser-origin XHR (works because request comes from same origin as preview). Safe today, worth documenting."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (27/27)", "frontend": "100% (all requested flows)"},
+  "test_credentials": "Admin admin@usgoldgym.com / GymAdmin2026! (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "TEST_-prefixed newsletter subs and parent/lead/contact records added via pytest run.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Newsletter emails are stored lowercased in DB (server lowercases before insert). Any test comparing must lower() the expected email. Admin stats now includes 'subscribers' key. Baseball trial CTA routes to /contact (iClassPro not integrated yet, per request)."
+}

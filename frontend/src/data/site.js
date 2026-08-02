@@ -52,6 +52,7 @@ export const NAV_LINKS = [
       { label: "Recreational", to: "/recreational" },
       { label: "Competitive", to: "/competitive" },
       { label: "Cheer", to: "/cheer" },
+      { label: "Baseball", to: "/baseball" },
       { label: "College Recruits", to: "/college-recruits" },
     ],
   },
@@ -139,12 +140,33 @@ export const SPECIAL_EVENTS = [
   { name: "Girl Scout Events", price: "Contact for Details", meta: "Patches • Sleepovers • Fundraisers", desc: "Fun and fitness for all ages and skill levels of Girl Scouts — daytime events, sleepovers, and fundraisers. Includes the U.S. Gold Patch on all 'Earn a Patch' and sleepover events.", cat: "special_event" },
 ];
 
-export const CAMPS = [
-  { name: "Summer Skills Camp", dates: "Jul 27 – Jul 31, 2026", age: "Ages 5–12", price: "$45 / day • $200 / week", desc: "Gymnastics fundamentals, obstacle courses, games, and open gym." },
-  { name: "Ninja Warrior Camp", dates: "Aug 3 – Aug 7, 2026", age: "Ages 6–13", price: "$50 / day • $220 / week", desc: "Climbing, agility, and ninja-course training for high-energy kids." },
-  { name: "Cheer & Tumble Camp", dates: "Aug 10 – Aug 14, 2026", age: "Ages 7–14", price: "$50 / day • $220 / week", desc: "Tumbling progressions, jumps, motions, and a showcase Friday." },
-  { name: "Winter Break Camp", dates: "Dec 21 – Dec 23, 2026", age: "Ages 5–12", price: "$45 / day", desc: "Beat the break boredom with active, structured gym days." },
+export const CAMP_INFO = {
+  ages: "Entering 1st grade & up (Fall 2026)",
+  hours: "Drop-off no more than 5 min before start • Prompt pick-up required",
+  note: "Closed June 29 – July 5 for the 4th of July. A signed waiver must be on file to participate. Registration required 24 hours in advance — walk-ins are not accepted.",
+};
+
+export const CAMP_SESSIONS = [
+  { name: "Aloha Summer", dates: "June 1 – 5" },
+  { name: "Jungle Safari", dates: "June 8 – 12" },
+  { name: "We've Got Talent!", dates: "June 15 – 19" },
+  { name: "Red, White & Blue", dates: "June 22 – 26" },
+  { name: "Holiday Hoopla", dates: "July 6 – 10" },
+  { name: "Wild About Butterflies", dates: "July 13 – 17" },
+  { name: "Pajama Party", dates: "July 20 – 24" },
+  { name: "Wild West Texas", dates: "July 27 – 31" },
+  { name: "Action & Sports", dates: "Aug 3 – 7" },
 ];
+
+export const LITTLE_DOG_DAYS = {
+  price: "$120 members / $130 non-members per session",
+  desc: "Our shorter, younger-camper program packed with the same themed fun — gymnastics, games, and crafts.",
+  sessions: [
+    { name: "Jungle Safari", dates: "June 8 – 11" },
+    { name: "Holiday Hoopla", dates: "July 6 – 9" },
+    { name: "Wild West Texas", dates: "July 27 – 30" },
+  ],
+};
 
 export const PARTY_TIERS = [
   { name: "Birthday Party", price: "$245", age: "Ages 5+", duration: "1.5 hrs (1 hr gym + 30 min cake/presents)", capacity: "1–15 kids", deposit: "$100 deposit required", featured: true },
@@ -192,4 +214,48 @@ export const EVENT_CATEGORIES = {
   clinic: { label: "Clinics", color: "#FF4E4E" },
   camp: { label: "Camps", color: "#4EA8FF" },
   special_event: { label: "Special Events", color: "#B98CFF" },
+};
+
+export const ANNOUNCEMENT =
+  "★  Call or Email us to Schedule your FREE Trial Class!  ★  817.491.9996  ★  staff@usgoldgymclub.com  ★";
+
+export const PDFS = {
+  enrollmentPacket:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/pzscqfao_Enrollment_Packet.pdf",
+  waiver:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/18bh2b6l_Waiver.pdf",
+  campRegistration:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/37f1hj5a_Camp_2026_Summer_Fun_Registration.pdf",
+  campPolicies:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/t17rj59e_Summer_Camp_Policies.pdf",
+  littleDogDays:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/rs8zvrx6_LITTLE_DOG_DAYS_CAMP_SIGN_UP_2026.pdf",
+};
+
+export const CAREERS = {
+  intro:
+    "Looking for a career working with children? Do you love children, have a positive attitude, enjoy working as a team, and are you self-motivated? U.S. Gold might be the perfect place for you!",
+  positions: [
+    { title: "Recreational Gymnastics & Tumble Coaches", note: "Teach class fundamentals to a range of ages and levels." },
+    { title: "Upper Level Team Gymnastics Coaches", note: "Coach optional-level athletes toward competitive success." },
+    { title: "Compulsory Team Gymnastics Coaches", note: "Develop athletes through USAG compulsory levels." },
+    { title: "Special Events Coordinator", note: "Run birthday parties and special events (weekends required)." },
+  ],
+};
+
+export const PRO_SHOP = {
+  blurb: "Stop by our in-gym Pro Shop for amazing discounted items — leotards, grips, tape, apparel, and gear.",
+  note: "In-store only. No online sales. Come see us during business hours!",
+};
+
+export const BASEBALL = {
+  hero: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
+  tagline: "Build the athletic foundation every ballplayer needs.",
+  intro:
+    "Our baseball training combines strength, speed, agility, and body-awareness work with sport-specific skill development. Whether your athlete is just starting out or sharpening their edge for the next level, our coaches build the fundamentals that translate to the diamond.",
+  tracks: [
+    { name: "Skills & Fundamentals", meta: "Ages 6–12", desc: "Hitting mechanics, fielding, throwing, and base-running taught with proper progressions." },
+    { name: "Athletic Development", meta: "All ages", desc: "Speed, agility, and strength training to build explosive, injury-resistant athletes." },
+    { name: "Private & Small-Group Lessons", meta: "By appointment", desc: "One-on-one or small-group instruction tailored to each athlete's goals." },
+  ],
 };

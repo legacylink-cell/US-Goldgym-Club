@@ -30,7 +30,7 @@ export const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
+      className={`fixed top-9 inset-x-0 z-50 transition-colors duration-300 ${
         scrolled ? "bg-ink/80 backdrop-blur-xl border-b border-white/10" : "bg-gradient-to-b from-black/70 to-transparent"
       }`}
       data-testid="main-navbar"

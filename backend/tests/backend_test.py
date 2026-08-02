@@ -247,3 +247,49 @@ class TestAdminStats:
     def test_parent_forbidden_admin_stats(self, parent_session):
         r = parent_session.get(f"{API}/admin/stats")
         assert r.status_code == 403
+
+    def test_admin_stats_has_subscribers(self, admin_session):
+        r = admin_session.get(f"{API}/admin/stats")
+        assert r.status_code == 200
+        j = r.json()
+        assert "subscribers" in j
+        assert isinstance(j["subscribers"], int)
+
+
+# ---------------- Newsletter ----------------
+class TestNewsletter:
+    def test_subscribe_and_dedupe(self):
+        email = f"TEST_news_{int(time.time()*1000)}@example.com"
+        r = requests.post(f"{API}/newsletter", json={"email": email})
+        assert r.status_code == 200, r.text
+        j = r.json()
+        assert j.get("already") is False
+        assert "message" in j
+
+        # dedupe
+        r2 = requests.post(f"{API}/newsletter", json={"email": email})
+        assert r2.status_code == 200
+        j2 = r2.json()
+        assert j2.get("already") is True
+
+    def test_admin_newsletter_requires_admin(self):
+        r = requests.get(f"{API}/admin/newsletter")
+        assert r.status_code == 401
+
+    def test_parent_forbidden_admin_newsletter(self, parent_session):
+        r = parent_session.get(f"{API}/admin/newsletter")
+        assert r.status_code == 403
+
+    def test_admin_newsletter_contains_new_email(self, admin_session):
+        email = f"TEST_news_admin_{int(time.time()*1000)}@example.com"
+        r = requests.post(f"{API}/newsletter", json={"email": email})
+        assert r.status_code == 200
+        r2 = admin_session.get(f"{API}/admin/newsletter")
+        assert r2.status_code == 200
+        subs = r2.json()
+        assert isinstance(subs, list)
+        assert any(s.get("email") == email.lower() for s in subs)
+
+    def test_newsletter_invalid_email(self):
+        r = requests.post(f"{API}/newsletter", json={"email": "not-an-email"})
+        assert r.status_code == 422

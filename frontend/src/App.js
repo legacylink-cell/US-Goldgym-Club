@@ -17,6 +17,8 @@ import CalendarPage from "@/pages/CalendarPage";
 import BirthdayParties from "@/pages/BirthdayParties";
 import CollegeRecruits from "@/pages/CollegeRecruits";
 import Contact from "@/pages/Contact";
+import Careers from "@/pages/Careers";
+import Baseball from "@/pages/Baseball";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import ParentDashboard from "@/pages/ParentDashboard";
@@ -59,6 +61,8 @@ function App() {
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/birthday-parties" element={<BirthdayParties />} />
               <Route path="/college-recruits" element={<CollegeRecruits />} />
+              <Route path="/baseball" element={<Baseball />} />
+              <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/dashboard" element={<Protected><ParentDashboard /></Protected>} />
               <Route path="/admin" element={<Protected admin><AdminDashboard /></Protected>} />

@@ -145,6 +145,11 @@ class ClientErrorInput(BaseModel):
     userAgent: Optional[str] = ""
 
 
+class NewsletterInput(BaseModel):
+    email: EmailStr
+    name: Optional[str] = ""
+
+
 class BookingInput(BaseModel):
     booking_type: str            # birthday_party, camp, event, trial
     item_name: str               # package / camp / event name
@@ -256,6 +261,29 @@ async def report_client_error(data: ClientErrorInput):
 
 
 
+# ---------------- Newsletter / Email List ----------------
+@api_router.post("/newsletter")
+async def subscribe_newsletter(data: NewsletterInput):
+    email = data.email.lower()
+    existing = await db.newsletter_subscribers.find_one({"email": email})
+    if existing:
+        return {"message": "You're already on the list!", "already": True}
+    await db.newsletter_subscribers.insert_one({
+        "email": email,
+        "name": data.name or "",
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    })
+    return {"message": "You're on the list!", "already": False}
+
+
+@api_router.get("/admin/newsletter")
+async def list_newsletter(admin: dict = Depends(require_admin)):
+    docs = await db.newsletter_subscribers.find().sort("created_at", -1).to_list(2000)
+    for d in docs:
+        d["id"] = str(d.pop("_id"))
+    return docs
+
+
 @api_router.get("/admin/contacts")
 async def list_contacts(admin: dict = Depends(require_admin)):
     docs = await db.contacts.find().sort("created_at", -1).to_list(1000)
@@ -302,6 +330,7 @@ async def admin_stats(admin: dict = Depends(require_admin)):
         "contacts": await db.contacts.count_documents({}),
         "bookings": await db.bookings.count_documents({}),
         "parents": await db.users.count_documents({"role": "parent"}),
+        "subscribers": await db.newsletter_subscribers.count_documents({}),
     }
 
 
