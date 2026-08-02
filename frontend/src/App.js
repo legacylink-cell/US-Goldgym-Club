@@ -28,18 +28,6 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Clear the one-time recovery flag after a successful mount so a genuine
-// later crash in the same session can also auto-heal.
-const ClearRecoveryFlag = () => {
-  useEffect(() => {
-    const t = setTimeout(() => {
-      try { sessionStorage.removeItem("__usg_recovered"); } catch (e) { /* noop */ }
-    }, 2000);
-    return () => clearTimeout(t);
-  }, []);
-  return null;
-};
-
 const Protected = ({ children, admin = false }) => {
   const { user, checked } = useAuth();
   if (!checked || user === null)
@@ -55,7 +43,6 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
-          <ClearRecoveryFlag />
           <Toaster position="top-right" theme="dark" richColors />
           <Routes>
             <Route element={<Layout />}>

@@ -137,6 +137,14 @@ class ContactInput(BaseModel):
     message: str
 
 
+class ClientErrorInput(BaseModel):
+    message: Optional[str] = ""
+    stack: Optional[str] = ""
+    componentStack: Optional[str] = ""
+    url: Optional[str] = ""
+    userAgent: Optional[str] = ""
+
+
 class BookingInput(BaseModel):
     booking_type: str            # birthday_party, camp, event, trial
     item_name: str               # package / camp / event name
@@ -235,6 +243,17 @@ async def create_contact(data: ContactInput):
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
     res = await db.contacts.insert_one(doc)
     return {"id": str(res.inserted_id), "message": "Message sent"}
+
+
+@api_router.post("/client-error")
+async def report_client_error(data: ClientErrorInput):
+    doc = data.model_dump()
+    doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    await db.client_errors.insert_one(doc)
+    logger.error("CLIENT ERROR REPORT | url=%s | ua=%s | message=%s | stack=%s | componentStack=%s",
+                 data.url, data.userAgent, data.message, (data.stack or "")[:1500], (data.componentStack or "")[:1500])
+    return {"ok": True}
+
 
 
 @api_router.get("/admin/contacts")
