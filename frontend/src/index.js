@@ -5,6 +5,13 @@ import "@/index.css";
 import App from "@/App";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
+// Remove any stale service worker so the browser never serves an outdated bundle.
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations()
+    .then((regs) => regs.forEach((r) => r.unregister()))
+    .catch(() => {});
+}
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

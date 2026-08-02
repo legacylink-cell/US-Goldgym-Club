@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend-only ErrorBoundary auto-recovery regression test. Loaded all 12 public routes (/, /about, /preschool, /recreational, /competitive, /cheer, /camps, /special-events, /calendar, /birthday-parties, /college-recruits, /contact) on a fresh browser — none rendered the 'Just a sec…' recovery screen (data-testid='error-reload-btn' never appeared). No cache-bust '?_r=' reload was triggered on any healthy load. Reloaded / and /recreational 3x each — content settled, no reload loop. Home renders hero 'FLIP. FLY. FIND YOUR GREATNESS.' (verified). Recreational page shows the Tumble Classes section (data-testid='tumble-section' present) and the progression 'LEVEL UP, STEP BY STEP'. Logged in as admin via API (cookie set) — /, /dashboard, and /admin all rendered normally with no error screen; admin dashboard shows stats + tabs. Only console noise is the expected harmless 401 on /api/auth/me when unauthenticated. No pageerror events observed.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ErrorBoundary auto-recovery is guarded correctly by sessionStorage key '__usg_recovered' so it can only fire once per tab session — prevents reload loops.",
+    "purgeCachesAndReload appends '?_r=<ts>' via URL.searchParams which will accumulate only if manually re-triggered; acceptable.",
+    "Consider also clearing the __usg_recovered flag after a successful render (e.g., in App on mount) so a genuine later crash in the same session can also self-heal. Currently only one auto-recover per session — subsequent crashes require manual click."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "n/a", "frontend": "100%" },
+  "test_credentials": "admin@usgoldgym.com / GymAdmin2026! (login API returned 200)",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "ErrorBoundary recovery screen never appears on healthy loads across all 12 public routes and 3 authenticated routes (dashboard/admin). No reload loop. Expected 401 on /api/auth/me for logged-out users is harmless. Admin dashboard renders with 3 pricing requests, 3 messages, 3 bookings, 7 parent accounts.",
+  "rca of the issue": "N/A — no bug reproduced. Fix (session-guarded auto-recovery + SW unregister in index.js) is functioning correctly; healthy loads never trigger the recovery reload."
+}
