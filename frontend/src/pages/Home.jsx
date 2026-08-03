@@ -99,7 +99,16 @@ const Home = () => {
             <MagneticButton as="link" to="/contact" variant="lime" data-testid="hero-book-trial">
               Book Free Trial <ArrowUpRight className="w-5 h-5" />
             </MagneticButton>
-            <MagneticButton as="link" to="/preschool" variant="outline" data-testid="hero-explore">
+            <MagneticButton
+              as="a"
+              href="#programs"
+              variant="outline"
+              data-testid="hero-explore"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("programs")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
               Explore Programs
             </MagneticButton>
           </motion.div>
@@ -116,7 +125,7 @@ const Home = () => {
       </section>
 
       {/* PROGRAMS BENTO */}
-      <section className="bg-ink py-20 md:py-32">
+      <section id="programs" className="bg-ink py-20 md:py-32 scroll-mt-28">
         <div className="max-w-[1400px] mx-auto px-5 md:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <SectionHeading overline="Find your track" title={<>Programs for<br />every athlete</>} />

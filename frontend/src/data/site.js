@@ -15,6 +15,7 @@ export const IMG = {
   facilityEquip: "https://images.unsplash.com/photo-1621046590998-78ecf71d58a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   facilityFloor: "https://images.unsplash.com/photo-1632758243488-7e6f9173cfa1?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   coach: "https://images.unsplash.com/photo-1655842556556-f7ab19796f25?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
+  baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
 };
 
 export const BUSINESS = {
@@ -76,10 +77,12 @@ export const STATS = [
 ];
 
 export const PROGRAM_TILES = [
-  { title: "Preschool", to: "/preschool", img: "preschoolBeam", tag: "Ages walking–5", span: "lg:col-span-5" },
-  { title: "Recreational", to: "/recreational", img: "floorJump", tag: "Beginner → Advanced", span: "lg:col-span-7" },
-  { title: "Competitive", to: "/competitive", img: "beamHandstand", tag: "USAG Levels 3–10", span: "lg:col-span-7" },
-  { title: "Cheer", to: "/cheer", img: "cheerJump", tag: "Tumble & All-Star", span: "lg:col-span-5" },
+  { title: "Preschool", to: "/preschool", img: "preschoolBeam", tag: "Ages walking–5", span: "lg:col-span-4" },
+  { title: "Recreational", to: "/recreational", img: "floorJump", tag: "Beginner → Advanced", span: "lg:col-span-4" },
+  { title: "Competitive", to: "/competitive", img: "beamHandstand", tag: "USAG Levels 3–10", span: "lg:col-span-4" },
+  { title: "Cheer", to: "/cheer", img: "cheerJump", tag: "Tumble & All-Star", span: "lg:col-span-4" },
+  { title: "Baseball", to: "/baseball", img: "baseball", tag: "Athletic development", span: "lg:col-span-4" },
+  { title: "College Recruits", to: "/college-recruits", img: "handstand", tag: "Alumni spotlight", span: "lg:col-span-4" },
 ];
 
 export const TESTIMONIALS = [
