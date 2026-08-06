@@ -116,6 +116,15 @@ BOT_RE = re.compile(
 
 ANALYTICS_PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"]
 
+ANALYTICS_PROGRAM_NAMES = {
+    "/preschool": "Preschool",
+    "/recreational": "Recreational",
+    "/competitive": "Competitive Team",
+    "/cheer": "Cheer & Tumbling",
+    "/baseball": "Baseball",
+    "/college-recruits": "College Recruits",
+}
+
 
 def get_client_ip(request: Request) -> str:
     xff = request.headers.get("x-forwarded-for", "")
@@ -648,6 +657,37 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
         "exit_pages": exit_pages,
         "timeseries": series,
     }
+
+
+@api_router.get("/top-program")
+async def top_program():
+    now = datetime.now(timezone.utc)
+    cutoff = (now - timedelta(days=90)).isoformat()
+    rows = await db.analytics_events.aggregate([
+        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}}},
+        {"$group": {"_id": "$path", "sessions": {"$addToSet": "$session_id"}}},
+    ]).to_list(50)
+    sub_sessions = await db.analytics_events.distinct("session_id", {"type": "conversion", "created_at": {"$gte": cutoff}})
+    sub_set = {s for s in sub_sessions if s}
+    stats = []
+    for r in rows:
+        vs = {s for s in r["sessions"] if s}
+        viewed = len(vs)
+        submitted = len(vs & sub_set)
+        stats.append({"program": r["_id"], "viewed": viewed, "submitted": submitted,
+                      "conv": (submitted / viewed if viewed else 0)})
+    if stats:
+        conv_candidates = [s for s in stats if s["viewed"] >= 3 and s["submitted"] > 0]
+        if conv_candidates:
+            best = max(conv_candidates, key=lambda s: (s["conv"], s["viewed"]))
+            reason = "best_converting"
+        else:
+            best = max(stats, key=lambda s: s["viewed"])
+            reason = "most_popular"
+        return {"program": best["program"], "name": ANALYTICS_PROGRAM_NAMES.get(best["program"], ""),
+                "reason": reason, "views": best["viewed"], "conv_rate": round(best["conv"] * 100, 1)}
+    return {"program": "/competitive", "name": ANALYTICS_PROGRAM_NAMES["/competitive"],
+            "reason": "default", "views": 0, "conv_rate": 0}
 
 
 # ---------------- Seed ----------------

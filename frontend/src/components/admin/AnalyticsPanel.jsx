@@ -5,29 +5,24 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, Cell, PieChart, Pie, Legend,
 } from "recharts";
-import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2, ArrowUp, ArrowDown, Filter, AlertTriangle } from "lucide-react";
+import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2, ArrowUp, ArrowDown, AlertTriangle } from "lucide-react";
 
 const PINK = "#FF1D8E";
 const PURPLE = "#A855F7";
 const BLUE = "#4EA8FF";
-const BERRY = "#C01C6E";
+const INK = "#2C0A4E";
+const AXIS = "rgba(44,10,78,0.55)";
+const GRID = "rgba(44,10,78,0.10)";
 const DEVICE_COLORS = { mobile: PINK, desktop: PURPLE, tablet: BLUE };
+const TOOLTIP = { background: "#fff", border: "1px solid rgba(44,10,78,0.15)", color: INK, fontSize: 12, boxShadow: "0 4px 16px rgba(44,10,78,0.12)" };
 
 const PROGRAM_NAMES = {
-  "/preschool": "Preschool",
-  "/recreational": "Recreational",
-  "/competitive": "Competitive",
-  "/cheer": "Cheer",
-  "/baseball": "Baseball",
-  "/college-recruits": "College Recruits",
+  "/preschool": "Preschool", "/recreational": "Recreational", "/competitive": "Competitive",
+  "/cheer": "Cheer", "/baseball": "Baseball", "/college-recruits": "College Recruits",
 };
 const CTA_NAMES = {
-  book_free_trial: "Book Free Trial",
-  request_pricing: "Request Pricing",
-  newsletter_signup: "Email Signup",
-  careers_apply: "Careers Apply",
-  phone_tap: "Phone Tap",
-  email_tap: "Email Tap",
+  book_free_trial: "Book Free Trial", request_pricing: "Request Pricing", newsletter_signup: "Email Signup",
+  careers_apply: "Careers Apply", phone_tap: "Phone Tap", email_tap: "Email Tap",
 };
 
 const prettyPath = (p) => (p === "/" ? "Home" : (p || "/").replace(/^\//, "").replace(/-/g, " "));
@@ -75,16 +70,16 @@ const AnalyticsPanel = () => {
   return (
     <div className="space-y-6" data-testid="analytics-panel">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-white/50 text-sm max-w-xl">
-          First-party website insights — real visitor traffic only (search bots and automated tests are excluded).
+        <p className="text-ink/50 text-sm max-w-xl">
+          First-party website insights — real visitor traffic only (your own admin browsing, search bots, and automated tests are excluded).
         </p>
-        <div className="flex gap-1 bg-white/5 border border-white/15 p-1" data-testid="analytics-range">
+        <div className="flex gap-1 bg-ink/5 border border-ink/10 p-1" data-testid="analytics-range">
           {RANGES.map((r) => (
             <button
               key={r.value}
               onClick={() => setDays(r.value)}
               className={`px-4 py-1.5 text-xs uppercase font-bold tracking-wide transition-colors ${
-                days === r.value ? "bg-lime text-ink" : "text-white/70 hover:text-white"
+                days === r.value ? "bg-lime text-ink" : "text-ink/60 hover:text-ink"
               }`}
               data-testid={`analytics-range-${r.value}`}
             >
@@ -95,17 +90,17 @@ const AnalyticsPanel = () => {
       </div>
 
       {(data.alerts || []).map((a, i) => (
-        <div key={i} className="border border-amber-500/40 bg-amber-500/10 p-4 flex items-start gap-3" data-testid={`analytics-alert-${i}`}>
-          <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+        <div key={i} className="border border-amber-400 bg-amber-50 p-4 flex items-start gap-3" data-testid={`analytics-alert-${i}`}>
+          <AlertTriangle className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
           <div>
-            <div className="text-amber-300 font-bold text-sm uppercase tracking-wide">{a.title}</div>
-            <div className="text-white/75 text-sm mt-0.5">{a.message}</div>
+            <div className="text-amber-700 font-bold text-sm uppercase tracking-wide">{a.title}</div>
+            <div className="text-ink/70 text-sm mt-0.5">{a.message}</div>
           </div>
         </div>
       ))}
 
       {empty && (
-        <div className="border border-white/15 bg-white/[0.03] p-8 text-center text-white/60" data-testid="analytics-empty">
+        <div className="border border-ink/10 bg-white p-8 text-center text-ink/60" data-testid="analytics-empty">
           No visitor data yet for this range. Stats will appear here as people browse the live site.
         </div>
       )}
@@ -130,7 +125,7 @@ const AnalyticsPanel = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[520px]">
               <thead>
-                <tr className="text-left text-white/40 text-xs uppercase tracking-wide">
+                <tr className="text-left text-ink/40 text-xs uppercase tracking-wide">
                   <th className="pb-2 font-bold">Program</th>
                   <th className="pb-2 font-bold text-right">Viewed</th>
                   <th className="pb-2 font-bold text-right">Clicked</th>
@@ -140,14 +135,14 @@ const AnalyticsPanel = () => {
               </thead>
               <tbody>
                 {(data.funnel_by_program || []).map((p) => (
-                  <tr key={p.program} className="border-t border-white/10 text-white/80" data-testid={`fbp-row-${p.program}`}>
-                    <td className="py-2.5 capitalize font-semibold text-white">{PROGRAM_NAMES[p.program] || prettyPath(p.program)}</td>
+                  <tr key={p.program} className="border-t border-ink/10 text-ink/80" data-testid={`fbp-row-${p.program}`}>
+                    <td className="py-2.5 capitalize font-semibold text-ink">{PROGRAM_NAMES[p.program] || prettyPath(p.program)}</td>
                     <td className="py-2.5 text-right">{p.viewed}</td>
                     <td className="py-2.5 text-right">{p.clicked}</td>
                     <td className="py-2.5 text-right">{p.submitted}</td>
                     <td className="py-2.5 pl-6">
                       <div className="flex items-center gap-2 justify-end">
-                        <div className="w-20 h-2 bg-white/10 hidden sm:block">
+                        <div className="w-20 h-2 bg-ink/10 hidden sm:block">
                           <div className="h-full bg-lime" style={{ width: `${Math.min(p.conv_rate, 100)}%` }} />
                         </div>
                         <span className="text-lime font-semibold w-12 text-right">{p.conv_rate}%</span>
@@ -176,7 +171,7 @@ const AnalyticsPanel = () => {
                 <Pie data={devices} dataKey="value" nameKey="name" innerRadius={40} outerRadius={65} paddingAngle={3}>
                   {devices.map((d) => <Cell key={d.name} fill={DEVICE_COLORS[d.name] || PURPLE} />)}
                 </Pie>
-                <Legend wrapperStyle={{ fontSize: 11, textTransform: "capitalize" }} />
+                <Legend wrapperStyle={{ fontSize: 11, textTransform: "capitalize", color: INK }} />
                 <Tooltip contentStyle={TOOLTIP} />
               </PieChart>
             </ResponsiveContainer>
@@ -190,15 +185,15 @@ const AnalyticsPanel = () => {
           <AreaChart data={series} margin={{ top: 10, right: 10, left: -18, bottom: 0 }}>
             <defs>
               <linearGradient id="gPv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={PURPLE} stopOpacity={0.5} />
+                <stop offset="0%" stopColor={PURPLE} stopOpacity={0.35} />
                 <stop offset="100%" stopColor={PURPLE} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
-            <XAxis dataKey="label" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} interval="preserveStartEnd" />
-            <YAxis tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} allowDecimals={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
+            <XAxis dataKey="label" tick={{ fill: AXIS, fontSize: 11 }} interval="preserveStartEnd" />
+            <YAxis tick={{ fill: AXIS, fontSize: 11 }} allowDecimals={false} />
             <Tooltip contentStyle={TOOLTIP} />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
+            <Legend wrapperStyle={{ fontSize: 12, color: INK }} />
             <Area type="monotone" dataKey="pageviews" name="Page Views" stroke={PURPLE} fill="url(#gPv)" strokeWidth={2} />
             <Area type="monotone" dataKey="leads" name="Pricing Leads" stroke={PINK} fill="transparent" strokeWidth={2} />
             <Area type="monotone" dataKey="signups" name="Email Signups" stroke={BLUE} fill="transparent" strokeWidth={2} />
@@ -212,9 +207,9 @@ const AnalyticsPanel = () => {
           {programs.length ? (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={programs} layout="vertical" margin={{ left: 20, right: 16 }}>
-                <XAxis type="number" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} allowDecimals={false} />
-                <YAxis type="category" dataKey="name" width={90} tick={{ fill: "rgba(255,255,255,0.7)", fontSize: 11 }} />
-                <Tooltip contentStyle={TOOLTIP} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
+                <XAxis type="number" tick={{ fill: AXIS, fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="name" width={90} tick={{ fill: INK, fontSize: 11 }} />
+                <Tooltip contentStyle={TOOLTIP} cursor={{ fill: "rgba(44,10,78,0.05)" }} />
                 <Bar dataKey="clicks" fill={PINK} radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -225,9 +220,9 @@ const AnalyticsPanel = () => {
           {ctas.length ? (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={ctas} layout="vertical" margin={{ left: 20, right: 16 }}>
-                <XAxis type="number" tick={{ fill: "rgba(255,255,255,0.5)", fontSize: 11 }} allowDecimals={false} />
-                <YAxis type="category" dataKey="name" width={100} tick={{ fill: "rgba(255,255,255,0.7)", fontSize: 11 }} />
-                <Tooltip contentStyle={TOOLTIP} cursor={{ fill: "rgba(255,255,255,0.05)" }} />
+                <XAxis type="number" tick={{ fill: AXIS, fontSize: 11 }} allowDecimals={false} />
+                <YAxis type="category" dataKey="name" width={100} tick={{ fill: INK, fontSize: 11 }} />
+                <Tooltip contentStyle={TOOLTIP} cursor={{ fill: "rgba(44,10,78,0.05)" }} />
                 <Bar dataKey="clicks" fill={PURPLE} radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -276,12 +271,12 @@ const AnalyticsPanel = () => {
               {(data.scroll_depth || []).map((s) => (
                 <div key={s.path} data-testid={`scroll-row-${s.path}`}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="capitalize text-white/80">{PROGRAM_NAMES[s.path] || prettyPath(s.path)}</span>
-                    <span className="text-white/50 text-xs">
+                    <span className="capitalize text-ink/80">{PROGRAM_NAMES[s.path] || prettyPath(s.path)}</span>
+                    <span className="text-ink/50 text-xs">
                       <span className="text-lime font-semibold">{s.avg_depth}%</span> avg · {s.reached_bottom_pct}% reached end · {s.samples} view{s.samples === 1 ? "" : "s"}
                     </span>
                   </div>
-                  <div className="h-2.5 bg-white/10 overflow-hidden">
+                  <div className="h-2.5 bg-ink/10 overflow-hidden">
                     <div className="h-full bg-lime" style={{ width: `${s.avg_depth}%` }} />
                   </div>
                 </div>
@@ -298,6 +293,104 @@ const AnalyticsPanel = () => {
           />
         </Card>
       </div>
+    </div>
+  );
+};
+
+const Delta = ({ cur, prev }) => {
+  if (cur == null || prev == null) return <div className="h-4 mt-2" />;
+  if (prev === 0 && cur === 0) return <div className="h-4 mt-2" />;
+  if (prev === 0) {
+    return <div className="flex items-center gap-1 mt-2 text-emerald-600 text-xs font-semibold"><ArrowUp className="w-3 h-3" /> new</div>;
+  }
+  const change = Math.round(((cur - prev) / prev) * 100);
+  const up = change >= 0;
+  const Icon = up ? ArrowUp : ArrowDown;
+  return (
+    <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${up ? "text-emerald-600" : "text-rose-600"}`} title="vs previous period">
+      <Icon className="w-3 h-3" /> {Math.abs(change)}% <span className="text-ink/35 font-normal">vs prev</span>
+    </div>
+  );
+};
+
+const Kpi = ({ icon: Icon, label, value, cur, prev }) => (
+  <div className="border border-ink/10 bg-white shadow-sm p-5" data-testid={`kpi-${label.toLowerCase().replace(/[^a-z]+/g, "-")}`}>
+    <Icon className="w-5 h-5 text-lime mb-3" />
+    <div className="font-display text-3xl text-ink leading-none">{value}</div>
+    <div className="text-ink/50 text-xs uppercase tracking-wide mt-1">{label}</div>
+    <Delta cur={cur} prev={prev} />
+  </div>
+);
+
+const Card = ({ title, children, testid }) => (
+  <div className="border border-ink/10 bg-white shadow-sm p-5" data-testid={testid}>
+    <h4 className="text-xs uppercase tracking-[0.2em] text-coral font-bold mb-4">{title}</h4>
+    {children}
+  </div>
+);
+
+const LoadStat = ({ icon: Icon, ms, samples }) => (
+  <div className="flex items-center gap-4">
+    <Icon className="w-9 h-9 text-ink/30" />
+    <div>
+      <div className="font-display text-4xl text-ink leading-none">
+        {ms ? `${(ms / 1000).toFixed(2)}s` : "—"}
+      </div>
+      <div className="text-ink/50 text-xs mt-1">{samples ? `${samples} sample${samples === 1 ? "" : "s"}` : "No data yet"}</div>
+    </div>
+  </div>
+);
+
+const Muted = ({ children }) => <div className="text-ink/50 text-sm py-8 text-center">{children}</div>;
+
+const MiniTable = ({ head, rows, empty }) => (
+  rows.length === 0 ? <Muted>{empty}</Muted> : (
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="text-left">
+          {head.map((h, i) => <th key={h} className={`pb-2 text-ink/40 text-xs uppercase tracking-wide font-bold ${i > 0 ? "text-right" : ""}`}>{h}</th>)}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r, i) => (
+          <tr key={i} className="border-t border-ink/10 text-ink/80">
+            <td className="py-2 pr-2">{r[0]}</td>
+            <td className="py-2 text-right font-semibold text-ink">{r[1]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+);
+
+const Funnel = ({ steps }) => {
+  const top = steps[0]?.sessions || 0;
+  if (!top) return <Muted>No funnel data yet — this fills in as visitors browse programs and start a trial or pricing request.</Muted>;
+  return (
+    <div className="space-y-4">
+      {steps.map((s, i) => {
+        const pct = Math.round((s.sessions / top) * 100);
+        const prevN = i > 0 ? steps[i - 1].sessions : null;
+        const cont = prevN ? Math.round((s.sessions / prevN) * 100) : null;
+        const drop = cont != null ? 100 - cont : null;
+        return (
+          <div key={s.stage} data-testid={`funnel-step-${i}`}>
+            <div className="flex justify-between items-baseline text-sm mb-1">
+              <span className="text-ink/80 font-semibold">{i + 1}. {s.stage}</span>
+              <span className="text-ink/50 text-xs">
+                {s.sessions} visitor{s.sessions === 1 ? "" : "s"}
+                {cont != null && <span className={drop > 0 ? "text-rose-600" : "text-emerald-600"}> · {cont}% continued ({drop}% drop)</span>}
+              </span>
+            </div>
+            <div className="h-9 bg-ink/10">
+              <div className="h-full bg-gradient-to-r from-lime to-coral flex items-center px-3 text-white font-bold text-sm transition-all"
+                   style={{ width: `${Math.max(pct, 8)}%` }}>
+                {pct}%
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -321,7 +414,7 @@ const PeakHeatmap = ({ peaks }) => {
       <div className="min-w-[640px]">
         {DAY_LABELS.map((day, d) => (
           <div key={day} className="flex items-center gap-1 mb-1">
-            <div className="w-9 text-[10px] uppercase tracking-wide text-white/50 font-bold shrink-0">{day}</div>
+            <div className="w-9 text-[10px] uppercase tracking-wide text-ink/60 font-bold shrink-0">{day}</div>
             <div className="flex gap-1 flex-1">
               {Array.from({ length: 24 }).map((_, h) => {
                 const count = map[`${d}-${h}`] || 0;
@@ -331,7 +424,7 @@ const PeakHeatmap = ({ peaks }) => {
                     key={h}
                     title={`${day} ${fmtHour(h)} — ${count} view${count === 1 ? "" : "s"}`}
                     className="h-5 flex-1 rounded-sm"
-                    style={{ backgroundColor: count ? `rgba(255,29,142,${intensity})` : "rgba(255,255,255,0.05)" }}
+                    style={{ backgroundColor: count ? `rgba(255,29,142,${intensity})` : "rgba(44,10,78,0.06)" }}
                   />
                 );
               })}
@@ -342,7 +435,7 @@ const PeakHeatmap = ({ peaks }) => {
           <div className="w-9 shrink-0" />
           <div className="flex gap-1 flex-1">
             {Array.from({ length: 24 }).map((_, h) => (
-              <div key={h} className="flex-1 text-center text-[9px] text-white/40">{HOUR_TICKS[h] || ""}</div>
+              <div key={h} className="flex-1 text-center text-[9px] text-ink/40">{HOUR_TICKS[h] || ""}</div>
             ))}
           </div>
         </div>
@@ -350,105 +443,5 @@ const PeakHeatmap = ({ peaks }) => {
     </div>
   );
 };
-
-const TOOLTIP = { background: "#1E0838", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 12 };
-
-const Delta = ({ cur, prev }) => {
-  if (cur == null || prev == null) return <div className="h-4 mt-2" />;
-  if (prev === 0 && cur === 0) return <div className="h-4 mt-2" />;
-  if (prev === 0) {
-    return <div className="flex items-center gap-1 mt-2 text-emerald-400 text-xs font-semibold"><ArrowUp className="w-3 h-3" /> new</div>;
-  }
-  const change = Math.round(((cur - prev) / prev) * 100);
-  const up = change >= 0;
-  const Icon = up ? ArrowUp : ArrowDown;
-  return (
-    <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${up ? "text-emerald-400" : "text-rose-400"}`} title="vs previous period">
-      <Icon className="w-3 h-3" /> {Math.abs(change)}% <span className="text-white/35 font-normal">vs prev</span>
-    </div>
-  );
-};
-
-const Kpi = ({ icon: Icon, label, value, cur, prev }) => (
-  <div className="border border-white/15 bg-white/[0.03] p-5" data-testid={`kpi-${label.toLowerCase().replace(/[^a-z]+/g, "-")}`}>
-    <Icon className="w-5 h-5 text-lime mb-3" />
-    <div className="font-display text-3xl text-white leading-none">{value}</div>
-    <div className="text-white/50 text-xs uppercase tracking-wide mt-1">{label}</div>
-    <Delta cur={cur} prev={prev} />
-  </div>
-);
-
-const Funnel = ({ steps }) => {
-  const top = steps[0]?.sessions || 0;
-  if (!top) return <Muted>No funnel data yet — this fills in as visitors browse programs and start a trial or pricing request.</Muted>;
-  return (
-    <div className="space-y-4">
-      {steps.map((s, i) => {
-        const pct = Math.round((s.sessions / top) * 100);
-        const prevN = i > 0 ? steps[i - 1].sessions : null;
-        const cont = prevN ? Math.round((s.sessions / prevN) * 100) : null;
-        const drop = cont != null ? 100 - cont : null;
-        return (
-          <div key={s.stage} data-testid={`funnel-step-${i}`}>
-            <div className="flex justify-between items-baseline text-sm mb-1">
-              <span className="text-white/80 font-semibold">{i + 1}. {s.stage}</span>
-              <span className="text-white/50 text-xs">
-                {s.sessions} visitor{s.sessions === 1 ? "" : "s"}
-                {cont != null && <span className={drop > 0 ? "text-rose-400" : "text-emerald-400"}> · {cont}% continued ({drop}% drop)</span>}
-              </span>
-            </div>
-            <div className="h-9 bg-white/10">
-              <div className="h-full bg-gradient-to-r from-lime to-coral flex items-center px-3 text-ink font-bold text-sm transition-all"
-                   style={{ width: `${Math.max(pct, 8)}%` }}>
-                {pct}%
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-const Card = ({ title, children, testid }) => (
-  <div className="border border-white/15 bg-white/[0.03] p-5" data-testid={testid}>
-    <h4 className="text-xs uppercase tracking-[0.2em] text-lime font-bold mb-4">{title}</h4>
-    {children}
-  </div>
-);
-
-const LoadStat = ({ icon: Icon, ms, samples }) => (
-  <div className="flex items-center gap-4">
-    <Icon className="w-9 h-9 text-white/40" />
-    <div>
-      <div className="font-display text-4xl text-white leading-none">
-        {ms ? `${(ms / 1000).toFixed(2)}s` : "—"}
-      </div>
-      <div className="text-white/50 text-xs mt-1">{samples ? `${samples} sample${samples === 1 ? "" : "s"}` : "No data yet"}</div>
-    </div>
-  </div>
-);
-
-const Muted = ({ children }) => <div className="text-white/50 text-sm py-8 text-center">{children}</div>;
-
-const MiniTable = ({ head, rows, empty }) => (
-  rows.length === 0 ? <Muted>{empty}</Muted> : (
-    <table className="w-full text-sm">
-      <thead>
-        <tr className="text-left">
-          {head.map((h, i) => <th key={h} className={`pb-2 text-white/40 text-xs uppercase tracking-wide font-bold ${i > 0 ? "text-right" : ""}`}>{h}</th>)}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((r, i) => (
-          <tr key={i} className="border-t border-white/10 text-white/80">
-            <td className="py-2 pr-2">{r[0]}</td>
-            <td className="py-2 text-right font-semibold text-white">{r[1]}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  )
-);
 
 export default AnalyticsPanel;

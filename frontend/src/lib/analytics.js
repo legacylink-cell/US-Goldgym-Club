@@ -3,6 +3,11 @@ import { API } from "@/lib/api";
 const SID_KEY = "usg_sid";
 const PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"];
 
+let enabled = true;
+export function setAnalyticsEnabled(v) {
+  enabled = !!v;
+}
+
 function getSessionId() {
   try {
     let sid = localStorage.getItem(SID_KEY);
@@ -25,6 +30,7 @@ function detectDevice() {
 }
 
 function send(payload) {
+  if (!enabled) return;
   try {
     fetch(`${API}/analytics/track`, {
       method: "POST",

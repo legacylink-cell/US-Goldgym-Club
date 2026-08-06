@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { BUSINESS } from "@/data/site";
-import { Users, Ticket, MessageSquare, Inbox, Mail, LogOut } from "lucide-react";
+import { Ticket, MessageSquare, Inbox, Mail, LogOut } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AnalyticsPanel from "@/components/admin/AnalyticsPanel";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, parents: 0, subscribers: 0 });
+  const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, subscribers: 0 });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -29,9 +29,11 @@ const AdminDashboard = () => {
     navigate("/login", { replace: true });
   };
 
+  const tab = "rounded-none text-ink/60 data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs";
+
   return (
-    <div className="bg-ink min-h-screen" data-testid="admin-dashboard">
-      <header className="sticky top-0 z-40 bg-[#1E0838]/95 backdrop-blur border-b border-white/10">
+    <div className="bg-cream min-h-screen" data-testid="admin-dashboard">
+      <header className="sticky top-0 z-40 bg-[#1E0838] border-b border-white/10">
         <div className="max-w-[1300px] mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src={BUSINESS.logo} alt="US Gold" className="h-10 w-10 rounded-full bg-white object-contain p-0.5 ring-2 ring-white/60" />
@@ -42,25 +44,25 @@ const AdminDashboard = () => {
           </button>
         </div>
       </header>
+
       <div className="max-w-[1300px] mx-auto px-5 md:px-8 py-10">
         <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold mb-2">Admin Control</div>
-        <h1 className="font-display text-5xl uppercase text-white leading-none mb-10">Dashboard<span className="text-lime">.</span></h1>
+        <h1 className="font-display text-5xl uppercase text-ink leading-none mb-10">Dashboard<span className="text-lime">.</span></h1>
 
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
           <StatBox icon={Inbox} label="Pricing Requests" value={stats.leads} />
           <StatBox icon={MessageSquare} label="Contact Messages" value={stats.contacts} />
           <StatBox icon={Ticket} label="Bookings" value={stats.bookings} />
-          <StatBox icon={Users} label="Parent Accounts" value={stats.parents} />
           <StatBox icon={Mail} label="Email Subscribers" value={stats.subscribers} />
         </div>
 
         <Tabs defaultValue="analytics">
-          <TabsList className="bg-white/5 border border-white/15 rounded-none p-1 flex-wrap h-auto">
-            <TabsTrigger value="analytics" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-analytics">Insights</TabsTrigger>
-            <TabsTrigger value="leads" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-leads">Pricing Requests</TabsTrigger>
-            <TabsTrigger value="contacts" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-contacts">Messages</TabsTrigger>
-            <TabsTrigger value="bookings" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-bookings">Bookings</TabsTrigger>
-            <TabsTrigger value="subscribers" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-subscribers">Email List</TabsTrigger>
+          <TabsList className="bg-ink/5 border border-ink/10 rounded-none p-1 flex-wrap h-auto">
+            <TabsTrigger value="analytics" className={tab} data-testid="admin-tab-analytics">Insights</TabsTrigger>
+            <TabsTrigger value="leads" className={tab} data-testid="admin-tab-leads">Pricing Requests</TabsTrigger>
+            <TabsTrigger value="contacts" className={tab} data-testid="admin-tab-contacts">Messages</TabsTrigger>
+            <TabsTrigger value="bookings" className={tab} data-testid="admin-tab-bookings">Bookings</TabsTrigger>
+            <TabsTrigger value="subscribers" className={tab} data-testid="admin-tab-subscribers">Email List</TabsTrigger>
           </TabsList>
 
           <TabsContent value="analytics" className="mt-6">
@@ -70,9 +72,9 @@ const AdminDashboard = () => {
           <TabsContent value="leads" className="mt-6">
             <Table headers={["Name", "Contact", "Program", "Child / Freq", "Message"]} rows={leads.map((l) => [
               l.name,
-              <span>{l.email}<br /><span className="text-white/50">{l.phone}</span></span>,
+              <span>{l.email}<br /><span className="text-ink/50">{l.phone}</span></span>,
               l.program,
-              <span>{l.child_name} {l.child_age && `(${l.child_age})`}<br /><span className="text-white/50">{l.frequency}</span></span>,
+              <span>{l.child_name} {l.child_age && `(${l.child_age})`}<br /><span className="text-ink/50">{l.frequency}</span></span>,
               l.message,
             ])} testid="admin-leads-table" empty="No pricing requests yet." />
           </TabsContent>
@@ -80,7 +82,7 @@ const AdminDashboard = () => {
           <TabsContent value="contacts" className="mt-6">
             <Table headers={["Name", "Contact", "Topic", "Message"]} rows={contacts.map((c) => [
               c.name,
-              <span>{c.email}<br /><span className="text-white/50">{c.phone}</span></span>,
+              <span>{c.email}<br /><span className="text-ink/50">{c.phone}</span></span>,
               c.topic,
               c.message,
             ])} testid="admin-contacts-table" empty="No messages yet." />
@@ -88,12 +90,12 @@ const AdminDashboard = () => {
 
           <TabsContent value="bookings" className="mt-6">
             <Table headers={["Parent", "Type", "Item", "Date", "Kids", "Waiver"]} rows={bookings.map((b) => [
-              <span>{b.user_name}<br /><span className="text-white/50">{b.user_email}</span></span>,
+              <span>{b.user_name}<br /><span className="text-ink/50">{b.user_email}</span></span>,
               b.booking_type,
               b.item_name,
-              <span>{b.date}<br /><span className="text-white/50">{b.time_slot}</span></span>,
+              <span>{b.date}<br /><span className="text-ink/50">{b.time_slot}</span></span>,
               b.num_kids,
-              <span className="text-green-400">{b.waiver_signed_name}</span>,
+              <span className="text-emerald-600 font-semibold">{b.waiver_signed_name}</span>,
             ])} testid="admin-bookings-table" empty="No bookings yet." />
           </TabsContent>
 
@@ -111,27 +113,27 @@ const AdminDashboard = () => {
 };
 
 const StatBox = ({ icon: Icon, label, value }) => (
-  <div className="border border-white/15 bg-white/[0.03] p-6">
+  <div className="border border-ink/10 bg-white shadow-sm p-6">
     <Icon className="w-6 h-6 text-lime mb-3" />
-    <div className="font-display text-4xl text-white leading-none">{value}</div>
-    <div className="text-white/50 text-xs uppercase tracking-wide mt-1">{label}</div>
+    <div className="font-display text-4xl text-ink leading-none">{value}</div>
+    <div className="text-ink/50 text-xs uppercase tracking-wide mt-1">{label}</div>
   </div>
 );
 
 const Table = ({ headers, rows, testid, empty }) => (
-  <div className="border border-white/15 overflow-x-auto" data-testid={testid}>
+  <div className="border border-ink/10 bg-white overflow-x-auto" data-testid={testid}>
     {rows.length === 0 ? (
-      <div className="p-10 text-center text-white/50">{empty}</div>
+      <div className="p-10 text-center text-ink/50">{empty}</div>
     ) : (
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-white/5 text-left">
-            {headers.map((h) => <th key={h} className="px-4 py-3 text-lime uppercase text-xs tracking-wide font-bold whitespace-nowrap">{h}</th>)}
+          <tr className="bg-ink/5 text-left">
+            {headers.map((h) => <th key={h} className="px-4 py-3 text-ink/50 uppercase text-xs tracking-wide font-bold whitespace-nowrap">{h}</th>)}
           </tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={i} className="border-t border-white/10 text-white/80 align-top">
+            <tr key={i} className="border-t border-ink/10 text-ink/80 align-top">
               {r.map((cell, j) => <td key={j} className="px-4 py-3">{cell}</td>)}
             </tr>
           ))}

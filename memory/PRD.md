@@ -23,6 +23,13 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Admin light theme, exclusion, parent-tile removal, homepage spotlight (2026-08-06)
+- **Admin exclusion**: `setAnalyticsEnabled` gate in analytics.js; `AnalyticsTracker` disables ALL tracking (pageviews/scroll/clicks) when logged-in user is admin, and never tracks /admin|/login|/register|/dashboard. Waits for `checked` before first event.
+- **Admin light theme**: dashboard body now `bg-cream` (light lavender) with white cards + dark text; header kept dark (#1E0838). Rewrote AdminDashboard + AnalyticsPanel for light (charts axes/tooltips/grid, tables, funnel, heatmap all light-readable).
+- **Removed** the "Parent Accounts" stat tile (parent logins are off) → 4 tiles.
+- **Best-Program Spotlight**: public `GET /api/top-program` (best-converting w/ min 3 views, else most-popular, else default). Homepage `ProgramSpotlight` band above the program grid auto-highlights it with Explore + Book Free Trial CTAs.
+- Verified: /top-program curl, admin light + spotlight screenshots.
+
 ## Admin standalone shell + Funnel-by-Program + Drop alerts (2026-08-06)
 - **Standalone admin view**: moved `/admin` (and `/dashboard`) OUT of the public Layout — no announcement bar, navbar, or footer. Added a slim admin header (logo + "Admin Panel") with a **Logout** button (`admin-logout`) that clears the session and redirects to `/login`. Verified logout + auth guard end-to-end.
 - **Funnel by Program**: backend `funnel_by_program` (session attribution: viewed → clicked trial/pricing → submitted, with conv %). New "Trial Funnel by Program" table in Insights.

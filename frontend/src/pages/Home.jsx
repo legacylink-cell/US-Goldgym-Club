@@ -1,11 +1,59 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Phone, MapPin, Star, Instagram } from "lucide-react";
+import { ArrowUpRight, Phone, MapPin, Star, Instagram, Flame } from "lucide-react";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { StatCounter } from "@/components/common/StatCounter";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { IMG, STATS, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
+import api from "@/lib/api";
+
+const SPOTLIGHT_COPY = {
+  best_converting: { tag: "Families' Favorite", line: "Our most-loved program right now — families are signing up fast." },
+  most_popular: { tag: "Most Popular", line: "The program families are exploring the most this season." },
+  default: { tag: "Program Spotlight", line: "A favorite pathway for building strength, confidence, and skill." },
+};
+const SPOTLIGHT_IMG = {
+  "/preschool": "preschoolBeam", "/recreational": "floorJump", "/competitive": "beamHandstand",
+  "/cheer": "cheerJump", "/baseball": "baseball", "/college-recruits": "handstand",
+};
+
+const ProgramSpotlight = () => {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    api.get("/top-program").then(({ data }) => { if (data && data.name) setData(data); }).catch(() => {});
+  }, []);
+  if (!data) return null;
+  const copy = SPOTLIGHT_COPY[data.reason] || SPOTLIGHT_COPY.default;
+  const img = IMG[SPOTLIGHT_IMG[data.program]] || IMG.floorJump;
+  return (
+    <Reveal>
+      <div className="relative overflow-hidden border border-lime/40 bg-gradient-to-r from-lime/[0.1] via-lime/[0.03] to-transparent mb-12" data-testid="program-spotlight">
+        <div className="grid md:grid-cols-[1.25fr_1fr] items-stretch">
+          <div className="p-8 md:p-10">
+            <div className="inline-flex items-center gap-2 bg-lime text-ink px-3 py-1 text-xs uppercase font-bold tracking-wide mb-4">
+              <Flame className="w-4 h-4" /> {copy.tag}
+            </div>
+            <h3 className="font-display text-4xl md:text-5xl uppercase text-white leading-none">{data.name}</h3>
+            <p className="text-white/70 mt-3 max-w-md">{copy.line}</p>
+            <div className="flex flex-wrap gap-3 mt-6">
+              <MagneticButton as="link" to={data.program} variant="lime" className="px-6 py-3" data-testid="spotlight-explore">
+                Explore {data.name}
+              </MagneticButton>
+              <MagneticButton as="link" to="/contact" variant="outline" className="px-6 py-3" data-testid="spotlight-trial">
+                Book Free Trial
+              </MagneticButton>
+            </div>
+          </div>
+          <div className="relative min-h-[220px] hidden md:block">
+            <img src={img} alt={data.name} className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/30 to-transparent" />
+          </div>
+        </div>
+      </div>
+    </Reveal>
+  );
+};
 
 const TestimonialCard = ({ t }) => (
   <div className="border border-white/15 bg-white/[0.03] p-7 h-full hover:border-lime transition-colors duration-300">
@@ -133,6 +181,8 @@ const Home = () => {
               Whether it's a preschooler's first tumble or a national-level routine, we build a pathway for every goal.
             </p>
           </div>
+
+          <ProgramSpotlight />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             {PROGRAM_TILES.map((t, i) => (
