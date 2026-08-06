@@ -3,8 +3,13 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { BUSINESS } from "@/data/site";
-import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download } from "lucide-react";
+import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download, Trash2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 import AnalyticsPanel from "@/components/admin/AnalyticsPanel";
 
 const AdminDashboard = () => {
@@ -16,17 +21,31 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
 
-  useEffect(() => {
+  const loadAll = () => {
     api.get("/admin/stats").then(({ data }) => setStats(data));
     api.get("/admin/leads").then(({ data }) => setLeads(data));
     api.get("/admin/contacts").then(({ data }) => setContacts(data));
     api.get("/admin/bookings").then(({ data }) => setBookings(data));
     api.get("/admin/newsletter").then(({ data }) => setSubscribers(data));
+  };
+
+  useEffect(() => {
+    loadAll();
   }, []);
 
   const handleLogout = async () => {
     await logout();
     navigate("/login", { replace: true });
+  };
+
+  const resetData = async () => {
+    try {
+      await api.post("/admin/reset-data");
+      toast.success("All submissions and analytics have been reset.");
+      loadAll();
+    } catch {
+      toast.error("Could not reset data. Please try again.");
+    }
   };
 
   const tab = "rounded-none text-ink/60 data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs";
@@ -77,6 +96,33 @@ const AdminDashboard = () => {
           <ExportBtn onClick={() => download("leads", "usgold-leads.csv")} testid="export-leads">Leads</ExportBtn>
           <ExportBtn onClick={() => download("contacts", "usgold-messages.csv")} testid="export-contacts">Messages</ExportBtn>
           <ExportBtn onClick={() => download("subscribers", "usgold-subscribers.csv")} testid="export-subscribers">Subscribers</ExportBtn>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                data-testid="reset-data-btn"
+                className="ml-auto flex items-center gap-2 border border-rose-300 bg-white text-rose-600 hover:bg-rose-600 hover:text-white hover:border-rose-600 px-4 py-2 text-xs uppercase font-bold tracking-wide transition-colors"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Reset All Data
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-white border-ink/10">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-ink">Reset all data?</AlertDialogTitle>
+                <AlertDialogDescription className="text-ink/60">
+                  This permanently deletes ALL pricing requests, contact messages, email subscribers,
+                  bookings, and website analytics. Your calendar events and admin login are kept.
+                  This cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="rounded-none text-ink border-ink/20" data-testid="reset-cancel">Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={resetData} className="rounded-none bg-rose-600 hover:bg-rose-700 text-white" data-testid="reset-confirm">
+                  Yes, delete everything
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         <Tabs defaultValue="analytics">

@@ -23,6 +23,12 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Admin Reset Data (2026-08-06)
+- `POST /api/admin/reset-data` (admin-only) wipes analytics_events, geo_cache, leads, contacts, newsletter_subscribers, bookings, client_errors, and all non-admin users. Preserves admin accounts + calendar events. Returns deleted counts.
+- Admin dashboard: "Reset All Data" danger button (rose) with an AlertDialog confirm ("Yes, delete everything"). Refetches stats after reset.
+- Verified: preview reset → all stats 0, events preserved (8), admin login still 200.
+- NOTE: production has its own DB; user must Re-publish then click Reset on the live admin to clear prod.
+
 ## Analytics admin-page exclusion + CSV export (2026-08-06)
 - **Reports exclude admin/auth pages**: added `not_admin_path` regex filter (`^/(admin|login|register|dashboard)`) to `pv_match` (drives pageviews, unique visitors, top pages, exit pages, location, peak, load, device) and the scroll-depth match. Also recomputed unique visitors from public pageviews only. Removes lingering historical `/login`, `/admin`, `/dashboard` rows from the dashboard.
 - **CSV export**: `GET /api/admin/export/{leads|contacts|subscribers}` (admin-only) streams a `text/csv` attachment. Admin dashboard has an "Export CSV" toolbar (Leads / Messages / Subscribers) that downloads via blob.

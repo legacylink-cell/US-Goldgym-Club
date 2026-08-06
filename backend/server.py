@@ -720,6 +720,20 @@ async def export_csv(kind: str, admin: dict = Depends(require_admin)):
     )
 
 
+@api_router.post("/admin/reset-data")
+async def reset_data(admin: dict = Depends(require_admin)):
+    collections = ["analytics_events", "geo_cache", "leads", "contacts",
+                   "newsletter_subscribers", "bookings", "client_errors"]
+    deleted = {}
+    for name in collections:
+        res = await db[name].delete_many({})
+        deleted[name] = res.deleted_count
+    # remove non-admin (parent/test) accounts, keep admins
+    res = await db.users.delete_many({"role": {"$ne": "admin"}})
+    deleted["users"] = res.deleted_count
+    return {"ok": True, "deleted": deleted}
+
+
 # ---------------- Seed ----------------
 async def seed_admin():
     email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
