@@ -23,6 +23,11 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Rebrand (2026-08-06) — Purple + Pink theme + new logo
+- Reworked palette via 4 core tokens in `tailwind.config.js` + `index.css` (cascades site-wide): `ink` #0E0E10→#2C0A4E (deep royal purple, dominant surface), `cream` #F5F4F0→#F4EEFB (light lavender), `lime` #D4FF3F→#FF1D8E (hot pink primary accent — announcement bar, buttons, overlines), `coral` #FF4E4E→#C01C6E (berry pink secondary). Updated shadcn HSL tokens, scrollbar, selection, ErrorBoundary inline colors, Camps alt section, Calendar category colors (no more yellow/red), and index.html theme-color + favicon.
+- New logo: `BUSINESS.logo` (US Gym Logo.jpeg badge) shown as a white circular coin in Navbar + Footer, and set as favicon/apple-touch-icon.
+- Verified readability on dark + light sections (hero, programs grid, footer, preschool light cards, calendar). Purely presentational change — no functional logic touched.
+
 ## Implemented (2026-08-02) — New feature batch
 - **Newsletter / Email List**: `POST /api/newsletter` (dedupe), `GET /api/admin/newsletter`, `subscribers` count in admin stats. Footer signup band + reusable `NewsletterSignup` component. Admin dashboard now has 5 stat boxes + "Email List" tab. Saves to `newsletter_subscribers` collection — NO emails sent.
 - **Careers page** (`/careers`): Employment Opportunities, 4 real open positions, "Request Application" mailto CTA (staff@usgoldgymclub.com). Linked in footer.

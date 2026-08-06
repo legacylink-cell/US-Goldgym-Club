@@ -47,7 +47,7 @@ const Camps = () => (
       </div>
     </section>
 
-    <section className="bg-[#141416] py-20 md:py-28 border-t border-white/10">
+    <section className="bg-[#1E0838] py-20 md:py-28 border-t border-white/10">
       <div className="max-w-[1400px] mx-auto px-5 md:px-8">
         <div className="grid lg:grid-cols-12 gap-10 items-start">
           <div className="lg:col-span-5">

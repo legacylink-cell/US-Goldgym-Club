@@ -17,8 +17,16 @@ export const Footer = () => (
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
         <div className="md:col-span-4">
-          <div className="font-display text-4xl text-white uppercase leading-none">
-            US<span className="text-lime">Gold</span>
+          <div className="flex items-center gap-4">
+            <img
+              src={BUSINESS.logo}
+              alt="U.S. Gold Gymnastics & Cheer Academy"
+              className="h-20 w-20 rounded-full object-contain bg-white p-1 ring-2 ring-white/70 shadow-lg"
+              data-testid="footer-logo"
+            />
+            <div className="font-display text-3xl text-white uppercase leading-none">
+              US<span className="text-lime">Gold</span>
+            </div>
           </div>
           <p className="mt-4 text-white/60 max-w-sm leading-relaxed">
             Gymnastics & cheer for every age and level. Proudly training athletes and welcoming families

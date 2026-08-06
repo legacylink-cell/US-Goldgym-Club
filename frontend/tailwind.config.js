@@ -18,10 +18,10 @@ module.exports = {
         archivo: ['Archivo', 'sans-serif'],
       },
       colors: {
-        ink: '#0E0E10',
-        cream: '#F5F4F0',
-        lime: '#D4FF3F',
-        coral: '#FF4E4E',
+        ink: '#2C0A4E',
+        cream: '#F4EEFB',
+        lime: '#FF1D8E',
+        coral: '#C01C6E',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

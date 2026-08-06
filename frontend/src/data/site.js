@@ -21,6 +21,7 @@ export const IMG = {
 export const BUSINESS = {
   name: "U.S. Gold Gymnastics & Cheer Academy",
   shortName: "US Gold",
+  logo: "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/d9cpnh56_US%20Gym%20Logo.jpeg",
   phone: "817.491.9996",
   phoneRaw: "+18174919996",
   email: "staff@usgoldgymclub.com",
@@ -213,10 +214,10 @@ export const CONTACT_TOPICS = [
 ];
 
 export const EVENT_CATEGORIES = {
-  open_gym: { label: "Open Gym", color: "#D4FF3F" },
-  clinic: { label: "Clinics", color: "#FF4E4E" },
+  open_gym: { label: "Open Gym", color: "#FF1D8E" },
+  clinic: { label: "Clinics", color: "#A855F7" },
   camp: { label: "Camps", color: "#4EA8FF" },
-  special_event: { label: "Special Events", color: "#B98CFF" },
+  special_event: { label: "Special Events", color: "#C77DFF" },
 };
 
 export const ANNOUNCEMENT =
