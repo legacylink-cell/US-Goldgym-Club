@@ -114,6 +114,8 @@ BOT_RE = re.compile(
     re.I,
 )
 
+ANALYTICS_PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"]
+
 
 def get_client_ip(request: Request) -> str:
     xff = request.headers.get("x-forwarded-for", "")
@@ -553,6 +555,38 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     total_leads = await db.leads.count_documents({"created_at": {"$gte": cutoff}})
     total_signups = await db.newsletter_subscribers.count_documents({"created_at": {"$gte": cutoff}})
 
+    # previous period (for trend arrows)
+    prev_start = (now - timedelta(days=days * 2)).isoformat()
+    prev_win = {"$gte": prev_start, "$lt": cutoff}
+    prev_pageviews = await db.analytics_events.count_documents({"type": "pageview", "created_at": prev_win})
+    prev_sessions = await db.analytics_events.distinct("session_id", {"created_at": prev_win})
+    prev_unique = len([s for s in prev_sessions if s])
+    prev_leads = await db.leads.count_documents({"created_at": prev_win})
+    prev_signups = await db.newsletter_subscribers.count_documents({"created_at": prev_win})
+    totals_prev = {
+        "pageviews": prev_pageviews,
+        "unique_visitors": prev_unique,
+        "leads": prev_leads,
+        "signups": prev_signups,
+        "conversion_rate": round(prev_leads / prev_unique * 100, 1) if prev_unique else 0,
+    }
+
+    # trial funnel (distinct sessions reaching each stage in this period)
+    def _n(lst):
+        return len([x for x in lst if x])
+    prog_sessions = await db.analytics_events.distinct(
+        "session_id", {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}})
+    cta_sessions = await db.analytics_events.distinct(
+        "session_id", {"type": "click", "category": "cta",
+                       "label": {"$in": ["book_free_trial", "request_pricing"]}, "created_at": {"$gte": cutoff}})
+    sub_sessions = await db.analytics_events.distinct(
+        "session_id", {"type": "conversion", "created_at": {"$gte": cutoff}})
+    funnel = [
+        {"stage": "Viewed a Program", "sessions": _n(prog_sessions)},
+        {"stage": "Clicked Trial / Pricing", "sessions": _n(cta_sessions)},
+        {"stage": "Submitted a Request", "sessions": _n(sub_sessions)},
+    ]
+
     return {
         "range_days": days,
         "totals": {
@@ -562,6 +596,8 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
             "signups": total_signups,
             "conversion_rate": round(total_leads / unique_visitors * 100, 1) if unique_visitors else 0,
         },
+        "totals_prev": totals_prev,
+        "funnel": funnel,
         "device_split": device_split,
         "load_time": load_time,
         "top_programs": top_programs,

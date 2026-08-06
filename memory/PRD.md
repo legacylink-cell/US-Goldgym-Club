@@ -23,6 +23,12 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Analytics — Trial Funnel, Period Comparison + Admin-only login (2026-08-06)
+- **Login rebranded to Admin**: `/login` now reads "Admin Login" / "Sign in to your website dashboard"; removed parent wording + "Create an account" link. No parent login is visible anywhere public (nav entry stays hidden via SHOW_PARENT_LOGIN=false; `/register` route unlinked). Admin reaches dashboard via `/login` → `/admin`.
+- **Trial Funnel**: new client `conversion` events on Contact + Quote form submit. Backend returns `funnel` = distinct sessions at: Viewed a Program → Clicked Book Trial/Request Pricing → Submitted a Request. Dashboard shows gradient funnel bars with continued/drop %.
+- **Compare Periods**: backend returns `totals_prev` (same window immediately before). KPI cards show ▲/▼ % vs previous period (emerald up / rose down).
+- Verified: funnel 4→2→1 + totals_prev via curl; login + dashboard via screenshots.
+
 ## Analytics — Peak Times, Scroll Depth, Exit Pages (2026-08-06)
 - Extended tracking: pageviews now send visitor local `hour`/`dow`; new `scroll` events send max scroll depth % per page (flushed on route change / tab hide / pagehide).
 - Backend `/api/admin/analytics` now also returns: `peak_times` (day-of-week × hour matrix), `scroll_depth` (avg depth, % reached end, samples per page), and `exit_pages` (last page per session).

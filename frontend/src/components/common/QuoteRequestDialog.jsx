@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import api, { formatApiError } from "@/lib/api";
+import { trackConversion } from "@/lib/analytics";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -22,6 +23,7 @@ export const QuoteRequestDialog = ({ program, trigger }) => {
     setLoading(true);
     try {
       await api.post("/leads", { ...form, program });
+      trackConversion("pricing_submitted");
       toast.success("Request received! Our team will reach out with pricing shortly.");
       setOpen(false);
       setForm({ name: "", email: "", phone: "", child_name: "", child_age: "", frequency: "", message: "" });

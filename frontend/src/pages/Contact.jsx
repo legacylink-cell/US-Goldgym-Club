@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import api, { formatApiError } from "@/lib/api";
+import { trackConversion } from "@/lib/analytics";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { IMG, BUSINESS, CONTACT_TOPICS } from "@/data/site";
@@ -22,6 +23,7 @@ const Contact = () => {
     setLoading(true);
     try {
       await api.post("/contact", form);
+      trackConversion("contact_submitted");
       toast.success("Message sent! We'll be in touch soon.");
       setForm({ name: "", email: "", phone: "", topic: "General Inquiry", message: "" });
     } catch (err) {

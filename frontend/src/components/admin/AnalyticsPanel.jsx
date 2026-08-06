@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, Cell, PieChart, Pie, Legend,
 } from "recharts";
-import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2 } from "lucide-react";
+import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2, ArrowUp, ArrowDown, Filter } from "lucide-react";
 
 const PINK = "#FF1D8E";
 const PURPLE = "#A855F7";
@@ -62,6 +62,7 @@ const AnalyticsPanel = () => {
   if (!data) return null;
 
   const t = data.totals;
+  const tp = data.totals_prev || {};
   const devices = Object.entries(data.device_split || {}).map(([name, value]) => ({ name, value }));
   const hasDevices = devices.some((d) => d.value > 0);
   const webLoad = data.load_time?.web?.avg_ms;
@@ -101,12 +102,17 @@ const AnalyticsPanel = () => {
 
       {/* KPI ROW */}
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <Kpi icon={Eye} label="Page Views" value={t.pageviews} />
-        <Kpi icon={Users} label="Unique Visitors" value={t.unique_visitors} />
-        <Kpi icon={Target} label="Pricing Leads" value={t.leads} />
-        <Kpi icon={Mail} label="Email Signups" value={t.signups} />
-        <Kpi icon={Gauge} label="Lead Conv. Rate" value={`${t.conversion_rate}%`} />
+        <Kpi icon={Eye} label="Page Views" value={t.pageviews} cur={t.pageviews} prev={tp.pageviews} />
+        <Kpi icon={Users} label="Unique Visitors" value={t.unique_visitors} cur={t.unique_visitors} prev={tp.unique_visitors} />
+        <Kpi icon={Target} label="Pricing Leads" value={t.leads} cur={t.leads} prev={tp.leads} />
+        <Kpi icon={Mail} label="Email Signups" value={t.signups} cur={t.signups} prev={tp.signups} />
+        <Kpi icon={Gauge} label="Lead Conv. Rate" value={`${t.conversion_rate}%`} cur={t.conversion_rate} prev={tp.conversion_rate} />
       </div>
+
+      {/* TRIAL FUNNEL */}
+      <Card title="Trial Funnel — Program → Book Trial → Submitted" testid="trial-funnel">
+        <Funnel steps={data.funnel || []} />
+      </Card>
 
       {/* LOAD TIME + DEVICE */}
       <div className="grid lg:grid-cols-3 gap-4">
@@ -300,13 +306,62 @@ const PeakHeatmap = ({ peaks }) => {
 
 const TOOLTIP = { background: "#1E0838", border: "1px solid rgba(255,255,255,0.15)", color: "#fff", fontSize: 12 };
 
-const Kpi = ({ icon: Icon, label, value }) => (
+const Delta = ({ cur, prev }) => {
+  if (cur == null || prev == null) return <div className="h-4 mt-2" />;
+  if (prev === 0 && cur === 0) return <div className="h-4 mt-2" />;
+  if (prev === 0) {
+    return <div className="flex items-center gap-1 mt-2 text-emerald-400 text-xs font-semibold"><ArrowUp className="w-3 h-3" /> new</div>;
+  }
+  const change = Math.round(((cur - prev) / prev) * 100);
+  const up = change >= 0;
+  const Icon = up ? ArrowUp : ArrowDown;
+  return (
+    <div className={`flex items-center gap-1 mt-2 text-xs font-semibold ${up ? "text-emerald-400" : "text-rose-400"}`} title="vs previous period">
+      <Icon className="w-3 h-3" /> {Math.abs(change)}% <span className="text-white/35 font-normal">vs prev</span>
+    </div>
+  );
+};
+
+const Kpi = ({ icon: Icon, label, value, cur, prev }) => (
   <div className="border border-white/15 bg-white/[0.03] p-5" data-testid={`kpi-${label.toLowerCase().replace(/[^a-z]+/g, "-")}`}>
     <Icon className="w-5 h-5 text-lime mb-3" />
     <div className="font-display text-3xl text-white leading-none">{value}</div>
     <div className="text-white/50 text-xs uppercase tracking-wide mt-1">{label}</div>
+    <Delta cur={cur} prev={prev} />
   </div>
 );
+
+const Funnel = ({ steps }) => {
+  const top = steps[0]?.sessions || 0;
+  if (!top) return <Muted>No funnel data yet — this fills in as visitors browse programs and start a trial or pricing request.</Muted>;
+  return (
+    <div className="space-y-4">
+      {steps.map((s, i) => {
+        const pct = Math.round((s.sessions / top) * 100);
+        const prevN = i > 0 ? steps[i - 1].sessions : null;
+        const cont = prevN ? Math.round((s.sessions / prevN) * 100) : null;
+        const drop = cont != null ? 100 - cont : null;
+        return (
+          <div key={s.stage} data-testid={`funnel-step-${i}`}>
+            <div className="flex justify-between items-baseline text-sm mb-1">
+              <span className="text-white/80 font-semibold">{i + 1}. {s.stage}</span>
+              <span className="text-white/50 text-xs">
+                {s.sessions} visitor{s.sessions === 1 ? "" : "s"}
+                {cont != null && <span className={drop > 0 ? "text-rose-400" : "text-emerald-400"}> · {cont}% continued ({drop}% drop)</span>}
+              </span>
+            </div>
+            <div className="h-9 bg-white/10">
+              <div className="h-full bg-gradient-to-r from-lime to-coral flex items-center px-3 text-ink font-bold text-sm transition-all"
+                   style={{ width: `${Math.max(pct, 8)}%` }}>
+                {pct}%
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 const Card = ({ title, children, testid }) => (
   <div className="border border-white/15 bg-white/[0.03] p-5" data-testid={testid}>

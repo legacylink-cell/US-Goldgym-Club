@@ -84,6 +84,10 @@ export function startScrollTracking(path) {
   scrollState = { path, max: computeScrollPct() };
 }
 
+export function trackConversion(label) {
+  send({ type: "conversion", category: "conversion", label, path: window.location.pathname });
+}
+
 export function trackPageview(path) {
   let referrer = "";
   try {

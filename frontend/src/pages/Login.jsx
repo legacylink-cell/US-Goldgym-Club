@@ -36,14 +36,14 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
         <div className="absolute bottom-10 left-10">
           <div className="font-display text-5xl text-white uppercase leading-none">US<span className="text-lime">Gold</span></div>
-          <p className="text-white/70 mt-2 max-w-xs">Your athlete's progress, payments, and waivers — all in one place.</p>
+          <p className="text-white/70 mt-2 max-w-xs">Staff &amp; owner access to your website dashboard.</p>
         </div>
       </div>
       <div className="flex items-center justify-center p-6 md:p-12">
         <div className="w-full max-w-md">
           <Link to="/" className="inline-flex items-center gap-2 text-white/60 hover:text-lime text-sm uppercase tracking-wide mb-8" data-testid="login-back"><ArrowLeft className="w-4 h-4" /> Back to site</Link>
-          <h1 className="font-display text-5xl uppercase text-white leading-none">Parent Login<span className="text-lime">.</span></h1>
-          <p className="text-white/60 mt-2 mb-8">Access your membership dashboard.</p>
+          <h1 className="font-display text-5xl uppercase text-white leading-none">Admin Login<span className="text-lime">.</span></h1>
+          <p className="text-white/60 mt-2 mb-8">Sign in to your website dashboard.</p>
           {error && <div className="bg-coral/15 border border-coral text-coral px-4 py-3 mb-5 text-sm" data-testid="login-error">{error}</div>}
           <form onSubmit={submit} className="space-y-5" data-testid="login-form">
             <div>
@@ -58,9 +58,6 @@ const Login = () => {
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
-          <p className="text-white/60 mt-6 text-sm">
-            New here? <Link to="/register" className="text-lime font-semibold hover:underline" data-testid="login-to-register">Create an account</Link>
-          </p>
         </div>
       </div>
     </div>
