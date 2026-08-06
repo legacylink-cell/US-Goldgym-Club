@@ -203,7 +203,7 @@ class NewsletterInput(BaseModel):
 
 
 class AnalyticsEventInput(BaseModel):
-    type: str                       # pageview | click
+    type: str                       # pageview | click | scroll
     path: Optional[str] = ""
     category: Optional[str] = ""    # program | cta
     label: Optional[str] = ""       # program path or cta name
@@ -211,6 +211,9 @@ class AnalyticsEventInput(BaseModel):
     load_time_ms: Optional[int] = None
     session_id: Optional[str] = ""
     referrer: Optional[str] = ""
+    hour: Optional[int] = None       # visitor local hour 0-23 (pageview)
+    dow: Optional[int] = None        # visitor local day-of-week 0=Sun..6=Sat
+    depth: Optional[int] = None      # max scroll depth % (scroll events)
 
 
 class BookingInput(BaseModel):
@@ -495,6 +498,34 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     ])
     top_referrers = [{"referrer": r["_id"], "count": r["count"]} for r in ref_rows]
 
+    # peak times heatmap (day-of-week x hour, visitor local time)
+    peak_rows = await agg(db.analytics_events, [
+        {"$match": {**pv_match, "hour": {"$ne": None}, "dow": {"$ne": None}}},
+        {"$group": {"_id": {"dow": "$dow", "hour": "$hour"}, "count": {"$sum": 1}}},
+    ])
+    peak_times = [{"dow": r["_id"]["dow"], "hour": r["_id"]["hour"], "count": r["count"]} for r in peak_rows]
+
+    # scroll depth per page (how far visitors read)
+    scroll_rows = await agg(db.analytics_events, [
+        {"$match": {"type": "scroll", "created_at": {"$gte": cutoff}, "depth": {"$ne": None}}},
+        {"$group": {"_id": "$path", "avg": {"$avg": "$depth"}, "samples": {"$sum": 1},
+                    "bottom": {"$sum": {"$cond": [{"$gte": ["$depth", 90]}, 1, 0]}}}},
+        {"$sort": {"samples": -1}}, {"$limit": 15},
+    ])
+    scroll_depth = [{"path": (r["_id"] or "/"), "avg_depth": round(r["avg"]), "samples": r["samples"],
+                     "reached_bottom_pct": round(r["bottom"] / r["samples"] * 100) if r["samples"] else 0}
+                    for r in scroll_rows]
+
+    # exit pages (last page viewed per session)
+    exit_rows = await agg(db.analytics_events, [
+        {"$match": pv_match},
+        {"$sort": {"created_at": 1}},
+        {"$group": {"_id": "$session_id", "last": {"$last": "$path"}}},
+        {"$group": {"_id": "$last", "exits": {"$sum": 1}}},
+        {"$sort": {"exits": -1}}, {"$limit": 15},
+    ])
+    exit_pages = [{"path": (r["_id"] or "/"), "exits": r["exits"]} for r in exit_rows]
+
     pv_day = await agg(db.analytics_events, [
         {"$match": pv_match},
         {"$group": {"_id": {"$substrCP": ["$created_at", 0, 10]}, "count": {"$sum": 1}}},
@@ -538,6 +569,9 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
         "by_location": by_location,
         "top_pages": top_pages,
         "top_referrers": top_referrers,
+        "peak_times": peak_times,
+        "scroll_depth": scroll_depth,
+        "exit_pages": exit_pages,
         "timeseries": series,
     }
 

@@ -23,6 +23,12 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Analytics — Peak Times, Scroll Depth, Exit Pages (2026-08-06)
+- Extended tracking: pageviews now send visitor local `hour`/`dow`; new `scroll` events send max scroll depth % per page (flushed on route change / tab hide / pagehide).
+- Backend `/api/admin/analytics` now also returns: `peak_times` (day-of-week × hour matrix), `scroll_depth` (avg depth, % reached end, samples per page), and `exit_pages` (last page per session).
+- Admin Insights tab: added a 7×24 **Peak Times heatmap** (pink intensity), **Scroll Depth** bars per program page, and an **Exit Pages** table. Verified via curl + dashboard screenshots.
+- Admin credentials live in `/app/memory/test_credentials.md`: admin@usgoldgym.com / GymAdmin2026!
+
 ## Analytics / Business Insights (2026-08-06)
 - **Custom first-party analytics** (no third-party account). Frontend `lib/analytics.js` + `AnalyticsTracker` logs pageviews (with load time via Navigation Timing, device type, referrer) and meaningful clicks (program links + key CTAs) via a delegated listener keyed off existing data-testids. Anonymous session id in localStorage.
 - **Backend**: `POST /api/analytics/track` (bot/headless/test traffic filtered out; IP→city/state via free ip-api.com with `geo_cache`), `GET /api/admin/analytics?days=7|30|90` (admin-only) aggregates: pageviews, unique visitors, device split, avg load time (web vs mobile), top programs, CTA clicks, visitors by city/state, top pages, top referrers, and a leads/signups/pageviews time series. Added `httpx` to requirements.

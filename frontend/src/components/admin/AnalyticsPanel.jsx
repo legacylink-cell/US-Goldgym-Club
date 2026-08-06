@@ -209,6 +209,91 @@ const AnalyticsPanel = () => {
           />
         </Card>
       </div>
+
+      {/* PEAK TIMES HEATMAP */}
+      <Card title="Peak Times — Busiest Days & Hours (visitor local time)" testid="peak-heatmap">
+        <PeakHeatmap peaks={data.peak_times || []} />
+      </Card>
+
+      {/* SCROLL DEPTH + EXIT PAGES */}
+      <div className="grid lg:grid-cols-2 gap-4">
+        <Card title="Scroll Depth — How Far Visitors Read" testid="scroll-depth">
+          {(data.scroll_depth || []).length ? (
+            <div className="space-y-4">
+              {(data.scroll_depth || []).map((s) => (
+                <div key={s.path} data-testid={`scroll-row-${s.path}`}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="capitalize text-white/80">{PROGRAM_NAMES[s.path] || prettyPath(s.path)}</span>
+                    <span className="text-white/50 text-xs">
+                      <span className="text-lime font-semibold">{s.avg_depth}%</span> avg · {s.reached_bottom_pct}% reached end · {s.samples} view{s.samples === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                  <div className="h-2.5 bg-white/10 overflow-hidden">
+                    <div className="h-full bg-lime" style={{ width: `${s.avg_depth}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : <Muted>No scroll data yet.</Muted>}
+        </Card>
+
+        <Card title="Exit Pages — Where Visitors Leave" testid="exit-pages">
+          <MiniTable
+            head={["Page", "Exits"]}
+            rows={(data.exit_pages || []).map((p) => [<span className="capitalize">{prettyPath(p.path)}</span>, p.exits])}
+            empty="No exit data yet."
+          />
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const HOUR_TICKS = { 0: "12a", 6: "6a", 12: "12p", 18: "6p", 23: "11p" };
+
+const PeakHeatmap = ({ peaks }) => {
+  const map = {};
+  let max = 0;
+  peaks.forEach((p) => {
+    map[`${p.dow}-${p.hour}`] = p.count;
+    if (p.count > max) max = p.count;
+  });
+  if (max === 0) return <Muted>No traffic timing data yet.</Muted>;
+
+  const fmtHour = (h) => `${((h + 11) % 12) + 1}${h < 12 ? "am" : "pm"}`;
+
+  return (
+    <div className="overflow-x-auto" data-testid="peak-heatmap-grid">
+      <div className="min-w-[640px]">
+        {DAY_LABELS.map((day, d) => (
+          <div key={day} className="flex items-center gap-1 mb-1">
+            <div className="w-9 text-[10px] uppercase tracking-wide text-white/50 font-bold shrink-0">{day}</div>
+            <div className="flex gap-1 flex-1">
+              {Array.from({ length: 24 }).map((_, h) => {
+                const count = map[`${d}-${h}`] || 0;
+                const intensity = count ? 0.18 + 0.82 * (count / max) : 0;
+                return (
+                  <div
+                    key={h}
+                    title={`${day} ${fmtHour(h)} — ${count} view${count === 1 ? "" : "s"}`}
+                    className="h-5 flex-1 rounded-sm"
+                    style={{ backgroundColor: count ? `rgba(255,29,142,${intensity})` : "rgba(255,255,255,0.05)" }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
+        <div className="flex items-center gap-1 mt-1">
+          <div className="w-9 shrink-0" />
+          <div className="flex gap-1 flex-1">
+            {Array.from({ length: 24 }).map((_, h) => (
+              <div key={h} className="flex-1 text-center text-[9px] text-white/40">{HOUR_TICKS[h] || ""}</div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

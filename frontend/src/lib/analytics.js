@@ -52,6 +52,38 @@ function getLoadTime() {
 
 let initialSent = false;
 
+let scrollState = { path: null, max: 0 };
+
+function computeScrollPct() {
+  try {
+    const el = document.documentElement;
+    const scrollTop = window.scrollY || el.scrollTop || 0;
+    const trackable = el.scrollHeight - el.clientHeight;
+    if (trackable <= 0) return 100;
+    return Math.min(100, Math.max(0, Math.round((scrollTop / trackable) * 100)));
+  } catch {
+    return 0;
+  }
+}
+
+function onScroll() {
+  if (!scrollState.path) return;
+  const p = computeScrollPct();
+  if (p > scrollState.max) scrollState.max = p;
+}
+
+export function flushScroll() {
+  if (scrollState.path) {
+    send({ type: "scroll", path: scrollState.path, depth: scrollState.max });
+    scrollState = { path: null, max: 0 };
+  }
+}
+
+export function startScrollTracking(path) {
+  flushScroll();
+  scrollState = { path, max: computeScrollPct() };
+}
+
 export function trackPageview(path) {
   let referrer = "";
   try {
@@ -63,6 +95,9 @@ export function trackPageview(path) {
     /* no-op */
   }
   const payload = { type: "pageview", path, referrer };
+  const now = new Date();
+  payload.hour = now.getHours();
+  payload.dow = now.getDay();
 
   if (!initialSent) {
     initialSent = true;
@@ -77,6 +112,12 @@ export function trackPageview(path) {
 export function initClickTracking() {
   if (window.__usgClickInit) return;
   window.__usgClickInit = true;
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("pagehide", flushScroll);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") flushScroll();
+  });
 
   document.addEventListener(
     "click",
