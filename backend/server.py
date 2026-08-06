@@ -16,6 +16,8 @@ import logging
 import jwt
 import bcrypt
 import secrets
+import re
+import httpx
 
 # ---------------- DB ----------------
 mongo_url = os.environ['MONGO_URL']
@@ -105,6 +107,56 @@ async def require_admin(request: Request) -> dict:
     return user
 
 
+# ---------------- Analytics helpers ----------------
+BOT_RE = re.compile(
+    r"(bot|spider|crawl|slurp|headless|playwright|puppeteer|lighthouse|"
+    r"curl|wget|python-requests|node-fetch|monitor|pingdom|uptime|scan|preview)",
+    re.I,
+)
+
+
+def get_client_ip(request: Request) -> str:
+    xff = request.headers.get("x-forwarded-for", "")
+    if xff:
+        return xff.split(",")[0].strip()
+    real = request.headers.get("x-real-ip", "")
+    if real:
+        return real.strip()
+    return request.client.host if request.client else ""
+
+
+def _is_private_ip(ip: str) -> bool:
+    if not ip:
+        return True
+    if ip in ("127.0.0.1", "::1", "localhost"):
+        return True
+    return ip.startswith(("10.", "192.168.", "172.16.", "172.17.", "172.18.",
+                          "172.19.", "172.2", "172.30.", "172.31.", "fe80", "fc", "fd"))
+
+
+async def geo_lookup(ip: str) -> dict:
+    if _is_private_ip(ip):
+        return {}
+    cached = await db.geo_cache.find_one({"_id": ip})
+    if cached:
+        return {"city": cached.get("city", ""), "state": cached.get("state", ""),
+                "country": cached.get("country", "")}
+    try:
+        async with httpx.AsyncClient(timeout=2.5) as c:
+            r = await c.get(f"http://ip-api.com/json/{ip}",
+                            params={"fields": "status,city,regionName,country"})
+            d = r.json()
+            if d.get("status") == "success":
+                geo = {"city": d.get("city", ""), "state": d.get("regionName", ""),
+                       "country": d.get("country", "")}
+                await db.geo_cache.insert_one(
+                    {"_id": ip, **geo, "created_at": datetime.now(timezone.utc).isoformat()})
+                return geo
+    except Exception:
+        pass
+    return {}
+
+
 # ---------------- Models ----------------
 class RegisterInput(BaseModel):
     name: str
@@ -148,6 +200,17 @@ class ClientErrorInput(BaseModel):
 class NewsletterInput(BaseModel):
     email: EmailStr
     name: Optional[str] = ""
+
+
+class AnalyticsEventInput(BaseModel):
+    type: str                       # pageview | click
+    path: Optional[str] = ""
+    category: Optional[str] = ""    # program | cta
+    label: Optional[str] = ""       # program path or cta name
+    device: Optional[str] = "desktop"
+    load_time_ms: Optional[int] = None
+    session_id: Optional[str] = ""
+    referrer: Optional[str] = ""
 
 
 class BookingInput(BaseModel):
@@ -344,6 +407,139 @@ async def list_events(category: Optional[str] = None):
     for d in docs:
         d["id"] = str(d.pop("_id"))
     return docs
+
+
+# ---------------- Analytics ----------------
+@api_router.post("/analytics/track")
+async def track_event(data: AnalyticsEventInput, request: Request):
+    ua = request.headers.get("user-agent", "")
+    if BOT_RE.search(ua):
+        return {"ok": True, "skipped": "bot"}
+    geo = {}
+    if data.type == "pageview":
+        geo = await geo_lookup(get_client_ip(request))
+    now = datetime.now(timezone.utc)
+    doc = data.model_dump()
+    doc.update({
+        "ua": ua[:300],
+        "city": geo.get("city", ""),
+        "state": geo.get("state", ""),
+        "country": geo.get("country", ""),
+        "created_at": now.isoformat(),
+    })
+    await db.analytics_events.insert_one(doc)
+    return {"ok": True}
+
+
+@api_router.get("/admin/analytics")
+async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
+    days = max(1, min(days, 365))
+    now = datetime.now(timezone.utc)
+    cutoff = (now - timedelta(days=days)).isoformat()
+    pv_match = {"type": "pageview", "created_at": {"$gte": cutoff}}
+    click_match = {"type": "click", "created_at": {"$gte": cutoff}}
+
+    async def agg(coll, pipeline):
+        return await coll.aggregate(pipeline).to_list(2000)
+
+    pageviews = await db.analytics_events.count_documents(pv_match)
+    sessions = await db.analytics_events.distinct("session_id", {"created_at": {"$gte": cutoff}})
+    unique_visitors = len([s for s in sessions if s])
+
+    device_rows = await agg(db.analytics_events, [
+        {"$match": pv_match},
+        {"$group": {"_id": {"$ifNull": ["$device", "desktop"]}, "count": {"$sum": 1}}},
+    ])
+    device_split = {(r["_id"] or "desktop"): r["count"] for r in device_rows}
+
+    load_rows = await agg(db.analytics_events, [
+        {"$match": {**pv_match, "load_time_ms": {"$ne": None, "$gt": 0}}},
+        {"$group": {"_id": {"$cond": [{"$eq": ["$device", "mobile"]}, "mobile", "web"]},
+                    "avg": {"$avg": "$load_time_ms"}, "count": {"$sum": 1}}},
+    ])
+    load_time = {r["_id"]: {"avg_ms": round(r["avg"]), "samples": r["count"]} for r in load_rows}
+
+    program_rows = await agg(db.analytics_events, [
+        {"$match": {**click_match, "category": "program"}},
+        {"$group": {"_id": "$label", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}, {"$limit": 20},
+    ])
+    top_programs = [{"program": r["_id"], "clicks": r["count"]} for r in program_rows if r["_id"]]
+
+    cta_rows = await agg(db.analytics_events, [
+        {"$match": {**click_match, "category": "cta"}},
+        {"$group": {"_id": "$label", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+    ])
+    cta_clicks = [{"cta": r["_id"], "clicks": r["count"]} for r in cta_rows if r["_id"]]
+
+    loc_rows = await agg(db.analytics_events, [
+        {"$match": {**pv_match, "city": {"$nin": ["", None]}}},
+        {"$group": {"_id": {"city": "$city", "state": "$state"}, "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}, {"$limit": 25},
+    ])
+    by_location = [{"city": r["_id"]["city"], "state": r["_id"].get("state", ""), "views": r["count"]}
+                   for r in loc_rows]
+
+    page_rows = await agg(db.analytics_events, [
+        {"$match": pv_match},
+        {"$group": {"_id": "$path", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}, {"$limit": 15},
+    ])
+    top_pages = [{"path": (r["_id"] or "/"), "views": r["count"]} for r in page_rows]
+
+    ref_rows = await agg(db.analytics_events, [
+        {"$match": {**pv_match, "referrer": {"$nin": ["", None]}}},
+        {"$group": {"_id": "$referrer", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}}, {"$limit": 15},
+    ])
+    top_referrers = [{"referrer": r["_id"], "count": r["count"]} for r in ref_rows]
+
+    pv_day = await agg(db.analytics_events, [
+        {"$match": pv_match},
+        {"$group": {"_id": {"$substrCP": ["$created_at", 0, 10]}, "count": {"$sum": 1}}},
+    ])
+    pv_by_day = {r["_id"]: r["count"] for r in pv_day}
+
+    lead_day = await agg(db.leads, [
+        {"$match": {"created_at": {"$gte": cutoff}}},
+        {"$group": {"_id": {"$substrCP": ["$created_at", 0, 10]}, "count": {"$sum": 1}}},
+    ])
+    leads_by_day = {r["_id"]: r["count"] for r in lead_day}
+
+    sub_day = await agg(db.newsletter_subscribers, [
+        {"$match": {"created_at": {"$gte": cutoff}}},
+        {"$group": {"_id": {"$substrCP": ["$created_at", 0, 10]}, "count": {"$sum": 1}}},
+    ])
+    subs_by_day = {r["_id"]: r["count"] for r in sub_day}
+
+    series = []
+    for i in range(days, -1, -1):
+        d = (now - timedelta(days=i)).strftime("%Y-%m-%d")
+        series.append({"date": d, "pageviews": pv_by_day.get(d, 0),
+                       "leads": leads_by_day.get(d, 0), "signups": subs_by_day.get(d, 0)})
+
+    total_leads = await db.leads.count_documents({"created_at": {"$gte": cutoff}})
+    total_signups = await db.newsletter_subscribers.count_documents({"created_at": {"$gte": cutoff}})
+
+    return {
+        "range_days": days,
+        "totals": {
+            "pageviews": pageviews,
+            "unique_visitors": unique_visitors,
+            "leads": total_leads,
+            "signups": total_signups,
+            "conversion_rate": round(total_leads / unique_visitors * 100, 1) if unique_visitors else 0,
+        },
+        "device_split": device_split,
+        "load_time": load_time,
+        "top_programs": top_programs,
+        "cta_clicks": cta_clicks,
+        "by_location": by_location,
+        "top_pages": top_pages,
+        "top_referrers": top_referrers,
+        "timeseries": series,
+    }
 
 
 # ---------------- Seed ----------------

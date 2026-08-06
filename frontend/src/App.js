@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-route
 import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Layout from "@/components/layout/Layout";
+import AnalyticsTracker from "@/components/common/AnalyticsTracker";
 
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -47,6 +48,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <ScrollToTop />
+          <AnalyticsTracker />
           <Toaster position="top-right" theme="dark" richColors />
           <Routes>
             <Route element={<Layout />}>

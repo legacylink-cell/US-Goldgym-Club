@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Users, Ticket, MessageSquare, Inbox, Mail } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import AnalyticsPanel from "@/components/admin/AnalyticsPanel";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, parents: 0, subscribers: 0 });
@@ -32,13 +33,18 @@ const AdminDashboard = () => {
           <StatBox icon={Mail} label="Email Subscribers" value={stats.subscribers} />
         </div>
 
-        <Tabs defaultValue="leads">
-          <TabsList className="bg-white/5 border border-white/15 rounded-none p-1">
+        <Tabs defaultValue="analytics">
+          <TabsList className="bg-white/5 border border-white/15 rounded-none p-1 flex-wrap h-auto">
+            <TabsTrigger value="analytics" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-analytics">Insights</TabsTrigger>
             <TabsTrigger value="leads" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-leads">Pricing Requests</TabsTrigger>
             <TabsTrigger value="contacts" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-contacts">Messages</TabsTrigger>
             <TabsTrigger value="bookings" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-bookings">Bookings</TabsTrigger>
             <TabsTrigger value="subscribers" className="rounded-none data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs" data-testid="admin-tab-subscribers">Email List</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="analytics" className="mt-6">
+            <AnalyticsPanel />
+          </TabsContent>
 
           <TabsContent value="leads" className="mt-6">
             <Table headers={["Name", "Contact", "Program", "Child / Freq", "Message"]} rows={leads.map((l) => [
