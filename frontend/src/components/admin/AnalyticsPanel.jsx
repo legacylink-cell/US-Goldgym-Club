@@ -5,7 +5,7 @@ import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid,
   BarChart, Bar, Cell, PieChart, Pie, Legend,
 } from "recharts";
-import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2, ArrowUp, ArrowDown, Filter } from "lucide-react";
+import { Eye, Users, Target, Mail, Gauge, Smartphone, Monitor, MapPin, Loader2, ArrowUp, ArrowDown, Filter, AlertTriangle } from "lucide-react";
 
 const PINK = "#FF1D8E";
 const PURPLE = "#A855F7";
@@ -94,6 +94,16 @@ const AnalyticsPanel = () => {
         </div>
       </div>
 
+      {(data.alerts || []).map((a, i) => (
+        <div key={i} className="border border-amber-500/40 bg-amber-500/10 p-4 flex items-start gap-3" data-testid={`analytics-alert-${i}`}>
+          <AlertTriangle className="w-5 h-5 text-amber-400 mt-0.5 shrink-0" />
+          <div>
+            <div className="text-amber-300 font-bold text-sm uppercase tracking-wide">{a.title}</div>
+            <div className="text-white/75 text-sm mt-0.5">{a.message}</div>
+          </div>
+        </div>
+      ))}
+
       {empty && (
         <div className="border border-white/15 bg-white/[0.03] p-8 text-center text-white/60" data-testid="analytics-empty">
           No visitor data yet for this range. Stats will appear here as people browse the live site.
@@ -112,6 +122,43 @@ const AnalyticsPanel = () => {
       {/* TRIAL FUNNEL */}
       <Card title="Trial Funnel — Program → Book Trial → Submitted" testid="trial-funnel">
         <Funnel steps={data.funnel || []} />
+      </Card>
+
+      {/* FUNNEL BY PROGRAM */}
+      <Card title="Trial Funnel by Program — Which Programs Convert Best" testid="funnel-by-program">
+        {(data.funnel_by_program || []).length ? (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[520px]">
+              <thead>
+                <tr className="text-left text-white/40 text-xs uppercase tracking-wide">
+                  <th className="pb-2 font-bold">Program</th>
+                  <th className="pb-2 font-bold text-right">Viewed</th>
+                  <th className="pb-2 font-bold text-right">Clicked</th>
+                  <th className="pb-2 font-bold text-right">Submitted</th>
+                  <th className="pb-2 font-bold text-right pl-6">Conv.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(data.funnel_by_program || []).map((p) => (
+                  <tr key={p.program} className="border-t border-white/10 text-white/80" data-testid={`fbp-row-${p.program}`}>
+                    <td className="py-2.5 capitalize font-semibold text-white">{PROGRAM_NAMES[p.program] || prettyPath(p.program)}</td>
+                    <td className="py-2.5 text-right">{p.viewed}</td>
+                    <td className="py-2.5 text-right">{p.clicked}</td>
+                    <td className="py-2.5 text-right">{p.submitted}</td>
+                    <td className="py-2.5 pl-6">
+                      <div className="flex items-center gap-2 justify-end">
+                        <div className="w-20 h-2 bg-white/10 hidden sm:block">
+                          <div className="h-full bg-lime" style={{ width: `${Math.min(p.conv_rate, 100)}%` }} />
+                        </div>
+                        <span className="text-lime font-semibold w-12 text-right">{p.conv_rate}%</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : <Muted>No program funnel data yet.</Muted>}
       </Card>
 
       {/* LOAD TIME + DEVICE */}

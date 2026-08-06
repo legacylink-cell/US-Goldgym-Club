@@ -66,9 +66,9 @@ function App() {
               <Route path="/baseball" element={<Baseball />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/dashboard" element={<Protected><ParentDashboard /></Protected>} />
-              <Route path="/admin" element={<Protected admin><AdminDashboard /></Protected>} />
             </Route>
+            <Route path="/dashboard" element={<Protected><ParentDashboard /></Protected>} />
+            <Route path="/admin" element={<Protected admin><AdminDashboard /></Protected>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Navigate to="/" replace />} />

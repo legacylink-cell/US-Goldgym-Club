@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "@/lib/api";
-import { Users, Ticket, MessageSquare, Inbox, Mail } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { BUSINESS } from "@/data/site";
+import { Users, Ticket, MessageSquare, Inbox, Mail, LogOut } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AnalyticsPanel from "@/components/admin/AnalyticsPanel";
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [stats, setStats] = useState({ leads: 0, contacts: 0, bookings: 0, parents: 0, subscribers: 0 });
   const [leads, setLeads] = useState([]);
   const [contacts, setContacts] = useState([]);
@@ -19,9 +24,25 @@ const AdminDashboard = () => {
     api.get("/admin/newsletter").then(({ data }) => setSubscribers(data));
   }, []);
 
+  const handleLogout = async () => {
+    await logout();
+    navigate("/login", { replace: true });
+  };
+
   return (
-    <div className="bg-ink min-h-screen pt-28 pb-20" data-testid="admin-dashboard">
-      <div className="max-w-[1300px] mx-auto px-5 md:px-8">
+    <div className="bg-ink min-h-screen" data-testid="admin-dashboard">
+      <header className="sticky top-0 z-40 bg-[#1E0838]/95 backdrop-blur border-b border-white/10">
+        <div className="max-w-[1300px] mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={BUSINESS.logo} alt="US Gold" className="h-10 w-10 rounded-full bg-white object-contain p-0.5 ring-2 ring-white/60" />
+            <span className="font-display uppercase text-white text-lg tracking-wide">Admin Panel<span className="text-lime">.</span></span>
+          </div>
+          <button onClick={handleLogout} data-testid="admin-logout" className="flex items-center gap-2 text-white/70 hover:text-lime text-sm uppercase font-bold tracking-wide transition-colors">
+            <LogOut className="w-4 h-4" /> Logout
+          </button>
+        </div>
+      </header>
+      <div className="max-w-[1300px] mx-auto px-5 md:px-8 py-10">
         <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold mb-2">Admin Control</div>
         <h1 className="font-display text-5xl uppercase text-white leading-none mb-10">Dashboard<span className="text-lime">.</span></h1>
 

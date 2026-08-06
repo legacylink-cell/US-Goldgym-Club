@@ -587,8 +587,46 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
         {"stage": "Submitted a Request", "sessions": _n(sub_sessions)},
     ]
 
+    # per-program funnel (session attribution)
+    cta_set = {s for s in cta_sessions if s}
+    sub_set = {s for s in sub_sessions if s}
+    prog_view_rows = await agg(db.analytics_events, [
+        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}}},
+        {"$group": {"_id": "$path", "sessions": {"$addToSet": "$session_id"}}},
+    ])
+    funnel_by_program = []
+    for r in prog_view_rows:
+        vs = {s for s in r["sessions"] if s}
+        viewed = len(vs)
+        clicked = len(vs & cta_set)
+        submitted = len(vs & sub_set)
+        funnel_by_program.append({
+            "program": r["_id"], "viewed": viewed, "clicked": clicked, "submitted": submitted,
+            "conv_rate": round(submitted / viewed * 100, 1) if viewed else 0,
+        })
+    funnel_by_program.sort(key=lambda x: x["viewed"], reverse=True)
+
+    # week-over-week drop alerts
+    wk1 = (now - timedelta(days=7)).isoformat()
+    wk2 = (now - timedelta(days=14)).isoformat()
+    subs_this = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk1}})
+    subs_prev = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk2, "$lt": wk1}})
+    leads_this = await db.leads.count_documents({"created_at": {"$gte": wk1}})
+    leads_prev = await db.leads.count_documents({"created_at": {"$gte": wk2, "$lt": wk1}})
+    alerts = []
+    if subs_prev >= 2 and subs_this <= subs_prev * 0.7:
+        drop = round((subs_prev - subs_this) / subs_prev * 100)
+        alerts.append({"level": "warning", "title": "Trial submissions dropping",
+                       "message": f"Trial/pricing form submissions fell {drop}% this week ({subs_this}) vs last week ({subs_prev}). Consider a promo or a follow-up push."})
+    if leads_prev >= 3 and leads_this <= leads_prev * 0.6:
+        drop = round((leads_prev - leads_this) / leads_prev * 100)
+        alerts.append({"level": "warning", "title": "Pricing requests dropping",
+                       "message": f"Pricing requests fell {drop}% this week ({leads_this}) vs last week ({leads_prev})."})
+
     return {
         "range_days": days,
+        "alerts": alerts,
+        "funnel_by_program": funnel_by_program,
         "totals": {
             "pageviews": pageviews,
             "unique_visitors": unique_visitors,

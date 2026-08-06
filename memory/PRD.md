@@ -23,6 +23,12 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Admin standalone shell + Funnel-by-Program + Drop alerts (2026-08-06)
+- **Standalone admin view**: moved `/admin` (and `/dashboard`) OUT of the public Layout — no announcement bar, navbar, or footer. Added a slim admin header (logo + "Admin Panel") with a **Logout** button (`admin-logout`) that clears the session and redirects to `/login`. Verified logout + auth guard end-to-end.
+- **Funnel by Program**: backend `funnel_by_program` (session attribution: viewed → clicked trial/pricing → submitted, with conv %). New "Trial Funnel by Program" table in Insights.
+- **Alert on Drop**: backend `alerts` compares this week vs last week; warns when trial/pricing submissions drop ≥30% (min 2 prior) or leads drop ≥40% (min 3 prior). Amber banner at top of Insights.
+- Verified via curl (funnel_by_program, alerts) + screenshots (standalone admin, logout redirect).
+
 ## Analytics — Trial Funnel, Period Comparison + Admin-only login (2026-08-06)
 - **Login rebranded to Admin**: `/login` now reads "Admin Login" / "Sign in to your website dashboard"; removed parent wording + "Create an account" link. No parent login is visible anywhere public (nav entry stays hidden via SHOW_PARENT_LOGIN=false; `/register` route unlinked). Admin reaches dashboard via `/login` → `/admin`.
 - **Trial Funnel**: new client `conversion` events on Contact + Quote form submit. Backend returns `funnel` = distinct sessions at: Viewed a Program → Clicked Book Trial/Request Pricing → Submitted a Request. Dashboard shows gradient funnel bars with continued/drop %.
