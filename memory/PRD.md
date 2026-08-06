@@ -23,6 +23,11 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Analytics admin-page exclusion + CSV export (2026-08-06)
+- **Reports exclude admin/auth pages**: added `not_admin_path` regex filter (`^/(admin|login|register|dashboard)`) to `pv_match` (drives pageviews, unique visitors, top pages, exit pages, location, peak, load, device) and the scroll-depth match. Also recomputed unique visitors from public pageviews only. Removes lingering historical `/login`, `/admin`, `/dashboard` rows from the dashboard.
+- **CSV export**: `GET /api/admin/export/{leads|contacts|subscribers}` (admin-only) streams a `text/csv` attachment. Admin dashboard has an "Export CSV" toolbar (Leads / Messages / Subscribers) that downloads via blob.
+- Verified: analytics paths now only public ('/', '/preschool', '/cheer'); CSV 200 + headers/rows via curl; buttons render.
+
 ## Admin light theme, exclusion, parent-tile removal, homepage spotlight (2026-08-06)
 - **Admin exclusion**: `setAnalyticsEnabled` gate in analytics.js; `AnalyticsTracker` disables ALL tracking (pageviews/scroll/clicks) when logged-in user is admin, and never tracks /admin|/login|/register|/dashboard. Waits for `checked` before first event.
 - **Admin light theme**: dashboard body now `bg-cream` (light lavender) with white cards + dark text; header kept dark (#1E0838). Rewrote AdminDashboard + AnalyticsPanel for light (charts axes/tooltips/grid, tables, funnel, heatmap all light-readable).

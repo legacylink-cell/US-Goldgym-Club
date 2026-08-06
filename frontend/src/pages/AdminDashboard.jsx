@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { BUSINESS } from "@/data/site";
-import { Ticket, MessageSquare, Inbox, Mail, LogOut } from "lucide-react";
+import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AnalyticsPanel from "@/components/admin/AnalyticsPanel";
 
@@ -31,6 +31,22 @@ const AdminDashboard = () => {
 
   const tab = "rounded-none text-ink/60 data-[state=active]:bg-lime data-[state=active]:text-ink uppercase font-bold text-xs";
 
+  const download = async (kind, filename) => {
+    try {
+      const res = await api.get(`/admin/export/${kind}`, { responseType: "blob" });
+      const url = URL.createObjectURL(res.data);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      /* noop */
+    }
+  };
+
   return (
     <div className="bg-cream min-h-screen" data-testid="admin-dashboard">
       <header className="sticky top-0 z-40 bg-[#1E0838] border-b border-white/10">
@@ -54,6 +70,13 @@ const AdminDashboard = () => {
           <StatBox icon={MessageSquare} label="Contact Messages" value={stats.contacts} />
           <StatBox icon={Ticket} label="Bookings" value={stats.bookings} />
           <StatBox icon={Mail} label="Email Subscribers" value={stats.subscribers} />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 mb-8">
+          <span className="text-ink/50 text-xs uppercase tracking-wide font-bold mr-1">Export CSV:</span>
+          <ExportBtn onClick={() => download("leads", "usgold-leads.csv")} testid="export-leads">Leads</ExportBtn>
+          <ExportBtn onClick={() => download("contacts", "usgold-messages.csv")} testid="export-contacts">Messages</ExportBtn>
+          <ExportBtn onClick={() => download("subscribers", "usgold-subscribers.csv")} testid="export-subscribers">Subscribers</ExportBtn>
         </div>
 
         <Tabs defaultValue="analytics">
@@ -111,6 +134,16 @@ const AdminDashboard = () => {
     </div>
   );
 };
+
+const ExportBtn = ({ onClick, children, testid }) => (
+  <button
+    onClick={onClick}
+    data-testid={testid}
+    className="flex items-center gap-2 border border-ink/15 bg-white hover:border-lime hover:text-lime text-ink/70 px-4 py-2 text-xs uppercase font-bold tracking-wide transition-colors"
+  >
+    <Download className="w-3.5 h-3.5" /> {children}
+  </button>
+);
 
 const StatBox = ({ icon: Icon, label, value }) => (
   <div className="border border-ink/10 bg-white shadow-sm p-6">

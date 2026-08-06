@@ -450,14 +450,15 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     days = max(1, min(days, 365))
     now = datetime.now(timezone.utc)
     cutoff = (now - timedelta(days=days)).isoformat()
-    pv_match = {"type": "pageview", "created_at": {"$gte": cutoff}}
+    not_admin_path = {"$not": re.compile(r"^/(admin|login|register|dashboard)")}
+    pv_match = {"type": "pageview", "created_at": {"$gte": cutoff}, "path": not_admin_path}
     click_match = {"type": "click", "created_at": {"$gte": cutoff}}
 
     async def agg(coll, pipeline):
         return await coll.aggregate(pipeline).to_list(2000)
 
     pageviews = await db.analytics_events.count_documents(pv_match)
-    sessions = await db.analytics_events.distinct("session_id", {"created_at": {"$gte": cutoff}})
+    sessions = await db.analytics_events.distinct("session_id", pv_match)
     unique_visitors = len([s for s in sessions if s])
 
     device_rows = await agg(db.analytics_events, [
@@ -518,7 +519,7 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
 
     # scroll depth per page (how far visitors read)
     scroll_rows = await agg(db.analytics_events, [
-        {"$match": {"type": "scroll", "created_at": {"$gte": cutoff}, "depth": {"$ne": None}}},
+        {"$match": {"type": "scroll", "created_at": {"$gte": cutoff}, "depth": {"$ne": None}, "path": not_admin_path}},
         {"$group": {"_id": "$path", "avg": {"$avg": "$depth"}, "samples": {"$sum": 1},
                     "bottom": {"$sum": {"$cond": [{"$gte": ["$depth", 90]}, 1, 0]}}}},
         {"$sort": {"samples": -1}}, {"$limit": 15},
@@ -688,6 +689,35 @@ async def top_program():
                 "reason": reason, "views": best["viewed"], "conv_rate": round(best["conv"] * 100, 1)}
     return {"program": "/competitive", "name": ANALYTICS_PROGRAM_NAMES["/competitive"],
             "reason": "default", "views": 0, "conv_rate": 0}
+
+
+@api_router.get("/admin/export/{kind}")
+async def export_csv(kind: str, admin: dict = Depends(require_admin)):
+    import csv
+    import io
+
+    configs = {
+        "leads": (db.leads, ["created_at", "name", "email", "phone", "program", "child_name", "child_age", "frequency", "message"]),
+        "contacts": (db.contacts, ["created_at", "name", "email", "phone", "topic", "message"]),
+        "subscribers": (db.newsletter_subscribers, ["created_at", "email", "name"]),
+    }
+    if kind not in configs:
+        raise HTTPException(status_code=404, detail="Unknown export type")
+    coll, fields = configs[kind]
+    docs = await coll.find().sort("created_at", -1).to_list(10000)
+
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow([f.replace("_", " ").title() for f in fields])
+    for d in docs:
+        writer.writerow([str(d.get(f, "") or "") for f in fields])
+
+    filename = f"usgold-{kind}-{datetime.now(timezone.utc).strftime('%Y%m%d')}.csv"
+    return Response(
+        content=buf.getvalue(),
+        media_type="text/csv",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
 
 
 # ---------------- Seed ----------------
