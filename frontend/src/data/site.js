@@ -1,10 +1,10 @@
 export const IMG = {
-  heroVault: "https://images.unsplash.com/photo-1583155778358-9da4eb5e0c1d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1920",
-  handstand: "https://images.unsplash.com/photo-1747336406309-79970f9066b1?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  beamHandstand: "https://images.unsplash.com/photo-1747336406564-717968046260?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  floorJump: "https://images.unsplash.com/photo-1505619730259-b1288d154955?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  preschoolGroup: "https://images.unsplash.com/photo-1655842556539-db2d2099ded1?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  preschoolBeam: "https://images.unsplash.com/photo-1655842556432-ece48a4f2c1a?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
+  heroVault: "/assets/floor-teen.jpg",
+  handstand: "/assets/bars.jpg",
+  beamHandstand: "/assets/beam.jpg",
+  floorJump: "/assets/floor-kid.jpg",
+  preschoolGroup: "/assets/team-huddle.jpg",
+  preschoolBeam: "/assets/vault-kid.jpg",
   preschoolMat: "https://images.unsplash.com/photo-1655842556563-2c28adb3fcc5?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   preschoolPlay: "https://images.unsplash.com/photo-1655842556550-6809c404ce9c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   cheerPose: "https://images.unsplash.com/photo-1639510478219-459967c2be92?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
@@ -14,7 +14,7 @@ export const IMG = {
   birthday: "https://images.unsplash.com/photo-1761257517671-2c81b35c22a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   facilityEquip: "https://images.unsplash.com/photo-1621046590998-78ecf71d58a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   facilityFloor: "https://images.unsplash.com/photo-1632758243488-7e6f9173cfa1?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  coach: "https://images.unsplash.com/photo-1655842556556-f7ab19796f25?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
+  coach: "/assets/coach.jpg",
   baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
 };
 

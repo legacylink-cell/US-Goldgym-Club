@@ -23,6 +23,11 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Real photos + mobile call CTA (2026-08-06)
+- Replaced 7 stock placeholder images in `IMG` (site.js) with the owner's real optimized gym photos (public/assets, EXIF-rotated, resized to 1600px / 130-390KB): heroVault→floor-teen, beamHandstand→beam, floorJump→floor-kid, preschoolBeam→vault-kid, handstand→bars, preschoolGroup→team-huddle, coach→coach. No duplicates. Chose only the pro-quality, correctly-oriented shots; skipped sideways/casual phone snaps.
+- Still placeholders (no fitting real photo yet): cheer*, birthday, facility*, baseball, preschoolMat, preschoolPlay.
+- Mobile-first: added `MobileCallBar` (always-on sticky "Call Us — phone" bar, `md:hidden` fixed bottom) in Layout; added `pb-16 md:pb-0` to main so content clears it.
+
 ## Admin Reset Data (2026-08-06)
 - `POST /api/admin/reset-data` (admin-only) wipes analytics_events, geo_cache, leads, contacts, newsletter_subscribers, bookings, client_errors, and all non-admin users. Preserves admin accounts + calendar events. Returns deleted counts.
 - Admin dashboard: "Reset All Data" danger button (rose) with an AlertDialog confirm ("Yes, delete everything"). Refetches stats after reset.
