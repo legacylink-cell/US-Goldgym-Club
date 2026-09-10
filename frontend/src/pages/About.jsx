@@ -49,14 +49,13 @@ const About = () => (
         <SectionHeading light overline="Meet the team" title="Certified & obsessed with your kid's progress" className="mb-12 max-w-3xl" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {STAFF.map((s, i) => (
-            <Reveal key={s.name} delay={i * 0.08}>
+            <Reveal key={s.role} delay={i * 0.08}>
               <div className="bg-white border-2 border-ink hard-shadow overflow-hidden group">
                 <div className="h-56 overflow-hidden">
-                  <img src={IMG[s.img]} alt={s.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img src={IMG[s.img]} alt={s.role} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div className="p-5">
-                  <div className="font-display text-2xl uppercase">{s.name}</div>
-                  <div className="text-ink/60 text-sm mb-3">{s.role}</div>
+                  <div className="font-display text-xl uppercase leading-tight mb-3">{s.role}</div>
                   <div className="flex flex-wrap gap-2">
                     {s.certs.map((c) => (
                       <span key={c} className="inline-flex items-center gap-1 bg-ink text-lime text-[10px] uppercase tracking-wide font-bold px-2 py-1">
