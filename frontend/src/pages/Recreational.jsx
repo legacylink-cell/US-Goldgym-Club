@@ -51,7 +51,7 @@ const Recreational = () => (
               </div>
             </div>
             <div className="h-64 md:h-auto relative">
-              <img src={IMG.handstand} alt="Boys gymnastics" className="absolute inset-0 w-full h-full object-cover" />
+              <img loading="lazy" decoding="async" src={IMG.handstand} alt="Boys gymnastics" className="absolute inset-0 w-full h-full object-cover" />
             </div>
           </div>
         </Reveal>

@@ -22,7 +22,7 @@ const Cheer = () => (
             <Reveal key={track.name} delay={i * 0.1}>
               <div className="relative overflow-hidden border border-white/15 group h-full flex flex-col" data-testid={`cheer-track-${i}`}>
                 <div className="h-64 overflow-hidden relative">
-                  <img src={IMG[track.img]} alt={track.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <img loading="lazy" decoding="async" src={IMG[track.img]} alt={track.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" />
                   <div className="absolute bottom-4 left-5">
                     <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold">{track.tag}</div>

@@ -32,7 +32,7 @@ const Login = () => {
   return (
     <div className="min-h-screen grid lg:grid-cols-2 bg-ink" data-testid="login-page">
       <div className="relative hidden lg:block">
-        <img src={IMG.beamHandstand} alt="Gymnast" className="absolute inset-0 w-full h-full object-cover" />
+        <img loading="lazy" decoding="async" src={IMG.beamHandstand} alt="Gymnast" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
         <div className="absolute bottom-10 left-10">
           <div className="font-display text-5xl text-white uppercase leading-none">US<span className="text-lime">Gold</span></div>

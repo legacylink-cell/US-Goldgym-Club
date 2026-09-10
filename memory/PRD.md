@@ -23,6 +23,14 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Performance optimizations (2026-08-06)
+- Fonts: removed render-blocking `@import` from index.css; moved to async `<link rel=preload as=style onload=swap>` in index.html; dropped unused **Archivo** family and trimmed Inter weights (400/600/700/800). Anton + Inter only.
+- LCP: hero `<img>` in PageHero.jsx + Home.jsx now `fetchPriority="high" decoding="async"` (camelCase for React 19).
+- Lazy-loading: all non-hero `<img>` across pages got `loading="lazy" decoding="async"` (Home spotlight/tiles/coach/IG + all subpages).
+- JSON-LD `url` updated to https://www.usgoldgymclub.com.
+- Verified: testing_agent iteration_12 = 100% frontend pass, 0 broken images (62 total, 14 lazy on home), Anton/Inter apply, contact submits, nav works, no regressions. Note: 401s from platform PostHog are pre-existing/not app-functional.
+- NOTE: run PageSpeed again AFTER Re-publish (PSI tests the live domain).
+
 ## Image remap fix + Roanoke wording (2026-08-06)
 - Copy had shuffled two assets: `bars.jpg` actually holds the coach+kids photo, `floor-teen.jpg` holds teen-bars. Remapped IMG keys: `handstand`→floor-teen.jpg (teen bars), `coach`→bars.jpg (real coach photo). College Recruits alumni + Careers/About now show correct older-athlete/coach imagery.
 - Replaced all "DFW" copy with "Roanoke & surrounding towns" (Home paragraph, About paragraph, Footer location line).

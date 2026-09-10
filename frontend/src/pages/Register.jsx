@@ -67,7 +67,7 @@ const Register = () => {
         </div>
       </div>
       <div className="relative hidden lg:block order-1 lg:order-2">
-        <img src={IMG.cheerJump} alt="Cheer" className="absolute inset-0 w-full h-full object-cover" />
+        <img loading="lazy" decoding="async" src={IMG.cheerJump} alt="Cheer" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
       </div>
     </div>

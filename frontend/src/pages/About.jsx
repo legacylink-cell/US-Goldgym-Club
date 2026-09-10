@@ -34,10 +34,10 @@ const About = () => (
         </Reveal>
         <Reveal delay={0.1}>
           <div className="grid grid-cols-2 gap-4">
-            <img src={IMG.handstand} alt="Athlete" className="w-full h-72 object-cover" />
-            <img src={IMG.preschoolBeam} alt="Preschool" className="w-full h-72 object-cover mt-8" />
-            <img src={IMG.facilityEquip} alt="Facility" className="w-full h-72 object-cover -mt-4" />
-            <img src={IMG.cheerPose} alt="Cheer" className="w-full h-72 object-cover mt-4" />
+            <img loading="lazy" decoding="async" src={IMG.handstand} alt="Athlete" className="w-full h-72 object-cover" />
+            <img loading="lazy" decoding="async" src={IMG.preschoolBeam} alt="Preschool" className="w-full h-72 object-cover mt-8" />
+            <img loading="lazy" decoding="async" src={IMG.facilityEquip} alt="Facility" className="w-full h-72 object-cover -mt-4" />
+            <img loading="lazy" decoding="async" src={IMG.cheerPose} alt="Cheer" className="w-full h-72 object-cover mt-4" />
           </div>
         </Reveal>
       </div>
@@ -52,7 +52,7 @@ const About = () => (
             <Reveal key={s.role} delay={i * 0.08}>
               <div className="bg-white border-2 border-ink hard-shadow overflow-hidden group">
                 <div className="h-56 overflow-hidden">
-                  <img src={IMG[s.img]} alt={s.role} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img loading="lazy" decoding="async" src={IMG[s.img]} alt={s.role} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 </div>
                 <div className="p-5">
                   <div className="font-display text-xl uppercase leading-tight mb-3">{s.role}</div>

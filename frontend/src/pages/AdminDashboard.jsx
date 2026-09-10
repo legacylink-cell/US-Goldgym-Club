@@ -71,7 +71,7 @@ const AdminDashboard = () => {
       <header className="sticky top-0 z-40 bg-[#1E0838] border-b border-white/10">
         <div className="max-w-[1300px] mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={BUSINESS.logo} alt="US Gold" className="h-10 w-10 rounded-full bg-white object-contain p-0.5 ring-2 ring-white/60" />
+            <img loading="lazy" decoding="async" src={BUSINESS.logo} alt="US Gold" className="h-10 w-10 rounded-full bg-white object-contain p-0.5 ring-2 ring-white/60" />
             <span className="font-display uppercase text-white text-lg tracking-wide">Admin Panel<span className="text-lime">.</span></span>
           </div>
           <button onClick={handleLogout} data-testid="admin-logout" className="flex items-center gap-2 text-white/70 hover:text-lime text-sm uppercase font-bold tracking-wide transition-colors">

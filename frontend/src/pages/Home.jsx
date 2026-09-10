@@ -46,7 +46,7 @@ const ProgramSpotlight = () => {
             </div>
           </div>
           <div className="relative min-h-[220px] hidden md:block">
-            <img src={img} alt={data.name} className="absolute inset-0 w-full h-full object-cover" />
+            <img src={img} alt={data.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/30 to-transparent" />
           </div>
         </div>
@@ -113,7 +113,7 @@ const Home = () => {
       {/* HERO */}
       <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
         <motion.div style={{ y, scale }} className="absolute inset-0">
-          <img src={IMG.heroVault} alt="Gymnast vaulting" className="w-full h-full object-cover" />
+          <img src={IMG.heroVault} alt="Gymnast vaulting" className="w-full h-full object-cover" fetchPriority="high" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-black/40" />
         </motion.div>
@@ -188,7 +188,7 @@ const Home = () => {
             {PROGRAM_TILES.map((t, i) => (
               <Reveal key={t.title} delay={i * 0.08} className={`${t.span} col-span-1`}>
                 <Link to={t.to} className="group relative block h-72 md:h-96 overflow-hidden" data-testid={`program-tile-${t.to}`}>
-                  <img src={IMG[t.img]} alt={t.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <img src={IMG[t.img]} alt={t.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" decoding="async" />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-lime transition-colors duration-300" />
                   <div className="absolute bottom-0 left-0 p-7">
@@ -210,7 +210,7 @@ const Home = () => {
         <div className="max-w-[1400px] mx-auto px-5 md:px-8 grid lg:grid-cols-2 gap-14 items-center">
           <Reveal>
             <div className="relative">
-              <img src={IMG.coach} alt="Coaching" className="w-full h-[480px] object-cover hard-shadow" />
+              <img src={IMG.coach} alt="Coaching" className="w-full h-[480px] object-cover hard-shadow" loading="lazy" decoding="async" />
               <div className="absolute -bottom-6 -right-4 bg-coral text-white p-6 hard-shadow max-w-[220px]">
                 <div className="font-display text-4xl leading-none">USAG</div>
                 <div className="text-xs uppercase tracking-wide mt-1">& USASF certified coaching staff</div>
@@ -280,7 +280,7 @@ const Home = () => {
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
             {[IMG.handstand, IMG.cheerJump, IMG.floorJump, IMG.beamHandstand, IMG.preschoolBeam, IMG.cheerSquad].map((src, i) => (
               <a key={i} href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="relative aspect-square overflow-hidden group">
-                <img src={src} alt="Instagram" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                <img src={src} alt="Instagram" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-lime/0 group-hover:bg-lime/20 transition-colors" />
               </a>
             ))}

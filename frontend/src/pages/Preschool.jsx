@@ -27,7 +27,7 @@ const Preschool = () => (
             <Reveal key={tier.name} delay={i * 0.06}>
               <div className="border border-white/15 bg-white/[0.03] overflow-hidden h-full group hover:border-lime transition-colors" data-testid={`preschool-tier-${tier.name}`}>
                 <div className="h-44 overflow-hidden relative">
-                  <img src={IMG[tier.img]} alt={tier.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img loading="lazy" decoding="async" src={IMG[tier.img]} alt={tier.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute top-3 left-3 bg-lime text-ink text-[10px] uppercase tracking-wide font-bold px-2 py-1 flex items-center gap-1">
                     <Clock className="w-3 h-3" /> {tier.length}
                   </div>

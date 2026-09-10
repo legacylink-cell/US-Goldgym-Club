@@ -21,7 +21,7 @@ const CollegeRecruits = () => (
             <Reveal key={r.name} delay={i * 0.06}>
               <div className="border border-white/15 overflow-hidden group hover:border-lime transition-colors" data-testid={`recruit-card-${i}`}>
                 <div className="h-64 overflow-hidden relative">
-                  <img src={IMG[r.img]} alt={r.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <img loading="lazy" decoding="async" src={IMG[r.img]} alt={r.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" />
                   <div className="absolute top-3 right-3 bg-coral text-white text-[10px] uppercase tracking-wide font-bold px-2 py-1 flex items-center gap-1">
                     <Trophy className="w-3 h-3" /> {r.level}
@@ -52,7 +52,7 @@ const CollegeRecruits = () => (
                 <MagneticButton as="link" to="/contact" variant="lime" data-testid="recruits-contact">Talk to a Coach</MagneticButton>
               </div>
             </div>
-            <img src={IMG.heroVault} alt="Athlete" className="w-full h-80 object-cover" />
+            <img loading="lazy" decoding="async" src={IMG.heroVault} alt="Athlete" className="w-full h-80 object-cover" />
           </div>
         </Reveal>
       </div>

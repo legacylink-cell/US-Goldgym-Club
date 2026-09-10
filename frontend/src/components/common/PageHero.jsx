@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export const PageHero = ({ overline, title, subtitle, image, height = "min-h-[55vh]" }) => (
   <section className={`relative ${height} flex items-end overflow-hidden`}>
     <div className="absolute inset-0">
-      <img src={image} alt={title} className="w-full h-full object-cover" />
+      <img src={image} alt={title} className="w-full h-full object-cover" fetchPriority="high" decoding="async" />
       <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-black/40" />
     </div>
     <div className="relative max-w-[1400px] mx-auto px-5 md:px-8 pb-16 pt-32 w-full">
