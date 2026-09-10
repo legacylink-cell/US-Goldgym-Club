@@ -23,6 +23,10 @@ Emergent badge.
   AuthContext (cookie session), Layout (Navbar/Footer/grain), reusable MagneticButton/StatCounter/
   Reveal/PageHero, QuoteRequestDialog, BookingDialog (embedded digital waiver).
 
+## Image remap fix + Roanoke wording (2026-08-06)
+- Copy had shuffled two assets: `bars.jpg` actually holds the coach+kids photo, `floor-teen.jpg` holds teen-bars. Remapped IMG keys: `handstand`→floor-teen.jpg (teen bars), `coach`→bars.jpg (real coach photo). College Recruits alumni + Careers/About now show correct older-athlete/coach imagery.
+- Replaced all "DFW" copy with "Roanoke & surrounding towns" (Home paragraph, About paragraph, Footer location line).
+
 ## Real photos + mobile call CTA (2026-08-06)
 - Replaced 7 stock placeholder images in `IMG` (site.js) with the owner's real optimized gym photos (public/assets, EXIF-rotated, resized to 1600px / 130-390KB): heroVault→floor-teen, beamHandstand→beam, floorJump→floor-kid, preschoolBeam→vault-kid, handstand→bars, preschoolGroup→team-huddle, coach→coach. No duplicates. Chose only the pro-quality, correctly-oriented shots; skipped sideways/casual phone snaps.
 - Still placeholders (no fitting real photo yet): cheer*, birthday, facility*, baseball, preschoolMat, preschoolPlay.

@@ -84,7 +84,7 @@ const About = () => (
               Families come from every surrounding town
             </h3>
             <p className="mt-5 text-white/70 text-lg leading-relaxed">
-              From Roanoke to Keller, Trophy Club, Fort Worth, and beyond — parents trust us with their kids
+              From Roanoke and every surrounding town — parents trust us with their kids
               because we treat every athlete like our own. When your child walks in, they're home.
             </p>
           </div>

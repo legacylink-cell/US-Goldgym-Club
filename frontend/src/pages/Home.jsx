@@ -221,7 +221,8 @@ const Home = () => {
             <SectionHeading light overline="Why we're different" title={<>Coaching that<br />builds humans</>} />
             <p className="mt-6 text-ink/70 text-lg leading-relaxed">
               We measure success in confidence, not just medals. Small class sizes, certified coaches,
-              and a culture where every kid is celebrated. Families drive from across DFW because what
+              and a culture where every kid is celebrated. Families drive from Roanoke and the
+              surrounding towns because what
               happens here sticks for life.
             </p>
             <div className="mt-8 grid sm:grid-cols-2 gap-4">

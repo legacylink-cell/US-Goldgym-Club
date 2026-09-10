@@ -52,7 +52,7 @@ const CollegeRecruits = () => (
                 <MagneticButton as="link" to="/contact" variant="lime" data-testid="recruits-contact">Talk to a Coach</MagneticButton>
               </div>
             </div>
-            <img src={IMG.floorJump} alt="Athlete" className="w-full h-80 object-cover" />
+            <img src={IMG.heroVault} alt="Athlete" className="w-full h-80 object-cover" />
           </div>
         </Reveal>
       </div>

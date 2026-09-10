@@ -1,6 +1,6 @@
 export const IMG = {
   heroVault: "/assets/floor-teen.jpg",
-  handstand: "/assets/bars.jpg",
+  handstand: "/assets/floor-teen.jpg",
   beamHandstand: "/assets/beam.jpg",
   floorJump: "/assets/floor-kid.jpg",
   preschoolGroup: "/assets/team-huddle.jpg",
@@ -14,7 +14,7 @@ export const IMG = {
   birthday: "https://images.unsplash.com/photo-1761257517671-2c81b35c22a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   facilityEquip: "https://images.unsplash.com/photo-1621046590998-78ecf71d58a8?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
   facilityFloor: "https://images.unsplash.com/photo-1632758243488-7e6f9173cfa1?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
-  coach: "/assets/coach.jpg",
+  coach: "/assets/bars.jpg",
   baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=jpg&q=85&w=1600",
 };
 
@@ -192,9 +192,9 @@ export const PARTY_INCLUDED = [
 export const RECRUITS = [
   { name: "Cole Davison", level: "USAG Level 10", college: "University of Oklahoma", img: "handstand" },
   { name: "Maya Fields", level: "USAG Level 9", college: "University of Denver", img: "beamHandstand" },
-  { name: "Ella Ramirez", level: "USAG Level 10", college: "UCLA", img: "floorJump" },
+  { name: "Ella Ramirez", level: "USAG Level 10", college: "UCLA", img: "heroVault" },
   { name: "Jordan Pak", level: "USAG Level 9", college: "Stanford University", img: "cheerPose" },
-  { name: "Sophie Nguyen", level: "USAG Level 10", college: "University of Georgia", img: "preschoolGroup" },
+  { name: "Sophie Nguyen", level: "USAG Level 10", college: "University of Georgia", img: "beamHandstand" },
   { name: "Grace Miller", level: "USAG Level 9", college: "Boise State", img: "cheerStage" },
 ];
 
