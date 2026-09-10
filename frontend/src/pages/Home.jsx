@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, Phone, MapPin, Star, Instagram, Flame } from "lucide-react";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { StatCounter } from "@/components/common/StatCounter";
@@ -78,6 +78,17 @@ const MobileTestimonials = ({ items }) => {
     const el = ref.current;
     if (el) el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
   };
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((a) => {
+        const next = (a + 1) % items.length;
+        const el = ref.current;
+        if (el) el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
+        return next;
+      });
+    }, 4500);
+    return () => clearInterval(id);
+  }, [items.length]);
   return (
     <div className="md:hidden">
       <div ref={ref} onScroll={onScroll} className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-5 px-5 pb-1" data-testid="testimonials-mobile">
@@ -95,6 +106,49 @@ const MobileTestimonials = ({ items }) => {
             aria-label={`Go to review ${i + 1}`}
             className={`h-2 rounded-full transition-all duration-300 ${active === i ? "w-6 bg-lime" : "w-2 bg-white/25"}`}
             data-testid={`testimonial-dot-${i}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const FadeTestimonials = ({ items, perPage = 4, interval = 5000 }) => {
+  const pages = [];
+  for (let i = 0; i < items.length; i += perPage) pages.push(items.slice(i, i + perPage));
+  const [page, setPage] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused || pages.length <= 1) return;
+    const id = setInterval(() => setPage((p) => (p + 1) % pages.length), interval);
+    return () => clearInterval(id);
+  }, [paused, pages.length, interval]);
+  return (
+    <div className="hidden md:block" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} data-testid="testimonials-desktop">
+      <div className="relative min-h-[290px]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={page}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.55, ease: "easeInOut" }}
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+          >
+            {pages[page].map((t) => (
+              <TestimonialCard key={t.name} t={t} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+      <div className="flex justify-center gap-2 mt-8">
+        {pages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i)}
+            aria-label={`Show reviews set ${i + 1}`}
+            className={`h-2 rounded-full transition-all duration-300 ${page === i ? "w-8 bg-lime" : "w-2 bg-white/25 hover:bg-white/50"}`}
+            data-testid={`testimonial-page-dot-${i}`}
           />
         ))}
       </div>
@@ -251,19 +305,7 @@ const Home = () => {
             </a>
           </div>
           <MobileTestimonials items={TESTIMONIALS} />
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              <Reveal key={t.name} delay={(i % 4) * 0.08}>
-                <motion.div
-                  whileHover={{ y: -8 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                  className="h-full"
-                >
-                  <TestimonialCard t={t} />
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
+          <FadeTestimonials items={TESTIMONIALS} />
         </div>
       </section>
 
