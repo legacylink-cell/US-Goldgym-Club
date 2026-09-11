@@ -116,7 +116,6 @@ Emergent badge.
 Marketing site + custom booking + waivers + parent/admin auth dashboards, mobile-first, local SEO.
 
 ## Backlog / Remaining
-- P1: Silence expected 401 from /auth/me on public pages (console noise only).
 - P2: Instagram feed live embed (currently curated image grid linking to IG).
 - P2: Brute-force login lockout, booking date validation, admin pagination.
 - P2: Payment/deposit collection (Stripe) for party $100 deposits & event fees.
@@ -124,3 +123,24 @@ Marketing site + custom booking + waivers + parent/admin auth dashboards, mobile
 
 ## Next Tasks
 Gather feedback on content accuracy, then consider Stripe deposits + email notifications (Resend).
+
+## Changelog — 2026-06 (Lighthouse / SEO optimization pass)
+- SEO 92 -> 100: added public/robots.txt (with sitemap ref, admin/auth disallowed), public/sitemap.xml
+  (14 routes), public/llms.txt (agentic browsing), and a dynamic self-referential canonical link set
+  per route in App.js ScrollToTop.
+- Accessibility 88 -> 100 (desktop + mobile): fixed all colour-contrast failures by adding tailwind
+  colour `pinklt: #FF7AB5` for small pink text on dark backgrounds (Footer + Home), raising
+  text-white/40 -> /60, text-ink/70 -> text-ink on pink stat band; added aria-labels to footer social
+  icon links; testimonial carousel dots now sit inside 32-36px tap-target buttons.
+- Performance (desktop 61 -> ~94 local Lighthouse): re-encoded all gym photos to WebP at sane sizes
+  (bars 308KB->84KB, floor-teen 156KB->36KB, coach 391KB->121KB, team-huddle 270KB->59KB etc.),
+  logo now local /assets/logo-240.webp (was 919x919 JPEG from CDN), Unsplash URLs now fm=webp&q=70&w=900,
+  hero image preloaded (fetchpriority high), preconnect to images.unsplash.com,
+  all routes except Home converted to React.lazy + Suspense (main bundle 350KB -> 217KB gzip, recharts
+  admin code split into its own chunk).
+- Best Practices 96 -> 100: AuthContext no longer calls /api/auth/me for anonymous visitors
+  (localStorage `usg_session` flag set on login/register, cleared on logout) -> no more 401 console error.
+- Verified by testing agent: /app/test_reports/iteration_13.json — 100% frontend pass (13 lazy routes,
+  carousels, admin login/reload/logout, contact form, static SEO files).
+- Note: remaining Lighthouse deductions are platform-side (PostHog/emergent scripts ~450ms TBT,
+  5-minute asset cache TTL) and not controllable from app code.

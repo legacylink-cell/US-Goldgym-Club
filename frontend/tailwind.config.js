@@ -21,6 +21,7 @@ module.exports = {
         ink: '#2C0A4E',
         cream: '#F4EEFB',
         lime: '#FF1D8E',
+        pinklt: '#FF7AB5',
         coral: '#C01C6E',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

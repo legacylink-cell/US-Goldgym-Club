@@ -8,10 +8,16 @@ export const AuthProvider = ({ children }) => {
   const [checked, setChecked] = useState(false);
 
   const refresh = useCallback(async () => {
+    if (!localStorage.getItem("usg_session")) {
+      setUser(false);
+      setChecked(true);
+      return;
+    }
     try {
       const { data } = await api.get("/auth/me");
       setUser(data);
     } catch {
+      localStorage.removeItem("usg_session");
       setUser(false);
     } finally {
       setChecked(true);
@@ -24,12 +30,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const { data } = await api.post("/auth/login", { email, password });
+    localStorage.setItem("usg_session", "1");
     setUser(data);
     return data;
   };
 
   const register = async (payload) => {
     const { data } = await api.post("/auth/register", payload);
+    localStorage.setItem("usg_session", "1");
     setUser(data);
     return data;
   };
@@ -40,6 +48,7 @@ export const AuthProvider = ({ children }) => {
     } catch {
       /* noop */
     }
+    localStorage.removeItem("usg_session");
     setUser(false);
   };
 

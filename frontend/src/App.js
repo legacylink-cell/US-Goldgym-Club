@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -7,28 +7,35 @@ import Layout from "@/components/layout/Layout";
 import AnalyticsTracker from "@/components/common/AnalyticsTracker";
 
 import Home from "@/pages/Home";
-import About from "@/pages/About";
-import Preschool from "@/pages/Preschool";
-import Recreational from "@/pages/Recreational";
-import Competitive from "@/pages/Competitive";
-import Cheer from "@/pages/Cheer";
-import Camps from "@/pages/Camps";
-import SpecialEvents from "@/pages/SpecialEvents";
-import CalendarPage from "@/pages/CalendarPage";
-import BirthdayParties from "@/pages/BirthdayParties";
-import CollegeRecruits from "@/pages/CollegeRecruits";
-import Contact from "@/pages/Contact";
-import Careers from "@/pages/Careers";
-import Baseball from "@/pages/Baseball";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import ParentDashboard from "@/pages/ParentDashboard";
-import AdminDashboard from "@/pages/AdminDashboard";
+const About = lazy(() => import("@/pages/About"));
+const Preschool = lazy(() => import("@/pages/Preschool"));
+const Recreational = lazy(() => import("@/pages/Recreational"));
+const Competitive = lazy(() => import("@/pages/Competitive"));
+const Cheer = lazy(() => import("@/pages/Cheer"));
+const Camps = lazy(() => import("@/pages/Camps"));
+const SpecialEvents = lazy(() => import("@/pages/SpecialEvents"));
+const CalendarPage = lazy(() => import("@/pages/CalendarPage"));
+const BirthdayParties = lazy(() => import("@/pages/BirthdayParties"));
+const CollegeRecruits = lazy(() => import("@/pages/CollegeRecruits"));
+const Contact = lazy(() => import("@/pages/Contact"));
+const Careers = lazy(() => import("@/pages/Careers"));
+const Baseball = lazy(() => import("@/pages/Baseball"));
+const Login = lazy(() => import("@/pages/Login"));
+const Register = lazy(() => import("@/pages/Register"));
+const ParentDashboard = lazy(() => import("@/pages/ParentDashboard"));
+const AdminDashboard = lazy(() => import("@/pages/AdminDashboard"));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
+    let link = document.querySelector('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "canonical";
+      document.head.appendChild(link);
+    }
+    link.href = `https://www.usgoldgymclub.com${pathname === "/" ? "/" : pathname}`;
   }, [pathname]);
   return null;
 };
@@ -50,6 +57,7 @@ function App() {
           <ScrollToTop />
           <AnalyticsTracker />
           <Toaster position="top-right" theme="dark" richColors />
+          <Suspense fallback={<div className="min-h-screen bg-ink" />}>
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
@@ -73,6 +81,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          </Suspense>
         </BrowserRouter>
       </AuthProvider>
     </div>

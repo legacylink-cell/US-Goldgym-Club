@@ -61,7 +61,7 @@ const TestimonialCard = ({ t }) => (
       {[...Array(5)].map((_, k) => <Star key={k} className="w-4 h-4 fill-lime text-lime" />)}
     </div>
     <p className="text-white/80 leading-relaxed mb-6">"{t.quote}"</p>
-    <div className="font-display uppercase text-lime text-lg">{t.name}</div>
+    <div className="font-display uppercase text-pinklt text-lg">{t.name}</div>
     <div className="text-white/50 text-xs uppercase tracking-wide">{t.role}</div>
   </div>
 );
@@ -98,15 +98,17 @@ const MobileTestimonials = ({ items }) => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center gap-2 mt-6">
+      <div className="flex justify-center mt-4">
         {items.map((_, i) => (
           <button
             key={i}
             onClick={() => go(i)}
             aria-label={`Go to review ${i + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${active === i ? "w-6 bg-lime" : "w-2 bg-white/25"}`}
+            className="w-8 h-8 flex items-center justify-center"
             data-testid={`testimonial-dot-${i}`}
-          />
+          >
+            <span className={`block h-2 rounded-full transition-all duration-300 ${active === i ? "w-6 bg-lime" : "w-2 bg-white/25"}`} />
+          </button>
         ))}
       </div>
     </div>
@@ -141,15 +143,17 @@ const FadeTestimonials = ({ items, perPage = 4, interval = 5000 }) => {
           </motion.div>
         </AnimatePresence>
       </div>
-      <div className="flex justify-center gap-2 mt-8">
+      <div className="flex justify-center mt-6">
         {pages.map((_, i) => (
           <button
             key={i}
             onClick={() => setPage(i)}
             aria-label={`Show reviews set ${i + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 ${page === i ? "w-8 bg-lime" : "w-2 bg-white/25 hover:bg-white/50"}`}
+            className="w-9 h-9 flex items-center justify-center group"
             data-testid={`testimonial-page-dot-${i}`}
-          />
+          >
+            <span className={`block h-2 rounded-full transition-all duration-300 ${page === i ? "w-8 bg-lime" : "w-2 bg-white/25 group-hover:bg-white/50"}`} />
+          </button>
         ))}
       </div>
     </div>
@@ -176,7 +180,7 @@ const Home = () => {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 border border-lime/40 bg-lime/10 px-4 py-2 mb-6">
             <span className="w-2 h-2 bg-lime rounded-full animate-pulse" />
-            <span className="text-lime text-xs uppercase tracking-[0.2em] font-bold">Now enrolling • Roanoke, TX</span>
+            <span className="text-pinklt text-xs uppercase tracking-[0.2em] font-bold">Now enrolling • Roanoke, TX</span>
           </motion.div>
 
           <motion.h1
@@ -221,7 +225,7 @@ const Home = () => {
       <section className="bg-lime py-16 md:py-20 diagonal-top -mt-8 relative z-10">
         <div className="max-w-[1400px] mx-auto px-5 md:px-8 grid grid-cols-2 lg:grid-cols-4 gap-10">
           {STATS.map((s) => (
-            <StatCounter key={s.label} {...s} numberClass="text-ink" labelClass="text-ink/70" />
+            <StatCounter key={s.label} {...s} numberClass="text-ink" labelClass="text-ink" />
           ))}
         </div>
       </section>
@@ -246,7 +250,7 @@ const Home = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
                   <div className="absolute inset-0 border-2 border-transparent group-hover:border-lime transition-colors duration-300" />
                   <div className="absolute bottom-0 left-0 p-7">
-                    <div className="text-lime text-xs uppercase tracking-[0.2em] font-bold mb-2">{t.tag}</div>
+                    <div className="text-pinklt text-xs uppercase tracking-[0.2em] font-bold mb-2">{t.tag}</div>
                     <div className="font-display text-4xl md:text-5xl uppercase text-white leading-none flex items-center gap-2">
                       {t.title}
                       <ArrowUpRight className="w-7 h-7 text-lime opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
@@ -273,7 +277,7 @@ const Home = () => {
           </Reveal>
           <Reveal delay={0.1}>
             <SectionHeading light overline="Why we're different" title={<>Coaching that<br />builds humans</>} />
-            <p className="mt-6 text-ink/70 text-lg leading-relaxed">
+            <p className="mt-6 text-ink/80 text-lg leading-relaxed">
               We measure success in confidence, not just medals. Small class sizes, certified coaches,
               and a culture where every kid is celebrated. Families drive from Roanoke and the
               surrounding towns because what
@@ -317,7 +321,7 @@ const Home = () => {
               <Instagram className="w-6 h-6 text-lime" />
               <span className="font-display text-2xl uppercase text-white">@usgoldgym</span>
             </div>
-            <a href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="text-lime text-sm uppercase tracking-wide font-bold hover:text-white" data-testid="ig-follow">Follow</a>
+            <a href={BUSINESS.instagram} target="_blank" rel="noreferrer" className="text-pinklt text-sm uppercase tracking-wide font-bold hover:text-white" data-testid="ig-follow">Follow</a>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
             {[IMG.handstand, IMG.cheerJump, IMG.floorJump, IMG.beamHandstand, IMG.preschoolBeam, IMG.cheerSquad].map((src, i) => (
