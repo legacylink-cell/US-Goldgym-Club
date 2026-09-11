@@ -101,7 +101,7 @@ export const Footer = () => (
         <span>Roanoke, TX • Serving Roanoke &amp; surrounding towns</span>
         <span>
           Designed by{" "}
-          <a href="https://mostudio.com" target="_blank" rel="noreferrer" className="text-lime hover:text-white transition-colors font-bold" data-testid="footer-credit">Mo Studio</a>
+          <a href="https://mozeid.com/" target="_blank" rel="noreferrer" className="text-lime hover:text-white transition-colors font-bold" data-testid="footer-credit">Mo Studio</a>
         </span>
       </div>
     </div>
