@@ -71,7 +71,7 @@ const AnalyticsPanel = () => {
     <div className="space-y-6" data-testid="analytics-panel">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-ink/50 text-sm max-w-xl">
-          First-party website insights — real visitor traffic only (your own admin browsing, search bots, and automated tests are excluded).
+          First-party website insights — real visitor traffic only (your own admin browsing, search bots, and automated tests are excluded). Every number below counts Texas visitors only; out-of-state and overseas traffic is filtered out.
         </p>
         <div className="flex gap-1 bg-ink/5 border border-ink/10 p-1" data-testid="analytics-range">
           {RANGES.map((r) => (
@@ -232,14 +232,14 @@ const AnalyticsPanel = () => {
 
       {/* LOCATION + PAGES + REFERRERS */}
       <div className="grid lg:grid-cols-3 gap-4">
-        <Card title="Visitors by City / State" testid="location-table">
+        <Card title="Visitors by City (Texas)" testid="location-table">
           <MiniTable
-            head={["Location", "Views"]}
+            head={["City", "Views"]}
             rows={(data.by_location || []).map((l) => [
-              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-lime" />{l.city}{l.state ? `, ${l.state}` : ""}</span>,
+              <span className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-lime" />{l.city}</span>,
               l.views,
             ])}
-            empty="No location data yet."
+            empty="No Texas location data yet."
           />
         </Card>
         <Card title="Top Pages" testid="pages-table">

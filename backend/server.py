@@ -114,6 +114,8 @@ BOT_RE = re.compile(
     re.I,
 )
 
+LOCAL_STATE = "Texas"
+
 ANALYTICS_PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"]
 
 ANALYTICS_PROGRAM_NAMES = {
@@ -424,6 +426,17 @@ async def list_events(category: Optional[str] = None):
 
 
 # ---------------- Analytics ----------------
+async def local_market_filter(since: str) -> dict:
+    """Drop sessions whose IP resolved outside Texas (unknown geo is kept)."""
+    out = await db.analytics_events.distinct(
+        "session_id",
+        {"type": "pageview", "created_at": {"$gte": since},
+         "state": {"$nin": ["", None, LOCAL_STATE]}},
+    )
+    out = [s for s in out if s]
+    return {"session_id": {"$nin": out}} if out else {}
+
+
 @api_router.post("/analytics/track")
 async def track_event(data: AnalyticsEventInput, request: Request):
     ua = request.headers.get("user-agent", "")
@@ -451,8 +464,15 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     now = datetime.now(timezone.utc)
     cutoff = (now - timedelta(days=days)).isoformat()
     not_admin_path = {"$not": re.compile(r"^/(admin|login|register|dashboard)")}
-    pv_match = {"type": "pageview", "created_at": {"$gte": cutoff}, "path": not_admin_path}
-    click_match = {"type": "click", "created_at": {"$gte": cutoff}}
+
+    # Local market only: this is a Roanoke, TX gym, so any session whose IP resolved
+    # to a state outside Texas is dropped from every KPI. Sessions with unknown geo
+    # (private IPs, failed lookups) are kept.
+    prev_start = (now - timedelta(days=days * 2)).isoformat()
+    local_only = await local_market_filter(prev_start)
+
+    pv_match = {"type": "pageview", "created_at": {"$gte": cutoff}, "path": not_admin_path, **local_only}
+    click_match = {"type": "click", "created_at": {"$gte": cutoff}, **local_only}
 
     async def agg(coll, pipeline):
         return await coll.aggregate(pipeline).to_list(2000)
@@ -489,7 +509,7 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     cta_clicks = [{"cta": r["_id"], "clicks": r["count"]} for r in cta_rows if r["_id"]]
 
     loc_rows = await agg(db.analytics_events, [
-        {"$match": {**pv_match, "city": {"$nin": ["", None]}}},
+        {"$match": {**pv_match, "city": {"$nin": ["", None]}, "state": LOCAL_STATE}},
         {"$group": {"_id": {"city": "$city", "state": "$state"}, "count": {"$sum": 1}}},
         {"$sort": {"count": -1}}, {"$limit": 25},
     ])
@@ -519,7 +539,7 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
 
     # scroll depth per page (how far visitors read)
     scroll_rows = await agg(db.analytics_events, [
-        {"$match": {"type": "scroll", "created_at": {"$gte": cutoff}, "depth": {"$ne": None}, "path": not_admin_path}},
+        {"$match": {"type": "scroll", "created_at": {"$gte": cutoff}, "depth": {"$ne": None}, "path": not_admin_path, **local_only}},
         {"$group": {"_id": "$path", "avg": {"$avg": "$depth"}, "samples": {"$sum": 1},
                     "bottom": {"$sum": {"$cond": [{"$gte": ["$depth", 90]}, 1, 0]}}}},
         {"$sort": {"samples": -1}}, {"$limit": 15},
@@ -566,10 +586,9 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     total_signups = await db.newsletter_subscribers.count_documents({"created_at": {"$gte": cutoff}})
 
     # previous period (for trend arrows)
-    prev_start = (now - timedelta(days=days * 2)).isoformat()
     prev_win = {"$gte": prev_start, "$lt": cutoff}
-    prev_pageviews = await db.analytics_events.count_documents({"type": "pageview", "created_at": prev_win})
-    prev_sessions = await db.analytics_events.distinct("session_id", {"created_at": prev_win})
+    prev_pageviews = await db.analytics_events.count_documents({"type": "pageview", "created_at": prev_win, **local_only})
+    prev_sessions = await db.analytics_events.distinct("session_id", {"created_at": prev_win, **local_only})
     prev_unique = len([s for s in prev_sessions if s])
     prev_leads = await db.leads.count_documents({"created_at": prev_win})
     prev_signups = await db.newsletter_subscribers.count_documents({"created_at": prev_win})
@@ -585,12 +604,13 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     def _n(lst):
         return len([x for x in lst if x])
     prog_sessions = await db.analytics_events.distinct(
-        "session_id", {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}})
+        "session_id", {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}, **local_only})
     cta_sessions = await db.analytics_events.distinct(
         "session_id", {"type": "click", "category": "cta",
-                       "label": {"$in": ["book_free_trial", "request_pricing"]}, "created_at": {"$gte": cutoff}})
+                       "label": {"$in": ["book_free_trial", "request_pricing"]}, "created_at": {"$gte": cutoff},
+                       **local_only})
     sub_sessions = await db.analytics_events.distinct(
-        "session_id", {"type": "conversion", "created_at": {"$gte": cutoff}})
+        "session_id", {"type": "conversion", "created_at": {"$gte": cutoff}, **local_only})
     funnel = [
         {"stage": "Viewed a Program", "sessions": _n(prog_sessions)},
         {"stage": "Clicked Trial / Pricing", "sessions": _n(cta_sessions)},
@@ -601,7 +621,7 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     cta_set = {s for s in cta_sessions if s}
     sub_set = {s for s in sub_sessions if s}
     prog_view_rows = await agg(db.analytics_events, [
-        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}}},
+        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}, **local_only}},
         {"$group": {"_id": "$path", "sessions": {"$addToSet": "$session_id"}}},
     ])
     funnel_by_program = []
@@ -619,8 +639,8 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
     # week-over-week drop alerts
     wk1 = (now - timedelta(days=7)).isoformat()
     wk2 = (now - timedelta(days=14)).isoformat()
-    subs_this = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk1}})
-    subs_prev = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk2, "$lt": wk1}})
+    subs_this = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk1}, **local_only})
+    subs_prev = await db.analytics_events.count_documents({"type": "conversion", "created_at": {"$gte": wk2, "$lt": wk1}, **local_only})
     leads_this = await db.leads.count_documents({"created_at": {"$gte": wk1}})
     leads_prev = await db.leads.count_documents({"created_at": {"$gte": wk2, "$lt": wk1}})
     alerts = []
@@ -664,11 +684,12 @@ async def get_analytics(days: int = 30, admin: dict = Depends(require_admin)):
 async def top_program():
     now = datetime.now(timezone.utc)
     cutoff = (now - timedelta(days=90)).isoformat()
+    local_only = await local_market_filter(cutoff)
     rows = await db.analytics_events.aggregate([
-        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}}},
+        {"$match": {"type": "pageview", "path": {"$in": ANALYTICS_PROGRAM_PATHS}, "created_at": {"$gte": cutoff}, **local_only}},
         {"$group": {"_id": "$path", "sessions": {"$addToSet": "$session_id"}}},
     ]).to_list(50)
-    sub_sessions = await db.analytics_events.distinct("session_id", {"type": "conversion", "created_at": {"$gte": cutoff}})
+    sub_sessions = await db.analytics_events.distinct("session_id", {"type": "conversion", "created_at": {"$gte": cutoff}, **local_only})
     sub_set = {s for s in sub_sessions if s}
     stats = []
     for r in rows:

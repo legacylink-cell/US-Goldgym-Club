@@ -144,3 +144,17 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   carousels, admin login/reload/logout, contact form, static SEO files).
 - Note: remaining Lighthouse deductions are platform-side (PostHog/emergent scripts ~450ms TBT,
   5-minute asset cache TTL) and not controllable from app code.
+
+## Changelog — 2026-06 (Analytics: Texas-only local market)
+- User decision: this is a Roanoke, TX gym, so out-of-market traffic is noise. Every admin analytics KPI
+  now counts Texas visitors only.
+- backend/server.py: new `LOCAL_STATE = "Texas"` + `local_market_filter(since)` helper. It collects
+  session_ids whose pageview IP resolved to a state other than Texas and excludes those sessions from
+  pageviews, unique visitors, device split, load times, program/CTA clicks, top pages, referrers, peak
+  times, scroll depth, exit pages, timeseries, previous-period trends, funnels, per-program funnels,
+  weekly drop alerts, and the public /api/top-program personalization. Sessions with unknown geo
+  (private IP / failed lookup) are kept so real local traffic is never dropped.
+- City table is Texas-only and now titled "Visitors by City (Texas)" (state column removed); panel
+  subtitle states the Texas-only scope.
+- Verified: seeded TX / CA / unknown-geo sessions — CA pageviews and its CTA click were excluded from
+  totals and the city list; test docs removed afterwards. Admin UI screenshot confirmed.
