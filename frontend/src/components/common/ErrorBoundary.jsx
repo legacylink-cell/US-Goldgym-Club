@@ -1,6 +1,5 @@
 import React from "react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import { API } from "@/lib/api";
 
 export class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -18,7 +17,7 @@ export class ErrorBoundary extends React.Component {
     // Report the real error back to the server so we can diagnose crashes
     // that only happen in a specific browser/environment.
     try {
-      fetch(`${BACKEND_URL}/api/client-error`, {
+      fetch(`${API}/client-error`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

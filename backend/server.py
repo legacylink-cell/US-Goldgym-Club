@@ -15,6 +15,7 @@ from bson import ObjectId
 import logging
 import jwt
 import bcrypt
+from urllib.parse import urlparse
 import secrets
 import re
 import httpx
@@ -829,10 +830,24 @@ async def shutdown():
 
 app.include_router(api_router)
 
+def _allowed_origins() -> list:
+    """Frontend origin from env, plus its www / non-www twin (a visitor on www.<domain>
+    would otherwise be blocked by CORS when calling the apex API)."""
+    origins = {"http://localhost:3000"}
+    url = _env_secret("FRONTEND_URL", "http://localhost:3000").rstrip("/")
+    origins.add(url)
+    parsed = urlparse(url)
+    if parsed.scheme and parsed.netloc:
+        bare = parsed.netloc[4:] if parsed.netloc.startswith("www.") else parsed.netloc
+        origins.add(f"{parsed.scheme}://{bare}")
+        origins.add(f"{parsed.scheme}://www.{bare}")
+    return sorted(origins)
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=[os.environ.get("FRONTEND_URL", "http://localhost:3000"), "http://localhost:3000"],
+    allow_origins=_allowed_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
 )

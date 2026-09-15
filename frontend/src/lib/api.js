@@ -1,7 +1,22 @@
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-export const API = `${BACKEND_URL}/api`;
+
+// If the page is served from the same site as the API (apex vs www of the same domain),
+// talk to our own origin so cookies stay first-party and CORS never applies.
+function resolveApiBase() {
+  if (typeof window === "undefined") return `${BACKEND_URL}/api`;
+  try {
+    const envHost = new URL(BACKEND_URL).hostname.replace(/^www\./, "");
+    const pageHost = window.location.hostname.replace(/^www\./, "");
+    if (envHost === pageHost) return `${window.location.origin}/api`;
+  } catch {
+    /* fall through to env value */
+  }
+  return `${BACKEND_URL}/api`;
+}
+
+export const API = resolveApiBase();
 
 const api = axios.create({
   baseURL: API,

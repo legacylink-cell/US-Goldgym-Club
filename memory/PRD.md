@@ -171,6 +171,13 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   lowercases the submitted email, so a mixed-case secret previously created an unusable account); any legacy
   mixed-case admin doc is folded down to lowercase, role is forced to admin, and the bcrypt hash is reset to
   match ADMIN_PASSWORD on every boot. Startup now logs "Admin account ready for <email> (updated: ...)".
-- STILL UNRESOLVED: user reports prod admin login failing "using the secrets". Awaiting their answers
-  (which URL, exact error, which secrets were set, and whether they re-deployed after adding them).
-  Note: deployment secrets only take effect after a re-publish.
+- RESOLVED (root cause found): prod admin login failed with "Something went wrong. Please try again."
+  only when the browser was on https://www.usgoldgymclub.com. The API runs on the apex
+  (https://usgoldgymclub.com) and CORS allow_origins came from FRONTEND_URL = apex only, so the
+  login POST from the www origin got no Access-Control-Allow-Origin header and axios saw a network
+  error (detail null -> generic message). Credentials/secrets were correct all along — verified by
+  logging into https://usgoldgymclub.com/login (curl + headless browser, both succeeded).
+  Fixes: (1) backend _allowed_origins() now derives apex + www twins from FRONTEND_URL;
+  (2) frontend src/lib/api.js resolves the API base to window.location.origin whenever the page host
+  matches REACT_APP_BACKEND_URL host ignoring "www.", so calls are same-origin and cookies stay
+  first-party (ErrorBoundary now reuses the same API base). Needs a re-publish to reach production.
