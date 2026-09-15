@@ -19,7 +19,6 @@ const BirthdayParties = lazy(() => import("@/pages/BirthdayParties"));
 const CollegeRecruits = lazy(() => import("@/pages/CollegeRecruits"));
 const Contact = lazy(() => import("@/pages/Contact"));
 const Careers = lazy(() => import("@/pages/Careers"));
-const Baseball = lazy(() => import("@/pages/Baseball"));
 const Login = lazy(() => import("@/pages/Login"));
 const Register = lazy(() => import("@/pages/Register"));
 const ParentDashboard = lazy(() => import("@/pages/ParentDashboard"));
@@ -71,7 +70,6 @@ function App() {
               <Route path="/calendar" element={<CalendarPage />} />
               <Route path="/birthday-parties" element={<BirthdayParties />} />
               <Route path="/college-recruits" element={<CollegeRecruits />} />
-              <Route path="/baseball" element={<Baseball />} />
               <Route path="/careers" element={<Careers />} />
               <Route path="/contact" element={<Contact />} />
             </Route>

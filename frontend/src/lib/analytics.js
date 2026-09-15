@@ -1,7 +1,7 @@
 import { API } from "@/lib/api";
 
 const SID_KEY = "usg_sid";
-const PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"];
+const PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/college-recruits"];
 
 let enabled = true;
 export function setAnalyticsEnabled(v) {

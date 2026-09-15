@@ -219,3 +219,17 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
 - Careers: intro now "Looking for a career working with children and teaching cartwheels? U.S. Gold might
   be the perfect place for you!" and added "Preschool Gymnastics Coaches (weekday mornings required)".
 - Verified by testing agent: /app/test_reports/iteration_14.json — 100% frontend pass, all 14 routes 200.
+
+## Changelog — 2026-06 (Baseball removed, recruit class years)
+- Baseball program does not exist: /baseball page deleted along with its nav entry, home program tile,
+  BASEBALL data + IMG.baseball, sitemap and llms.txt entries, and the program path lists used by
+  analytics (frontend src/lib/analytics.js, AnalyticsPanel label map, backend ANALYTICS_PROGRAM_PATHS
+  and page-label map). /baseball now falls through the catch-all route and redirects to the homepage.
+  Home program grid rebalanced to 5 tiles (3 across, then 2 half-width).
+- College Recruits: class years added — Audrey Collins (OU) 2027, Norah Collins (ETBU) 2027 with sport
+  corrected to "Acro & Tumble", Jordan Smith (Central Michigan) 2027. Years render as "Name · 2027".
+- "Boys & Competitive Director" no longer appears anywhere (it was part of the old placeholder staff list
+  replaced in the previous batch). NOTE for user: the Recreational page still advertises a "Boys
+  Gymnastics" track and a "Boys Sport" preschool class — confirm whether those are accurate.
+- Self-verified in preview: 0 baseball links on the homepage, program grid renders, recruit rows show the
+  new years, /baseball redirects home.

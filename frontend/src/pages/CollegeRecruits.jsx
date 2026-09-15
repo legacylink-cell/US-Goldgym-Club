@@ -47,7 +47,10 @@ const CollegeRecruits = () => (
                   {group.athletes.map((a) => (
                     <li key={a.name} data-testid={`recruit-${a.name.toLowerCase().replace(/\s+/g, "-")}`}>
                       <div className="flex items-baseline justify-between gap-3">
-                        <span className="text-white font-semibold">{a.name}</span>
+                        <span className="text-white font-semibold">
+                          {a.name}
+                          {a.year && <span className="text-white/45 font-normal text-sm"> · {a.year}</span>}
+                        </span>
                         <span className="text-pinklt text-[10px] uppercase tracking-[0.15em] font-bold shrink-0">
                           {a.sport}
                         </span>

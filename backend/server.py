@@ -117,14 +117,13 @@ BOT_RE = re.compile(
 
 LOCAL_STATE = "Texas"
 
-ANALYTICS_PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/baseball", "/college-recruits"]
+ANALYTICS_PROGRAM_PATHS = ["/preschool", "/recreational", "/competitive", "/cheer", "/college-recruits"]
 
 ANALYTICS_PROGRAM_NAMES = {
     "/preschool": "Preschool",
     "/recreational": "Recreational",
     "/competitive": "Competitive Team",
     "/cheer": "Cheer & Tumbling",
-    "/baseball": "Baseball",
     "/college-recruits": "College Recruits",
 }
 

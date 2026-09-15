@@ -15,7 +15,6 @@ export const IMG = {
   facilityEquip: "https://images.unsplash.com/photo-1621046590998-78ecf71d58a8?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
   facilityFloor: "https://images.unsplash.com/photo-1632758243488-7e6f9173cfa1?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
   coach: "/assets/bars.webp",
-  baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
 };
 
 // Friendly "we're updating the site" strip. Set enabled:false to turn it off.
@@ -73,7 +72,6 @@ export const NAV_LINKS = [
       { label: "Recreational", to: "/recreational" },
       { label: "Competitive", to: "/competitive" },
       { label: "Cheer", to: "/cheer" },
-      { label: "Baseball", to: "/baseball" },
       { label: "College Recruits", to: "/college-recruits" },
     ],
   },
@@ -100,9 +98,8 @@ export const PROGRAM_TILES = [
   { title: "Preschool", to: "/preschool", img: "preschoolBeam", tag: "Ages walking–5", span: "lg:col-span-4" },
   { title: "Recreational", to: "/recreational", img: "floorJump", tag: "Beginner → Advanced", span: "lg:col-span-4" },
   { title: "Competitive", to: "/competitive", img: "beamHandstand", tag: "USAG Levels 3–10", span: "lg:col-span-4" },
-  { title: "Cheer", to: "/cheer", img: "cheerJump", tag: "Tumble & All-Star", span: "lg:col-span-4" },
-  { title: "Baseball", to: "/baseball", img: "baseball", tag: "Athletic development", span: "lg:col-span-4" },
-  { title: "College Recruits", to: "/college-recruits", img: "handstand", tag: "Alumni spotlight", span: "lg:col-span-4" },
+  { title: "Cheer", to: "/cheer", img: "cheerJump", tag: "Tumble & All-Star", span: "lg:col-span-6" },
+  { title: "College Recruits", to: "/college-recruits", img: "handstand", tag: "Alumni spotlight", span: "lg:col-span-6" },
 ];
 
 export const TESTIMONIALS = [
@@ -228,7 +225,7 @@ export const RECRUIT_SCHOOLS = [
     logo: null,
     athletes: [
       { name: "Samantha Craus", sport: "Gymnastics" },
-      { name: "Audrey Collins", sport: "Gymnastics" },
+      { name: "Audrey Collins", sport: "Gymnastics", year: "2027" },
     ],
   },
   {
@@ -309,13 +306,13 @@ export const RECRUIT_SCHOOLS = [
     school: "East Texas Baptist University",
     short: "ETBU",
     logo: null,
-    athletes: [{ name: "Norah Collins", sport: "Acro" }],
+    athletes: [{ name: "Norah Collins", sport: "Acro & Tumble", year: "2027" }],
   },
   {
     school: "Central Michigan University",
     short: "Central Michigan",
     logo: null,
-    athletes: [{ name: "Jordan Smith", sport: "Gymnastics" }],
+    athletes: [{ name: "Jordan Smith", sport: "Gymnastics", year: "2027" }],
   },
 ];
 
@@ -378,14 +375,3 @@ export const PRO_SHOP = {
   note: "In-store only. No online sales. Come see us during business hours!",
 };
 
-export const BASEBALL = {
-  hero: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
-  tagline: "Build the athletic foundation every ballplayer needs.",
-  intro:
-    "Our baseball training combines strength, speed, agility, and body-awareness work with sport-specific skill development. Whether your athlete is just starting out or sharpening their edge for the next level, our coaches build the fundamentals that translate to the diamond.",
-  tracks: [
-    { name: "Skills & Fundamentals", meta: "Ages 6–12", desc: "Hitting mechanics, fielding, throwing, and base-running taught with proper progressions." },
-    { name: "Athletic Development", meta: "All ages", desc: "Speed, agility, and strength training to build explosive, injury-resistant athletes." },
-    { name: "Private & Small-Group Lessons", meta: "By appointment", desc: "One-on-one or small-group instruction tailored to each athlete's goals." },
-  ],
-};

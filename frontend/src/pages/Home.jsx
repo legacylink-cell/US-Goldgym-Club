@@ -14,7 +14,7 @@ const SPOTLIGHT_COPY = {
 };
 const SPOTLIGHT_IMG = {
   "/preschool": "preschoolBeam", "/recreational": "floorJump", "/competitive": "beamHandstand",
-  "/cheer": "cheerJump", "/baseball": "baseball", "/college-recruits": "handstand",
+  "/cheer": "cheerJump", "/college-recruits": "handstand",
 };
 
 const ProgramSpotlight = () => {

@@ -18,7 +18,7 @@ const TOOLTIP = { background: "#fff", border: "1px solid rgba(44,10,78,0.15)", c
 
 const PROGRAM_NAMES = {
   "/preschool": "Preschool", "/recreational": "Recreational", "/competitive": "Competitive",
-  "/cheer": "Cheer", "/baseball": "Baseball", "/college-recruits": "College Recruits",
+  "/cheer": "Cheer", "/college-recruits": "College Recruits",
 };
 const CTA_NAMES = {
   book_free_trial: "Book Free Trial", request_pricing: "Request Pricing", newsletter_signup: "Email Signup",
