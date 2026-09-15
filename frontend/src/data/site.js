@@ -18,6 +18,14 @@ export const IMG = {
   baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
 };
 
+// Friendly "we're updating the site" strip. Set enabled:false to turn it off.
+// Bump `version` to re-show it to visitors who previously dismissed it.
+export const SITE_NOTICE = {
+  enabled: true,
+  version: "2026-06",
+  text: "Fresh look in progress — we're adding new photos and details all week. Thanks for your patience!",
+};
+
 export const GOOGLE_CALENDAR = {
   // usgoldgym@gmail.com public calendar
   embedUrl:

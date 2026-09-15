@@ -181,3 +181,14 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   (2) frontend src/lib/api.js resolves the API base to window.location.origin whenever the page host
   matches REACT_APP_BACKEND_URL host ignoring "www.", so calls are same-origin and cookies stay
   first-party (ErrorBoundary now reuses the same API base). Needs a re-publish to reach production.
+
+## Changelog — 2026-06 (Friendly "site updating" notice)
+- New src/components/common/SiteNotice.jsx, rendered from Layout under the fixed navbar: glassy
+  purple strip, sparkle icon, copy "Fresh look in progress — we're adding new photos and details all
+  week. Thanks for your patience!", a tap-to-call 817.491.9996 link, and an X to dismiss.
+- Calm by design: fades out once the visitor scrolls past 90px, never covers the Book Free Trial CTA,
+  and dismissal is remembered in localStorage (key usg_notice_dismissed = SITE_NOTICE.version).
+- Controlled from src/data/site.js -> SITE_NOTICE { enabled, version, text }. Set enabled:false to turn
+  it off (user asked for it to stay up until turned off manually); bump `version` to re-show it to
+  people who already dismissed it.
+- Verified in preview: shows on load, hides on scroll, dismiss persists across reload.
