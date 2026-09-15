@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { IMG, REC_LEVELS, TUMBLE_CLASSES } from "@/data/site";
-import { ArrowRight, ArrowUpRight, Clock } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Clock, Layers, Users } from "lucide-react";
 
 const Recreational = () => (
   <div data-testid="recreational-page">
@@ -79,19 +79,41 @@ const Recreational = () => (
           </div>
         </Reveal>
 
-        {/* Pricing CTA */}
-        <div className="mt-12 border border-lime/40 bg-lime/[0.05] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-display text-3xl md:text-4xl uppercase text-white">Tuition set by weekly frequency</h3>
-            <p className="text-white/60 mt-2 max-w-xl">Rates depend on your class schedule. Request a quote and we'll match your athlete to the right level and price.</p>
+        {/* Discounts */}
+        <div className="mt-12 border border-lime/40 bg-lime/[0.05] p-8 md:p-12" data-testid="rec-discounts">
+          <div className="text-pinklt text-xs uppercase tracking-[0.25em] font-bold mb-2">Family friendly pricing</div>
+          <h3 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">More classes, more savings</h3>
+          <p className="text-white/60 mt-3 max-w-2xl">
+            We want your athlete in the gym as often as they love it — and we don't want a second child to be the reason you hold back.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-4 mt-8">
+            <div className="border border-white/15 bg-ink/40 p-6" data-testid="discount-multi-class">
+              <div className="w-11 h-11 bg-lime text-ink flex items-center justify-center mb-4"><Layers className="w-5 h-5" /></div>
+              <div className="font-display text-2xl uppercase text-white leading-none">Multi-class discount</div>
+              <p className="text-white/60 mt-3">
+                Add a second class each week — gymnastics, tumble, or cheer — and every additional class comes at a reduced rate.
+              </p>
+            </div>
+            <div className="border border-white/15 bg-ink/40 p-6" data-testid="discount-sibling">
+              <div className="w-11 h-11 bg-coral text-white flex items-center justify-center mb-4"><Users className="w-5 h-5" /></div>
+              <div className="font-display text-2xl uppercase text-white leading-none">Sibling discount</div>
+              <p className="text-white/60 mt-3">
+                Enrolling brothers and sisters together? Every additional sibling in the gym gets a discount on tuition.
+              </p>
+            </div>
           </div>
-          <Link
-            to="/contact?topic=Class%20Enrollment&program=Recreational%20Classes"
-            className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2"
-            data-testid="rec-request-pricing"
-          >
-            Request Pricing <ArrowUpRight className="w-5 h-5" />
-          </Link>
+
+          <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
+            <Link
+              to="/contact?topic=Class%20Enrollment&program=Recreational%20Classes"
+              className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors inline-flex items-center justify-center gap-2"
+              data-testid="rec-request-pricing"
+            >
+              Ask about discounts <ArrowUpRight className="w-5 h-5" />
+            </Link>
+            <span className="text-white/50 text-sm">Tell us your athlete's age and schedule and we'll put together your exact rate.</span>
+          </div>
         </div>
       </div>
     </section>

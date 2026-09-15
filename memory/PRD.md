@@ -323,3 +323,10 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   bottom space so the footer credit is never covered. Verified at 390x844.
 - Removed the hero <link rel=preload> that was logging "preloaded but not used" warnings on every page.
 - Verified by testing agent: /app/test_reports/iteration_15.json — backend 32/32 pytest, frontend 100%.
+
+- 2026-06: Recreational page — the confusing "Tuition set by weekly frequency / Request Pricing" block was
+  replaced with a "Family friendly pricing — More classes, more savings" section featuring two cards
+  (Multi-class discount, Sibling discount) and an "Ask about discounts" CTA to
+  /contact?topic=Class Enrollment&program=Recreational Classes. Deliberately NO percentages or dollar
+  figures — CONFIRM with the user whether they want exact discount amounts published.
+  Verified on /recreational (old tuition copy gone, CTA routes correctly).
