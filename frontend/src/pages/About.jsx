@@ -9,7 +9,7 @@ const About = () => (
     <PageHero
       overline="Our story"
       title={<>More than a gym<span className="text-lime">.</span></>}
-      subtitle="Over three decades of turning nervous first-timers into confident athletes — and building a community families are proud to be part of."
+      subtitle="Two decades of turning nervous first-timers into confidant athletes - and building a community families are proud to be part of"
       image={IMG.facilityFloor}
     />
 

@@ -233,3 +233,8 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   Gymnastics" track and a "Boys Sport" preschool class — confirm whether those are accurate.
 - Self-verified in preview: 0 baseball links on the homepage, program grid renders, recruit rows show the
   new years, /baseball redirects home.
+
+- 2026-06: About hero subtitle reverted at user request to their exact wording: "Two decades of turning
+  nervous first-timers into confidant athletes - and building a community families are proud to be part
+  of" (user's spelling "confidant" and hyphen kept verbatim; flagged to them as a possible typo for
+  "confident"). Verified live on /about.
