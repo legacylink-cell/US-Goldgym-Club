@@ -261,3 +261,9 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
 - Desktop = month grid (680px), mobile = agenda view (560px). Verified in preview.
 - IMPLICATION: the admin dashboard's calendar/event editor no longer drives anything public — events must
   now be managed in Google Calendar. /api/events still exists and is used by nothing on the public site.
+
+- 2026-06 (calendar polish): the Google Calendar embed is now dark-themed to match the site — the iframe
+  wrapper uses CSS `filter: invert(0.92) hue-rotate(180deg)` inside an ink card, so the grid reads as dark
+  purple/near-black with light text like the old custom calendar. The "Add to Google Calendar" link is
+  covered by a 24px #edf2f6 strip placed INSIDE the filtered wrapper (so it inverts to exactly the footer
+  colour and is invisible); the timezone line and Google attribution remain visible. Verified at 1527px.

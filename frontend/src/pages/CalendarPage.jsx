@@ -14,8 +14,12 @@ const CalendarPage = () => (
 
     <section className="bg-ink py-14 md:py-20" data-testid="gcal-section">
       <div className="max-w-[1400px] mx-auto px-5 md:px-8">
-        <div className="border border-white/15 bg-white p-2 md:p-3">
-          <div className="relative">
+        <div className="border border-white/15 bg-ink p-2 md:p-3">
+          <div
+            className="relative"
+            style={{ filter: "invert(0.92) hue-rotate(180deg)" }}
+            data-testid="gcal-theme-wrap"
+          >
             <iframe
               title="U.S. Gold Gymnastics & Cheer Academy Calendar"
               src={GOOGLE_CALENDAR.embedUrlAgenda}
@@ -31,8 +35,8 @@ const CalendarPage = () => (
               scrolling="no"
               data-testid="gcal-iframe"
             />
-            {/* masks Google's "Add to Google Calendar" link in the embed footer */}
-            <div className="absolute left-0 bottom-0 h-7 w-[70%] md:w-[55%] bg-[#f1f3f4]" data-testid="gcal-link-mask" />
+            {/* covers Google's "Add to Google Calendar" link in the embed footer */}
+            <div className="absolute left-0 bottom-0 h-[24px] w-[75%] md:w-[60%] bg-[#edf2f6]" data-testid="gcal-link-mask" />
           </div>
         </div>
 
