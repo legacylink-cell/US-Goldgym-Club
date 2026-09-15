@@ -267,3 +267,24 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   purple/near-black with light text like the old custom calendar. The "Add to Google Calendar" link is
   covered by a 24px #edf2f6 strip placed INSIDE the filtered wrapper (so it inverts to exactly the footer
   colour and is invisible); the timezone line and Google attribution remain visible. Verified at 1527px.
+
+## Changelog — 2026-06 (Custom purple calendar, powered by Google Calendar)
+- The Google iframe embed was dropped. New backend endpoint GET /api/gcal/events reads the gym's PUBLIC
+  Google Calendar ICS feed (usgoldgym@gmail.com), expands recurring events with recurring-ical-events,
+  converts to America/Chicago, caches the feed in memory for 10 minutes, and returns
+  {id,title,date,time,all_day,category,location,description}. Categories are derived from the title:
+  "open gym"->open_gym, "clinic"->clinic, "camp"->camp, everything else->special_event.
+  New deps: icalendar, recurring-ical-events (requirements.txt updated via pip freeze).
+- /calendar restored to the original branded purple UI, now fed by the Google feed: dynamic
+  month/week-range/"Upcoming events" header that follows the view, prev/next arrows, MONTH/WEEK/LIST
+  toggle, and the category key (All / Open Gym / Clinics / Camps / Special Events) used as filters.
+  Event chips use the category colours; clicking one opens a dialog with day/time/location/description and
+  two CTAs — "Sign up / ask a question" (deep links to /contact?topic=Event Sign Up&event=<title>) and
+  "Call the gym". Graceful fallback message if the feed is unreachable.
+- Mobile respected: LIST view is the default under 768px, the month grid scrolls horizontally
+  (min-w-[680px] inside an overflow-x wrapper), and controls/legend wrap.
+- Verified in preview at 1527px and 390px: header switches Sep->Oct on next, list shows real events
+  (Tumble Clinic, Bar/Beam Clinic, National Gymnastics Day all-day, Daytime Playtime, Lunch & Learn,
+  Open Gym), dialog renders correctly.
+- Special Events "Sign Up" -> contact form was already done in the earlier batch and re-confirmed in code
+  (SpecialEvents.jsx line ~44) and by testing agent in iteration_14.

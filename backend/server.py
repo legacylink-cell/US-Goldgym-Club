@@ -19,6 +19,9 @@ from urllib.parse import urlparse
 import secrets
 import re
 import httpx
+import icalendar
+import recurring_ical_events
+from zoneinfo import ZoneInfo
 
 # ---------------- DB ----------------
 mongo_url = os.environ['MONGO_URL']
@@ -423,6 +426,77 @@ async def list_events(category: Optional[str] = None):
     for d in docs:
         d["id"] = str(d.pop("_id"))
     return docs
+
+
+GCAL_ICS_URL = "https://calendar.google.com/calendar/ical/usgoldgym%40gmail.com/public/basic.ics"
+GYM_TZ = ZoneInfo("America/Chicago")
+_ics_cache: dict = {"fetched_at": None, "text": ""}
+
+
+def _gcal_category(title: str) -> str:
+    t = (title or "").lower()
+    if "open gym" in t:
+        return "open_gym"
+    if "clinic" in t:
+        return "clinic"
+    if "camp" in t:
+        return "camp"
+    return "special_event"
+
+
+async def _gcal_ics() -> str:
+    now = datetime.now(timezone.utc)
+    fetched = _ics_cache["fetched_at"]
+    if fetched and (now - fetched).total_seconds() < 600 and _ics_cache["text"]:
+        return _ics_cache["text"]
+    async with httpx.AsyncClient(timeout=20, follow_redirects=True) as c:
+        r = await c.get(GCAL_ICS_URL)
+    r.raise_for_status()
+    _ics_cache.update({"fetched_at": now, "text": r.text})
+    return r.text
+
+
+@api_router.get("/gcal/events")
+async def gcal_events(months_back: int = 2, months_ahead: int = 10):
+    """Public Google Calendar feed, recurrences expanded, shaped for the site calendar."""
+    try:
+        text = await _gcal_ics()
+    except Exception as exc:
+        logger.warning("Google Calendar fetch failed: %s", exc)
+        raise HTTPException(status_code=502, detail="Calendar is temporarily unavailable")
+
+    cal = icalendar.Calendar.from_ical(text)
+    today = datetime.now(GYM_TZ).date()
+    start = today.replace(day=1) - timedelta(days=31 * months_back)
+    end = today.replace(day=1) + timedelta(days=31 * months_ahead)
+
+    out = []
+    for ev in recurring_ical_events.of(cal).between(start, end):
+        dt = ev["DTSTART"].dt
+        title = str(ev.get("SUMMARY") or "Event").strip()
+        all_day = not isinstance(dt, datetime)
+        if all_day:
+            day, time_label = dt, "All day"
+        else:
+            local = dt.astimezone(GYM_TZ)
+            day = local.date()
+            time_label = local.strftime("%-I:%M %p").lower().replace(":00", "")
+            dtend = ev.get("DTEND")
+            if dtend is not None and isinstance(dtend.dt, datetime):
+                time_label += f" – {dtend.dt.astimezone(GYM_TZ).strftime('%-I:%M %p').lower().replace(':00', '')}"
+        out.append({
+            "id": f"{day.isoformat()}-{re.sub(r'[^a-z0-9]+', '-', title.lower())}-{len(out)}",
+            "title": title,
+            "date": day.isoformat(),
+            "time": time_label,
+            "all_day": all_day,
+            "category": _gcal_category(title),
+            "location": str(ev.get("LOCATION") or ""),
+            "description": str(ev.get("DESCRIPTION") or ""),
+        })
+    out.sort(key=lambda e: (e["date"], e["time"]))
+    return out
+
 
 
 # ---------------- Analytics ----------------
