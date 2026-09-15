@@ -249,3 +249,15 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   — remaining stock images that could be swapped for these: cheerJump, cheerSquad, cheerStage, birthday,
   facilityEquip, facilityFloor, preschoolMat, preschoolPlay. NOTE: 6 of the zip photos need EXIF rotation
   handling (use ImageOps.exif_transpose) and the 4000x3000 "inbound" shots are sideways wide gym views.
+
+## Changelog — 2026-06 (Google Calendar is now THE calendar)
+- /calendar rewritten: the hand-built month/week/list calendar (and its event detail dialog, /api/events
+  fetch, category filters) was REMOVED and replaced by the gym's Google Calendar embed as the primary
+  schedule. Hero kept ("Live schedule / Calendar"), plus a "dates subject to change — call us" line with
+  a tap-to-call link.
+- The "Add to my calendar" button was removed, and Google's own "Add to Google Calendar" link inside the
+  embed footer is masked with a matching #f1f3f4 strip (data-testid=gcal-link-mask). Google Calendar
+  attribution/logo is intentionally left visible.
+- Desktop = month grid (680px), mobile = agenda view (560px). Verified in preview.
+- IMPLICATION: the admin dashboard's calendar/event editor no longer drives anything public — events must
+  now be managed in Google Calendar. /api/events still exists and is used by nothing on the public site.
