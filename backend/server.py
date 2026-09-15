@@ -756,18 +756,36 @@ async def reset_data(admin: dict = Depends(require_admin)):
 
 
 # ---------------- Seed ----------------
+def _env_secret(name: str, default: str = "") -> str:
+    """Read an env secret, tolerating stray whitespace or wrapping quotes."""
+    v = os.environ.get(name, default).strip()
+    if len(v) >= 2 and v[0] == v[-1] and v[0] in ('"', "'"):
+        v = v[1:-1]
+    return v
+
+
 async def seed_admin():
-    email = os.environ.get("ADMIN_EMAIL", "admin@example.com")
-    password = os.environ.get("ADMIN_PASSWORD", "admin123")
-    existing = await db.users.find_one({"email": email})
+    email = _env_secret("ADMIN_EMAIL", "admin@example.com").lower()
+    password = _env_secret("ADMIN_PASSWORD", "admin123")
+    # login lowercases the submitted email, so any legacy mixed-case admin doc is folded down first
+    existing = await db.users.find_one({"email": {"$regex": f"^{re.escape(email)}$", "$options": "i"}})
     if existing is None:
         await db.users.insert_one({
             "email": email, "password_hash": hash_password(password), "name": "Gym Admin",
             "phone": "", "role": "admin", "created_at": datetime.now(timezone.utc).isoformat(),
         })
-        logger.info("Seeded admin user")
-    elif not verify_password(password, existing["password_hash"]):
-        await db.users.update_one({"email": email}, {"$set": {"password_hash": hash_password(password)}})
+        logger.info("Admin account created for %s", email)
+        return
+    updates = {}
+    if existing.get("email") != email:
+        updates["email"] = email
+    if existing.get("role") != "admin":
+        updates["role"] = "admin"
+    if not verify_password(password, existing.get("password_hash", "")):
+        updates["password_hash"] = hash_password(password)
+    if updates:
+        await db.users.update_one({"_id": existing["_id"]}, {"$set": updates})
+    logger.info("Admin account ready for %s (updated: %s)", email, ", ".join(updates) or "nothing")
 
 
 async def seed_events():

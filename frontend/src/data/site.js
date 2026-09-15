@@ -18,6 +18,17 @@ export const IMG = {
   baseball: "https://images.unsplash.com/photo-1508344928928-7165b67de128?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
 };
 
+export const GOOGLE_CALENDAR = {
+  // usgoldgym@gmail.com public calendar
+  embedUrl:
+    "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FChicago&showPrint=0&showTitle=0&src=dXNnb2xkZ3ltQGdtYWlsLmNvbQ&color=%23b39ddb",
+  publicUrl:
+    "https://calendar.google.com/calendar/u/0/r?cid=dXNnb2xkZ3ltQGdtYWlsLmNvbQ",
+  embedUrlAgenda:
+    "https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FChicago&showPrint=0&showTitle=0&showNav=1&showTabs=0&showCalendars=0&mode=AGENDA&src=dXNnb2xkZ3ltQGdtYWlsLmNvbQ&color=%23b39ddb",
+};
+
+
 export const BUSINESS = {
   name: "U.S. Gold Gymnastics & Cheer Academy",
   shortName: "US Gold",

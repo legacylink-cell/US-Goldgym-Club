@@ -4,8 +4,8 @@ import api from "@/lib/api";
 import { PageHero } from "@/components/common/PageHero";
 import { BookingDialog } from "@/components/common/BookingDialog";
 import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
-import { IMG, EVENT_CATEGORIES } from "@/data/site";
-import { ChevronLeft, ChevronRight, Clock, Tag, Users } from "lucide-react";
+import { IMG, EVENT_CATEGORIES, GOOGLE_CALENDAR } from "@/data/site";
+import { ChevronLeft, ChevronRight, Clock, Tag, Users, CalendarPlus } from "lucide-react";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
@@ -167,6 +167,47 @@ const CalendarPage = () => {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* GOOGLE CALENDAR EMBED */}
+      <section className="bg-cream text-ink py-14 md:py-20 diagonal-top" data-testid="gcal-section">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
+            <div>
+              <div className="text-coral text-xs uppercase tracking-[0.25em] font-bold mb-2">Straight from the gym</div>
+              <h2 className="font-display text-4xl md:text-5xl uppercase leading-none">Our Google Calendar</h2>
+              <p className="text-ink/70 mt-3 max-w-xl">
+                The same schedule our coaches keep — closures, meets, camps, and events as soon as we post them.
+              </p>
+            </div>
+            <a
+              href={GOOGLE_CALENDAR.publicUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-ink text-white font-display uppercase px-6 py-3 hover:bg-lime hover:text-ink transition-colors self-start"
+              data-testid="gcal-subscribe"
+            >
+              <CalendarPlus className="w-4 h-4" /> Add to my calendar
+            </a>
+          </div>
+          <div className="border border-ink/15 bg-white p-2 hard-shadow">
+            <iframe
+              title="U.S. Gold Gymnastics & Cheer Academy Google Calendar"
+              src={GOOGLE_CALENDAR.embedUrlAgenda}
+              className="w-full h-[520px] border-0 md:hidden"
+              loading="lazy"
+              data-testid="gcal-iframe-mobile"
+            />
+            <iframe
+              title="U.S. Gold Gymnastics & Cheer Academy Google Calendar"
+              src={GOOGLE_CALENDAR.embedUrl}
+              className="w-full h-[640px] border-0 hidden md:block"
+              loading="lazy"
+              scrolling="no"
+              data-testid="gcal-iframe"
+            />
+          </div>
         </div>
       </section>
 

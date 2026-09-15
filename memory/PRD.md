@@ -158,3 +158,19 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   subtitle states the Texas-only scope.
 - Verified: seeded TX / CA / unknown-geo sessions — CA pageviews and its CTA click were excluded from
   totals and the city list; test docs removed afterwards. Admin UI screenshot confirmed.
+
+## Changelog — 2026-06 (Google Calendar embed + admin seed hardening)
+- /calendar page: added an "Our Google Calendar" section below the custom calendar that embeds the gym's
+  public Google Calendar (usgoldgym@gmail.com, America/Chicago, brand-purple event colour). Desktop shows
+  the month grid, mobile shows the AGENDA view, plus an "Add to my calendar" subscribe button.
+  Config lives in src/data/site.js -> GOOGLE_CALENDAR {embedUrl, embedUrlAgenda, publicUrl}.
+  Verified live: real events (Tumble Clinic, Open Gym, Daytime Playtime, National Gymnastics Day) render.
+  OPEN QUESTION for the user: the Google Calendar now duplicates the hand-managed admin calendar above it —
+  decide whether Google Calendar becomes the single source of truth.
+- backend seed_admin() hardened: ADMIN_EMAIL is trimmed, unwrapped from stray quotes and lowercased (login
+  lowercases the submitted email, so a mixed-case secret previously created an unusable account); any legacy
+  mixed-case admin doc is folded down to lowercase, role is forced to admin, and the bcrypt hash is reset to
+  match ADMIN_PASSWORD on every boot. Startup now logs "Admin account ready for <email> (updated: ...)".
+- STILL UNRESOLVED: user reports prod admin login failing "using the secrets". Awaiting their answers
+  (which URL, exact error, which secrets were set, and whether they re-deployed after adding them).
+  Note: deployment secrets only take effect after a re-publish.
