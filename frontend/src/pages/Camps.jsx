@@ -21,6 +21,16 @@ const Camps = () => (
           <InfoCard icon={Info} label="Good to know" value={CAMP_INFO.note} />
         </div>
 
+        <Reveal>
+          <div className="mb-12 border border-lime/40 bg-lime/[0.06] px-6 py-5 flex items-start gap-4" data-testid="camps-2027-note">
+            <CalendarDays className="w-6 h-6 text-pinklt shrink-0" />
+            <div>
+              <div className="font-display text-xl md:text-2xl uppercase text-white leading-none">Summer 2027 camp info coming early 2027!</div>
+              <p className="text-white/60 text-sm mt-2">Dates, themes, and registration will be posted here — call 817.491.9996 to be first to know.</p>
+            </div>
+          </div>
+        </Reveal>
+
         <div className="flex flex-col sm:flex-row gap-4 mb-16">
           <MagneticButton as="a" href={PDFS.campRegistration} variant="lime" className="px-7 py-4" data-testid="camp-registration-btn">
             <Download className="w-5 h-5" /> Registration Form

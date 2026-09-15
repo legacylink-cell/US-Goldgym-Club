@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
-import { BookingDialog } from "@/components/common/BookingDialog";
 import { IMG, SPECIAL_EVENTS } from "@/data/site";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 
@@ -42,9 +41,13 @@ const SpecialEvents = () => (
                       </button>
                     } />
                   ) : (
-                    <BookingDialog bookingType="event" itemName={ev.name} price={ev.price} trigger={
-                      <button className="w-full bg-lime text-ink font-display uppercase py-3 hover:bg-white transition-colors" data-testid={`event-signup-${i}`}>Sign Up</button>
-                    } />
+                    <Link
+                      to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(ev.name)}`}
+                      className="w-full bg-lime text-ink font-display uppercase py-3 hover:bg-white transition-colors flex items-center justify-center gap-2"
+                      data-testid={`event-signup-${i}`}
+                    >
+                      Sign Up <ArrowUpRight className="w-4 h-4" />
+                    </Link>
                   )}
                 </div>
               </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import api, { formatApiError } from "@/lib/api";
@@ -14,7 +15,15 @@ import {
 } from "@/components/ui/select";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", topic: "General Inquiry", message: "" });
+  const [params] = useSearchParams();
+  // deep links from Special Events / Birthday Parties prefill the topic and message
+  const prefillTopic = CONTACT_TOPICS.includes(params.get("topic")) ? params.get("topic") : "General Inquiry";
+  const subject = params.get("event") || params.get("package");
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "",
+    topic: prefillTopic,
+    message: subject ? `I'm interested in: ${subject}\n\n` : "",
+  });
   const [loading, setLoading] = useState(false);
   const upd = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -38,7 +47,7 @@ const Contact = () => {
       <PageHero
         overline="Get in touch"
         title={<>Let's talk<span className="text-lime">.</span></>}
-        subtitle="Questions, enrollment, tryouts, or a free trial — reach out and a real human from our team will get back to you."
+        subtitle="Questions, enrollment, tryouts, or a free trial — reach out and one of our team members will get back to you."
         image={IMG.facilityEquip}
       />
 

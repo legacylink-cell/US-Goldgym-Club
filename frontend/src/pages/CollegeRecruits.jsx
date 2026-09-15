@@ -1,8 +1,10 @@
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { MagneticButton } from "@/components/common/MagneticButton";
-import { IMG, RECRUITS } from "@/data/site";
-import { GraduationCap, Trophy } from "lucide-react";
+import { IMG, RECRUIT_SCHOOLS } from "@/data/site";
+import { GraduationCap } from "lucide-react";
+
+const totalAthletes = RECRUIT_SCHOOLS.reduce((n, s) => n + s.athletes.length, 0);
 
 const CollegeRecruits = () => (
   <div data-testid="college-recruits-page">
@@ -15,25 +17,45 @@ const CollegeRecruits = () => (
 
     <section className="bg-ink py-20 md:py-28">
       <div className="max-w-[1400px] mx-auto px-5 md:px-8">
-        <SectionHeading overline="Alumni showcase" title="Where they landed" className="mb-12" />
+        <SectionHeading
+          overline={`${totalAthletes} alumni · ${RECRUIT_SCHOOLS.length} programs`}
+          title="Where they landed"
+          className="mb-12"
+        />
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {RECRUITS.map((r, i) => (
-            <Reveal key={r.name} delay={i * 0.06}>
-              <div className="border border-white/15 overflow-hidden group hover:border-lime transition-colors" data-testid={`recruit-card-${i}`}>
-                <div className="h-64 overflow-hidden relative">
-                  <img loading="lazy" decoding="async" src={IMG[r.img]} alt={r.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" />
-                  <div className="absolute top-3 right-3 bg-coral text-white text-[10px] uppercase tracking-wide font-bold px-2 py-1 flex items-center gap-1">
-                    <Trophy className="w-3 h-3" /> {r.level}
+          {RECRUIT_SCHOOLS.map((group, i) => (
+            <Reveal key={group.school} delay={(i % 3) * 0.06}>
+              <div
+                className="h-full border border-white/15 bg-white/[0.02] p-6 hover:border-lime transition-colors"
+                data-testid={`recruit-school-${i}`}
+              >
+                <div className="flex items-start gap-3 pb-4 border-b border-white/10">
+                  {group.logo ? (
+                    <img src={group.logo} alt={group.school} className="w-12 h-12 object-contain shrink-0" />
+                  ) : (
+                    <span className="w-12 h-12 shrink-0 border border-lime/40 flex items-center justify-center text-pinklt font-display text-lg">
+                      <GraduationCap className="w-5 h-5" />
+                    </span>
+                  )}
+                  <div>
+                    <div className="font-display text-2xl uppercase text-white leading-none">{group.short}</div>
+                    <div className="text-white/50 text-xs mt-1.5 leading-snug">{group.school}</div>
                   </div>
                 </div>
-                <div className="p-6">
-                  <div className="font-display text-3xl uppercase text-white leading-none">{r.name}</div>
-                  <div className="flex items-center gap-2 text-lime mt-3">
-                    <GraduationCap className="w-5 h-5" />
-                    <span className="font-semibold">{r.college}</span>
-                  </div>
-                </div>
+                <ul className="mt-4 space-y-3">
+                  {group.athletes.map((a) => (
+                    <li key={a.name} data-testid={`recruit-${a.name.toLowerCase().replace(/\s+/g, "-")}`}>
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-white font-semibold">{a.name}</span>
+                        <span className="text-pinklt text-[10px] uppercase tracking-[0.15em] font-bold shrink-0">
+                          {a.sport}
+                        </span>
+                      </div>
+                      {a.note && <div className="text-white/45 text-xs mt-1">{a.note}</div>}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           ))}

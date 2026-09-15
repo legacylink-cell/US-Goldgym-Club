@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Sparkles, Phone, X } from "lucide-react";
+import { Hammer, Phone, X } from "lucide-react";
 import { SITE_NOTICE, BUSINESS } from "@/data/site";
 
 const STORAGE_KEY = "usg_notice_dismissed";
@@ -35,7 +35,7 @@ export const SiteNotice = () => {
           data-testid="site-notice"
         >
           <div className="pointer-events-auto max-w-[1400px] mx-auto flex items-center gap-3 border border-lime/40 bg-ink/85 backdrop-blur-md px-4 py-2.5 md:px-5">
-            <Sparkles className="w-4 h-4 text-pinklt shrink-0" />
+            <Hammer className="w-4 h-4 text-pinklt shrink-0" />
             <p className="text-white/85 text-xs md:text-sm leading-snug flex-1">
               {SITE_NOTICE.text}
             </p>

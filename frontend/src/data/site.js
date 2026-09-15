@@ -202,31 +202,137 @@ export const PARTY_ADDONS = [
 ];
 
 export const PARTY_INCLUDED = [
-  { title: "Trampoline", desc: "In-ground trampoline time supervised by our staff." },
+  { title: "Trampoline", desc: "Trampoline time supervised by our staff." },
   { title: "Obstacle Course", desc: "Age-appropriate courses built for maximum fun." },
-  { title: "Foam Pit", desc: "The crowd favorite — dive, flip, and land soft." },
-  { title: "Dedicated Party Host", desc: "A staff member runs the whole event so you relax." },
+  { title: "Foam Pit", desc: "The crowd favorite." },
+  { title: "Dedicated Party Host", desc: "A staff member runs the whole event so you can relax." },
 ];
 
-export const RECRUITS = [
-  { name: "Cole Davison", level: "USAG Level 10", college: "University of Oklahoma", img: "handstand" },
-  { name: "Maya Fields", level: "USAG Level 9", college: "University of Denver", img: "beamHandstand" },
-  { name: "Ella Ramirez", level: "USAG Level 10", college: "UCLA", img: "heroVault" },
-  { name: "Jordan Pak", level: "USAG Level 9", college: "Stanford University", img: "cheerPose" },
-  { name: "Sophie Nguyen", level: "USAG Level 10", college: "University of Georgia", img: "beamHandstand" },
-  { name: "Grace Miller", level: "USAG Level 9", college: "Boise State", img: "cheerStage" },
+// College alumni grouped by school. `logo` is left null until the gym supplies school logos.
+export const RECRUIT_SCHOOLS = [
+  {
+    school: "Texas Woman's University",
+    short: "TWU",
+    logo: null,
+    athletes: [
+      { name: "Mollie Blessing", sport: "Gymnastics" },
+      { name: "Kristi Costa", sport: "Gymnastics" },
+      { name: "Mackenzie Balderas", sport: "Gymnastics" },
+      { name: "Domi Bonzagni", sport: "Gymnastics" },
+      { name: "Cayden Smout", sport: "Stunt" },
+    ],
+  },
+  {
+    school: "University of Oklahoma",
+    short: "OU",
+    logo: null,
+    athletes: [
+      { name: "Samantha Craus", sport: "Gymnastics" },
+      { name: "Audrey Collins", sport: "Gymnastics" },
+    ],
+  },
+  {
+    school: "Centenary College",
+    short: "Centenary",
+    logo: null,
+    athletes: [
+      { name: "Megan DesJardines", sport: "Gymnastics" },
+      { name: "Sophie Schmitz", sport: "Gymnastics" },
+    ],
+  },
+  {
+    school: "University of Mary Hardin-Baylor",
+    short: "UMHB",
+    logo: null,
+    athletes: [
+      { name: "Ryanne Bealle", sport: "Acro" },
+      { name: "Carsyn Vincent", sport: "Acro" },
+    ],
+  },
+  {
+    school: "Linwood University",
+    short: "Linwood",
+    logo: null,
+    athletes: [
+      { name: "Aleah Turon", sport: "Gymnastics", note: "Now Head Coach — McMurray Gymnastics" },
+    ],
+  },
+  {
+    school: "Southern Connecticut State University",
+    short: "Southern Connecticut",
+    logo: null,
+    athletes: [{ name: "Gracie Hundley", sport: "Gymnastics" }],
+  },
+  {
+    school: "Southern Utah University",
+    short: "Southern Utah",
+    logo: null,
+    athletes: [{ name: "Makenna Burnside", sport: "Gymnastics" }],
+  },
+  {
+    school: "Winona State University",
+    short: "Winona State",
+    logo: null,
+    athletes: [{ name: "Hailey Bryant", sport: "Gymnastics" }],
+  },
+  {
+    school: "Frostburg State University",
+    short: "Frostburg",
+    logo: null,
+    athletes: [{ name: "Kaylee Kosi", sport: "Acro" }],
+  },
+  {
+    school: "Limestone University",
+    short: "Limestone",
+    logo: null,
+    athletes: [{ name: "Lindsey Bryant", sport: "Acro" }],
+  },
+  {
+    school: "Canisius University",
+    short: "Canisius",
+    logo: null,
+    athletes: [{ name: "Jordan Yancy", sport: "Acro" }],
+  },
+  {
+    school: "San Jose State University",
+    short: "San Jose State",
+    logo: null,
+    athletes: [{ name: "Camdyn Foster", sport: "Gymnastics" }],
+  },
+  {
+    school: "Cal Poly",
+    short: "Cal Poly",
+    logo: null,
+    athletes: [{ name: "Morgan Allen", sport: "Stunt" }],
+  },
+  {
+    school: "East Texas Baptist University",
+    short: "ETBU",
+    logo: null,
+    athletes: [{ name: "Norah Collins", sport: "Acro" }],
+  },
+  {
+    school: "Central Michigan University",
+    short: "Central Michigan",
+    logo: null,
+    athletes: [{ name: "Jordan Smith", sport: "Gymnastics" }],
+  },
 ];
 
 export const STAFF = [
-  { name: "Coach Dana", role: "Owner / Head Coach", certs: ["USAG Certified", "Safety/CPR"], img: "coach" },
-  { name: "Coach Rob", role: "Boys & Competitive Director", certs: ["USAG Certified"], img: "handstand" },
-  { name: "Coach Bri", role: "All-Star Cheer Director", certs: ["USASF Certified"], img: "cheerPose" },
-  { name: "Coach Sam", role: "Preschool Program Lead", certs: ["USAG Certified", "Early Childhood"], img: "preschoolGroup" },
+  { name: "Tina Martin", role: "Owner / Team Coach" },
+  { name: "Bobby Dombrowski", role: "Owner / Team Coach" },
+  { name: "Michelle Bryant", role: "Office Manager" },
+  { name: "Nancy Martin", role: "Office Manager" },
+  { name: "Jessica Parker", role: "Owner's Assistant" },
+  { name: "Mollie Blessing", role: "Recreational Director / Team Coach" },
 ];
 
 export const CONTACT_TOPICS = [
   "General Inquiry",
+  "Free Trial",
   "Class Enrollment",
+  "Event Sign Up",
   "Birthday Party",
   "Team Tryout",
   "Employment",
@@ -257,12 +363,13 @@ export const PDFS = {
 
 export const CAREERS = {
   intro:
-    "Looking for a career working with children? Do you love children, have a positive attitude, enjoy working as a team, and are you self-motivated? U.S. Gold might be the perfect place for you!",
+    "Looking for a career working with children and teaching cartwheels? U.S. Gold might be the perfect place for you!",
   positions: [
     { title: "Recreational Gymnastics & Tumble Coaches", note: "Teach class fundamentals to a range of ages and levels." },
     { title: "Upper Level Team Gymnastics Coaches", note: "Coach optional-level athletes toward competitive success." },
     { title: "Compulsory Team Gymnastics Coaches", note: "Develop athletes through USAG compulsory levels." },
     { title: "Special Events Coordinator", note: "Run birthday parties and special events (weekends required)." },
+    { title: "Preschool Gymnastics Coaches", note: "Help our youngest athletes develop a love for gymnastics (weekday mornings required)." },
   ],
 };
 

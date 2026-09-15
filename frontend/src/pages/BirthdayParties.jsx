@@ -1,6 +1,6 @@
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { BookingDialog } from "@/components/common/BookingDialog";
+import { Link } from "react-router-dom";
 import { IMG, PARTY_TIERS, PARTY_ADDONS, PARTY_INCLUDED } from "@/data/site";
 import { Check, Plus, ShieldCheck, Cake, Clock, Users } from "lucide-react";
 
@@ -32,9 +32,13 @@ const BirthdayParties = () => (
                   <div className="flex items-center gap-3"><ShieldCheck className="w-5 h-5 text-lime" /> {tier.deposit}</div>
                 </div>
                 <div className="mt-8">
-                  <BookingDialog bookingType="birthday_party" itemName={tier.name} price={tier.price} trigger={
-                    <button className={`w-full font-display uppercase text-lg py-4 transition-colors ${tier.featured ? "bg-lime text-ink hover:bg-white" : "bg-white/10 text-white hover:bg-lime hover:text-ink"}`} data-testid={`party-book-${tier.name}`}>Book This Party</button>
-                  } />
+                  <Link
+                    to={`/contact?topic=Birthday%20Party&package=${encodeURIComponent(tier.name)}`}
+                    className={`w-full font-display uppercase text-lg py-4 transition-colors flex items-center justify-center ${tier.featured ? "bg-lime text-ink hover:bg-white" : "bg-white/10 text-white hover:bg-lime hover:text-ink"}`}
+                    data-testid={`party-book-${tier.name}`}
+                  >
+                    Book This Party
+                  </Link>
                 </div>
               </div>
             </Reveal>
@@ -76,8 +80,8 @@ const BirthdayParties = () => (
           <div className="mt-10 bg-ink text-white p-8 md:p-10 flex items-start gap-4">
             <ShieldCheck className="w-8 h-8 text-lime shrink-0" />
             <div>
-              <h4 className="font-display text-2xl uppercase">Digital waiver, built into checkout</h4>
-              <p className="text-white/60 mt-2 max-w-2xl">No printing, no scrambling on party day. Every booking includes a quick digital waiver you sign right in the checkout — signed and on file before you arrive.</p>
+              <h4 className="font-display text-2xl uppercase">Digital waiver — coming soon!</h4>
+              <p className="text-white/60 mt-2 max-w-2xl">We're setting up online waivers so there's no printing and no scrambling on party day. For now we'll send the waiver over with your party details — give us a call at 817.491.9996 with any questions.</p>
             </div>
           </div>
         </Reveal>

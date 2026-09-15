@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, Phone, MapPin, Star, Instagram, Flame } from "lucide-react";
 import { MagneticButton } from "@/components/common/MagneticButton";
-import { StatCounter } from "@/components/common/StatCounter";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { IMG, STATS, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
+import { IMG, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
 import api from "@/lib/api";
 
 const SPOTLIGHT_COPY = {
@@ -218,15 +217,6 @@ const Home = () => {
               Explore Programs
             </MagneticButton>
           </motion.div>
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="bg-lime py-16 md:py-20 diagonal-top -mt-8 relative z-10">
-        <div className="max-w-[1400px] mx-auto px-5 md:px-8 grid grid-cols-2 lg:grid-cols-4 gap-10">
-          {STATS.map((s) => (
-            <StatCounter key={s.label} {...s} numberClass="text-ink" labelClass="text-ink" />
-          ))}
         </div>
       </section>
 

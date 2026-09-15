@@ -2,14 +2,14 @@ import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { IMG, STAFF, BUSINESS } from "@/data/site";
-import { BadgeCheck, MapPin } from "lucide-react";
+import { Camera, MapPin } from "lucide-react";
 
 const About = () => (
   <div data-testid="about-page">
     <PageHero
       overline="Our story"
       title={<>More than a gym<span className="text-lime">.</span></>}
-      subtitle="Two decades of turning nervous first-timers into confident athletes — and building a community families are proud to be part of."
+      subtitle="Over three decades of turning nervous first-timers into confident athletes — and building a community families are proud to be part of."
       image={IMG.facilityFloor}
     />
 
@@ -46,23 +46,18 @@ const About = () => (
     {/* STAFF STRIP */}
     <section className="bg-cream text-ink py-20 md:py-28 diagonal-top">
       <div className="max-w-[1400px] mx-auto px-5 md:px-8">
-        <SectionHeading light overline="Meet the team" title="Certified & obsessed with your kid's progress" className="mb-12 max-w-3xl" />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <SectionHeading light overline="Meet the team" title="The people in the gym every day" className="mb-12 max-w-3xl" />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
           {STAFF.map((s, i) => (
-            <Reveal key={s.role} delay={i * 0.08}>
-              <div className="bg-white border-2 border-ink hard-shadow overflow-hidden group">
-                <div className="h-56 overflow-hidden">
-                  <img loading="lazy" decoding="async" src={IMG[s.img]} alt={s.role} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <Reveal key={s.name} delay={i * 0.06}>
+              <div className="bg-white border-2 border-ink hard-shadow overflow-hidden h-full" data-testid={`staff-card-${i}`}>
+                <div className="h-56 flex flex-col items-center justify-center gap-2 bg-ink/[0.04] border-b-2 border-ink/10">
+                  <Camera className="w-7 h-7 text-ink/30" />
+                  <span className="text-ink/45 text-[11px] uppercase tracking-[0.2em] font-bold">Photo coming soon</span>
                 </div>
                 <div className="p-5">
-                  <div className="font-display text-xl uppercase leading-tight mb-3">{s.role}</div>
-                  <div className="flex flex-wrap gap-2">
-                    {s.certs.map((c) => (
-                      <span key={c} className="inline-flex items-center gap-1 bg-ink text-lime text-[10px] uppercase tracking-wide font-bold px-2 py-1">
-                        <BadgeCheck className="w-3 h-3" /> {c}
-                      </span>
-                    ))}
-                  </div>
+                  <div className="font-display text-2xl uppercase leading-none">{s.name}</div>
+                  <div className="text-coral text-xs uppercase tracking-[0.15em] font-bold mt-2">{s.role}</div>
                 </div>
               </div>
             </Reveal>
