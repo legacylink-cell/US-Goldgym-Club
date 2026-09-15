@@ -1,0 +1,30 @@
+{
+  "summary": "Backend (32 pytest tests) + Frontend (Playwright) regression for the email-notification + dialog-removal batch. All backend endpoints pass, including new /api/admin/email/status (returns configured:false, staff_to:staff@usgoldgymclub.com), /api/admin/email/test returns 400 with clear 'Email is not configured yet' message (NOT 500), /api/gcal/events returns non-empty list with id/title/date/time/category, /api/admin/analytics?days=30 returns 200. All CTAs across Preschool / Recreational / Cheer / SpecialEvents / BirthdayParties now navigate to /contact with correct topic + prefilled message and NO dialog opens. Contact form shows 'or talk to us now' divider and tel: 'CALL 817.491.9996' button (data-testid=contact-form-call). Contact form submission still returns 'Message sent!' toast. Calendar renders purple month view SEPTEMBER 2026 with MONTH/WEEK/LIST toggle, legend (Open Gym, Clinics, Camps, Special Events) and real events.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "mailer.email_enabled() correctly gates both notify_staff and confirm_to_parent so unconfigured SMTP is a silent no-op (only INFO log). Good.",
+    "/api/admin/email/test raises HTTPException(400) before attempting SMTP; returned detail is user-friendly ('Email is not configured yet (SMTP settings missing).'). Good.",
+    "Preschool/Recreational/Cheer/SpecialEvents/BirthdayParties CTAs now emit anchor tags with /contact?topic=&program|event|package= query params; Contact.jsx reads them via useSearchParams and pre-fills both topic dropdown and message. Verified end-to-end.",
+    "QuoteRequestDialog.jsx and BookingDialog.jsx components still exist in the repo but are no longer imported/referenced by the tested pages (0 dialogs after clicking any CTA). Consider removing dead code in a future cleanup pass.",
+    "Preloaded /assets/floor-teen.webp emits repeated 'preloaded but not used' console warnings across pages — cosmetic only, worth fixing the <link rel=preload> or removing it.",
+    "server.py is now 967 lines and continues to grow; will soon exceed the 700-line guideline and should be split (auth, admin, public, gcal, mailer routes)."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "100% (32/32)", "frontend": "100% of scenarios in request"},
+  "test_credentials": "admin@usgoldgym.com / GymAdmin2026! (verified working)",
+  "seed_data_creation": "One /api/contact submission via UI (TEST QA <timestamp>) and several backend TEST_ prefixed contacts/leads/newsletter entries created by pytest; safe to purge via /api/admin/reset-data if desired.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "SMTP_PASSWORD is intentionally empty; mailer.email_enabled() returns False and forms remain functional (silent skip). /api/admin/email/test MUST return 400 not 500 while unconfigured — assertion in TestEmailConfig. Google Calendar feed is cached 10min server-side; if flaky, retry after 60s. All click-to-contact CTAs use anchor <Link>s (no dialog); verified data-testids: preschool-request-pricing, preschool-book-<name>, rec-request-pricing, cheer-request-pricing, event-inquire-<i>, event-signup-<i>, party-book-<name>, contact-form-call (tel:+18174919996), cal-title. Contact form field testids: contact-name, contact-email, contact-phone, contact-topic, contact-message, contact-submit (note: NOT contact-form-name).",
+  "rca of the issue": "n/a — no failures"
+}

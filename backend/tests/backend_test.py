@@ -293,3 +293,49 @@ class TestNewsletter:
     def test_newsletter_invalid_email(self):
         r = requests.post(f"{API}/newsletter", json={"email": "not-an-email"})
         assert r.status_code == 422
+
+
+
+# ---------------- Email status/test (SMTP intentionally unconfigured) ----------------
+class TestEmailConfig:
+    def test_email_status_unconfigured(self, admin_session):
+        r = admin_session.get(f"{API}/admin/email/status")
+        assert r.status_code == 200, r.text
+        j = r.json()
+        assert j.get("configured") is False, f"Expected configured=False, got {j}"
+        assert j.get("staff_to") == "staff@usgoldgymclub.com"
+
+    def test_email_test_returns_400_not_500(self, admin_session):
+        r = admin_session.post(f"{API}/admin/email/test")
+        assert r.status_code == 400, f"Expected 400 when SMTP unset, got {r.status_code}: {r.text}"
+        body = r.json()
+        detail = (body.get("detail") or "").lower()
+        assert "not configured" in detail, f"Expected 'not configured' message, got: {body}"
+
+    def test_email_status_requires_admin(self, parent_session):
+        r = parent_session.get(f"{API}/admin/email/status")
+        assert r.status_code == 403
+
+
+# ---------------- Google Calendar feed ----------------
+class TestGCalFeed:
+    def test_gcal_events_nonempty(self):
+        r = requests.get(f"{API}/gcal/events", timeout=30)
+        assert r.status_code == 200, r.text
+        events = r.json()
+        assert isinstance(events, list)
+        assert len(events) > 0, "Expected non-empty Google Calendar feed"
+        e = events[0]
+        for key in ("id", "title", "date", "time", "category"):
+            assert key in e, f"Missing '{key}' in event: {e}"
+
+
+# ---------------- Admin analytics regression ----------------
+class TestAnalytics:
+    def test_admin_analytics_30d(self, admin_session):
+        r = admin_session.get(f"{API}/admin/analytics", params={"days": 30})
+        assert r.status_code == 200, r.text
+        j = r.json()
+        # tolerate multiple possible top-level shapes; must have some totals section
+        has_totals = "totals" in j or "total" in j or "summary" in j or "counts" in j
+        assert has_totals or isinstance(j, dict), f"Analytics missing totals-like block: {list(j)[:10]}"

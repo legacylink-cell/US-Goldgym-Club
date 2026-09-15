@@ -297,3 +297,29 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   Hardening added anyway: ErrorBoundary now detects stale-bundle signatures (Loading chunk / ChunkLoadError /
   "before initialization" / "Unexpected token '<'" / failed dynamic import) and performs ONE silent
   hard reload (sessionStorage flag usg_bundle_reloaded) instead of showing the crash screen to a parent.
+
+## Changelog — 2026-06 (Email notifications + all CTAs to the form + mobile bar polish)
+- EMAIL (Microsoft 365 SMTP, user choice): new /app/backend/mailer.py sends a staff notification to
+  STAFF_TO with the parent's address as Reply-To, plus a branded "we got your message" confirmation to
+  the parent. Wired via FastAPI BackgroundTasks into /api/contact, /api/leads, /api/newsletter,
+  /api/bookings. Gated by mailer.email_enabled() — with SMTP_PASSWORD empty it logs
+  "Email not configured — skipped" and forms keep saving, so nothing breaks pre-credentials.
+  Helpers: POST /api/admin/email/test, GET /api/admin/email/status. Env keys added to backend/.env
+  (SMTP_HOST/PORT/USERNAME/PASSWORD, MAIL_FROM, STAFF_TO) — SMTP_PASSWORD intentionally blank and MUST
+  also be added to deployment secrets for production. Dep: aiosmtplib.
+  PENDING FROM USER: Microsoft 365 app password for staff@usgoldgymclub.com. Full instructions written to
+  /app/memory/SMTP_SETUP.md (enable Authenticated SMTP on the mailbox, create app password, send it over).
+  Note Microsoft disables basic SMTP AUTH by default after Dec 2026 — migrate to Graph Mail.Send or
+  Resend before then.
+- ALL CTAs now point at the contact form (user request): the last pop-up dialogs were replaced with
+  deep links — Preschool "Request Class Pricing" + extras "Request Info", Recreational "Request Pricing",
+  Cheer "Request Pricing", Special Events "Inquire". Every CTA carries topic + program/event/package so
+  Contact.jsx prefills the dropdown and message (it now also reads the `program` param).
+  QuoteRequestDialog.jsx / BookingDialog.jsx are now dead code (kept, unreferenced by public pages).
+- Contact form: added an "or talk to us now" divider plus a full-width tel: "Call 817.491.9996" button
+  (data-testid=contact-form-call) under Send Message.
+- Mobile action bar: now slides out of view on scroll-down and returns instantly on scroll-up or at the
+  page bottom (rAF-throttled, 300ms transform), with iOS safe-area padding, and the layout reserves
+  bottom space so the footer credit is never covered. Verified at 390x844.
+- Removed the hero <link rel=preload> that was logging "preloaded but not used" warnings on every page.
+- Verified by testing agent: /app/test_reports/iteration_15.json — backend 32/32 pytest, frontend 100%.

@@ -6,11 +6,11 @@ import MobileCallBar from "@/components/common/MobileCallBar";
 import SiteNotice from "@/components/common/SiteNotice";
 
 export const Layout = ({ children }) => (
-  <div className="grain min-h-screen bg-ink">
+  <div className="grain min-h-screen bg-ink pb-14 md:pb-0">
     <AnnouncementBar />
     <Navbar />
     <SiteNotice />
-    <main className="pt-9 pb-16 md:pb-0">{children ?? <Outlet />}</main>
+    <main className="pt-9">{children ?? <Outlet />}</main>
     <Footer />
     <MobileCallBar />
   </div>
