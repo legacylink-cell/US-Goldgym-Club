@@ -238,3 +238,14 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   nervous first-timers into confidant athletes - and building a community families are proud to be part
   of" (user's spelling "confidant" and hyphen kept verbatim; flagged to them as a possible typo for
   "confident"). Verified live on /about.
+
+- 2026-06: About collage — the Unsplash pompom cheerleader stock photo was replaced with a REAL US Gold
+  photo (cheer squad huddle, from the user's "US GOLD Pics.zip" asset). Saved as
+  /assets/cheer-squad.webp (758x1000, 123KB) and wired to IMG.cheerPose, so it also now appears on the
+  Cheer page "Cheer Tumble Classes" card. Verified on /about.
+  The zip (15 real photos: beam, split leap, vault handstand, bars release, floor poses, podium shots,
+  coach with athletes, gym wide shots) is available at
+  https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/vl6am4tm_US%20GOLD%20Pics.zip
+  — remaining stock images that could be swapped for these: cheerJump, cheerSquad, cheerStage, birthday,
+  facilityEquip, facilityFloor, preschoolMat, preschoolPlay. NOTE: 6 of the zip photos need EXIF rotation
+  handling (use ImageOps.exif_transpose) and the 4000x3000 "inbound" shots are sideways wide gym views.

@@ -7,7 +7,7 @@ export const IMG = {
   preschoolBeam: "/assets/vault-kid.webp",
   preschoolMat: "https://images.unsplash.com/photo-1655842556563-2c28adb3fcc5?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
   preschoolPlay: "https://images.unsplash.com/photo-1655842556550-6809c404ce9c?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
-  cheerPose: "https://images.unsplash.com/photo-1639510478219-459967c2be92?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
+  cheerPose: "/assets/cheer-squad.webp",
   cheerJump: "https://images.unsplash.com/photo-1589748263853-21d0bd847017?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
   cheerSquad: "https://images.unsplash.com/photo-1705592341761-fdca5d1b7f2e?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
   cheerStage: "https://images.unsplash.com/photo-1589748239338-afe695e833d3?crop=entropy&cs=srgb&fm=webp&q=70&w=900",
