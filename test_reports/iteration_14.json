@@ -1,0 +1,23 @@
+{
+  "summary": "Frontend-only regression for content/UX batch (SiteNotice, Home stats removed, About team, College Recruits grouping, Camps 2027 note, Special Events + Birthday Parties deep-link to /contact, Contact topics/subtitle/submit, Careers intro + new position). All 9 requested scenarios verified via Playwright against the preview URL. All 14 public routes load 200. No console/page errors seen.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Contact.jsx: prefillTopic uses CONTACT_TOPICS.includes(params.get('topic')) — good; ok that ?topic=Event%20Sign%20Up decoded correctly by useSearchParams.",
+    "SiteNotice storage key uses version tag ('2026-06'); dismissal persists across reloads. Works as designed.",
+    "STAFF names render via CSS text-transform: uppercase — content is correct; note this affects any innerText-based assertions in future tests (use case-insensitive)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped)", "frontend": "100%"},
+  "seed_data_creation": "One contact lead POSTed via UI (name 'Test QA', email 'qa+test@example.com') — success toast shown; safe to ignore.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All content changes in this batch verified verbatim: Home stats band gone; SiteNotice uses Hammer icon (no sparkle) with working close+persist; About subtitle 'Over three decades…' and 6 staff cards with 'Photo coming soon' & no certs; CollegeRecruits shows '22 alumni · 15 programs' with TWU roster (Mollie Blessing, Kristi Costa, Mackenzie Balderas, Domi Bonzagni — Gymnastics; Cayden Smout — Stunt) and Aleah Turon 'Now Head Coach — McMurray Gymnastics'; Camps has camps-2027-note; Special Events Sign Up buttons deep-link to /contact?topic=Event Sign Up&event=…, prefilling topic + message; Inquire (request-only) still opens QuoteRequestDialog; Birthday Parties 'Book This Party' deep-links to /contact?topic=Birthday Party&package=…; What's Included wording verified; waiver reads 'Digital waiver — coming soon!'; Contact subtitle updated, topic dropdown has exactly 7 values in required order; POST /api/contact succeeded with success toast; Careers intro matches, 5 positions incl. 'Preschool Gymnastics Coaches (weekday mornings required)'; Calendar iframe present on desktop; all 14 routes return 200.",
+  "rca of the issue": "n/a — no failures"
+}

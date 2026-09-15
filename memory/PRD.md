@@ -192,3 +192,30 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   it off (user asked for it to stay up until turned off manually); bump `version` to re-show it to
   people who already dismissed it.
 - Verified in preview: shows on load, hides on scroll, dismiss persists across reload.
+
+## Changelog — 2026-06 (Content batch: About, Recruits, Camps, Parties, Contact, Careers)
+- SiteNotice: sparkle icon swapped for a hammer (user: no AI-looking icons anywhere on the site).
+- Home: pink stats band (22+ years / 8000+ athletes / 140+ wins / 30+ coaches) REMOVED at user request
+  (numbers were placeholders). STATS still exists in site.js if it's ever wanted back.
+- About: hero subtitle now "Over three decades of turning nervous first-timers into confident athletes…".
+  Team section rebuilt with the 6 real staff (Tina Martin & Bobby Dombrowski — Owner/Team Coach;
+  Michelle Bryant & Nancy Martin — Office Manager; Jessica Parker — Owner's Assistant; Mollie Blessing —
+  Recreational Director/Team Coach), every card shows a "Photo coming soon" placeholder, and ALL
+  certification badges were removed (USAG gym, may return later). Heading is "The people in the gym every
+  day" — user still owes final "Meet the team" and "Rooted in the community" wording + photos.
+- College Recruits: photos removed; 22 alumni now grouped into 15 school cards (RECRUIT_SCHOOLS in site.js,
+  each with a `logo: null` slot ready for the school logos the user is sourcing). Aleah Turon carries the
+  note "Now Head Coach — McMurray Gymnastics". SPELLING TO CONFIRM with user: "Linwood University"
+  (likely Lindenwood) and "McMurray" (likely McMurry).
+- Camps: added "Summer 2027 camp info coming early 2027!" callout (data-testid=camps-2027-note).
+- Special Events: "Sign Up" no longer opens the booking dialog — it deep-links to
+  /contact?topic=Event Sign Up&event=<event>.
+- Birthday Parties: "Book This Party" deep-links to /contact?topic=Birthday Party&package=<tier>;
+  What's Included wording trimmed (no "in-ground", no "dive, flip, and land soft", "so you can relax");
+  waiver block now reads "Digital waiver — coming soon!". Header photo still to be supplied by user.
+- Contact: subtitle "…one of our team members will get back to you."; topic list is now General Inquiry,
+  Free Trial, Class Enrollment, Event Sign Up, Birthday Party, Team Tryout, Employment; the form prefills
+  topic + message from the query string.
+- Careers: intro now "Looking for a career working with children and teaching cartwheels? U.S. Gold might
+  be the perfect place for you!" and added "Preschool Gymnastics Coaches (weekday mornings required)".
+- Verified by testing agent: /app/test_reports/iteration_14.json — 100% frontend pass, all 14 routes 200.
