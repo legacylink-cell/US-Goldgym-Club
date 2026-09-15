@@ -1,6 +1,12 @@
 import React from "react";
 import { API } from "@/lib/api";
 
+// A visitor holding a stale/partial bundle (old cached index.html, dev hot-reload,
+// interrupted deploy) gets module-init or chunk errors. One silent hard reload fixes
+// it, so recover instead of showing a crash screen.
+const STALE_BUNDLE = /Loading chunk|ChunkLoadError|before initialization|Unexpected token '<'|dynamically imported module/i;
+const RELOAD_FLAG = "usg_bundle_reloaded";
+
 export class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -8,6 +14,12 @@ export class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
+    const message = String((error && error.message) || error);
+    if (STALE_BUNDLE.test(message) && !sessionStorage.getItem(RELOAD_FLAG)) {
+      sessionStorage.setItem(RELOAD_FLAG, "1");
+      window.location.reload();
+      return { hasError: false, message: "", stack: "" };
+    }
     return { hasError: true, message: String(error && error.message || error), stack: String(error && error.stack || "") };
   }
 

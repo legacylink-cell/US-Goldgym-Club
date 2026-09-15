@@ -288,3 +288,12 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   Open Gym), dialog renders correctly.
 - Special Events "Sign Up" -> contact form was already done in the earlier batch and re-confirmed in code
   (SpecialEvents.jsx line ~44) and by testing agent in iteration_14.
+
+- 2026-06 (calendar crash report): user hit "Something went wrong — Cannot access '__WEBPACK_DEFAULT_EXPORT__'
+  before initialization" on /calendar. Diagnosis: transient stale-module state from the dev server's hot
+  reload while CalendarPage.jsx was being rewritten; /calendar renders correctly (14 events, SEPTEMBER 2026
+  header, zero page errors) and production chunk hashes were all verified present and self-consistent
+  (prod index.html is served no-store, so chunk names can't drift). NOT a code bug.
+  Hardening added anyway: ErrorBoundary now detects stale-bundle signatures (Loading chunk / ChunkLoadError /
+  "before initialization" / "Unexpected token '<'" / failed dynamic import) and performs ONE silent
+  hard reload (sessionStorage flag usg_bundle_reloaded) instead of showing the crash screen to a parent.
