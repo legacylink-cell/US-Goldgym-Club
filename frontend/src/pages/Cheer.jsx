@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { PricingDiscounts } from "@/components/common/PricingDiscounts";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { MagneticButton } from "@/components/common/MagneticButton";
@@ -65,6 +66,8 @@ const Cheer = () => (
             <p className="text-white/60 mt-4 max-w-2xl mx-auto">Our all-star program is built on discipline, performance, and family. Athletes train stunting, jumps, and routines while building bonds that last a lifetime.</p>
           </div>
         </Reveal>
+
+        <PricingDiscounts program="Cheer Tumble Classes" note="Tumble athletes often train twice a week, and cheer siblings are common around here — both earn a discount." />
       </div>
     </section>
   </div>

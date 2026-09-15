@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { PricingDiscounts } from "@/components/common/PricingDiscounts";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
 import { IMG, PRESCHOOL_TIERS, PRESCHOOL_EXTRAS } from "@/data/site";
@@ -47,20 +48,7 @@ const Preschool = () => (
           ))}
         </div>
 
-        {/* Pricing CTA */}
-        <div className="mt-12 border border-lime/40 bg-lime/[0.05] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="font-display text-3xl md:text-4xl uppercase text-white">Tuition varies by weekly frequency</h3>
-            <p className="text-white/60 mt-2 max-w-xl">Preschool pricing depends on how many days per week your child attends. Request a personalized quote and we'll get right back to you.</p>
-          </div>
-          <Link
-            to="/contact?topic=Class%20Enrollment&program=Preschool"
-            className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2"
-            data-testid="preschool-request-pricing"
-          >
-            Request Class Pricing <ArrowUpRight className="w-5 h-5" />
-          </Link>
-        </div>
+        <PricingDiscounts program="Preschool" note="Preschool families often add a second morning or bring a sibling along — both come with a discount." />
       </div>
     </section>
 

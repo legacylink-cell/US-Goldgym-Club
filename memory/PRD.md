@@ -330,3 +330,11 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   /contact?topic=Class Enrollment&program=Recreational Classes. Deliberately NO percentages or dollar
   figures — CONFIRM with the user whether they want exact discount amounts published.
   Verified on /recreational (old tuition copy gone, CTA routes correctly).
+
+- 2026-06: tuition messaging unified. New shared component
+  /app/frontend/src/components/common/PricingDiscounts.jsx (props: program, note) renders the
+  "Family friendly pricing / More classes, more savings" panel with Multi-class + Sibling discount cards
+  and an "Ask about discounts" CTA to /contact?topic=Class Enrollment&program=<program>.
+  Used on Recreational (replaces the earlier inline copy), Preschool (replaces "Tuition varies by weekly
+  frequency"), and Cheer (new, after the tracks grid). Competitive keeps its "Inquire About Team" CTA since
+  team fees are quoted individually. Verified on all three pages.
