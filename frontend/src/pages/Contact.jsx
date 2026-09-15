@@ -18,7 +18,7 @@ const Contact = () => {
   const [params] = useSearchParams();
   // deep links from Special Events / Birthday Parties prefill the topic and message
   const prefillTopic = CONTACT_TOPICS.includes(params.get("topic")) ? params.get("topic") : "General Inquiry";
-  const subject = params.get("event") || params.get("package");
+  const subject = params.get("event") || params.get("package") || params.get("program");
   const [form, setForm] = useState({
     name: "", email: "", phone: "",
     topic: prefillTopic,
@@ -90,6 +90,22 @@ const Contact = () => {
               <button type="submit" disabled={loading} className="w-full bg-lime text-ink font-display uppercase text-lg py-4 hover:bg-white transition-colors disabled:opacity-60" data-testid="contact-submit">
                 {loading ? "Sending..." : "Send Message"}
               </button>
+
+              <div className="flex items-center gap-4 pt-1">
+                <span className="h-px flex-1 bg-white/15" />
+                <span className="text-white/45 text-xs uppercase tracking-[0.2em]">or talk to us now</span>
+                <span className="h-px flex-1 bg-white/15" />
+              </div>
+              <a
+                href={`tel:${BUSINESS.phoneRaw}`}
+                className="w-full border-2 border-lime text-lime font-display uppercase text-lg py-4 hover:bg-lime hover:text-ink transition-colors flex items-center justify-center gap-2"
+                data-testid="contact-form-call"
+              >
+                <Phone className="w-5 h-5" /> Call {BUSINESS.phone}
+              </a>
+              <p className="text-white/45 text-sm text-center">
+                Prefer the phone? Our front desk is happy to answer questions on the spot.
+              </p>
             </form>
           </Reveal>
 

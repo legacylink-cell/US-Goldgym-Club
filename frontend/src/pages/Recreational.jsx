@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
 import { IMG, REC_LEVELS, TUMBLE_CLASSES } from "@/data/site";
 import { ArrowRight, ArrowUpRight, Clock } from "lucide-react";
 
@@ -85,11 +85,13 @@ const Recreational = () => (
             <h3 className="font-display text-3xl md:text-4xl uppercase text-white">Tuition set by weekly frequency</h3>
             <p className="text-white/60 mt-2 max-w-xl">Rates depend on your class schedule. Request a quote and we'll match your athlete to the right level and price.</p>
           </div>
-          <QuoteRequestDialog program="Recreational Classes" trigger={
-            <button className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2" data-testid="rec-request-pricing">
-              Request Pricing <ArrowUpRight className="w-5 h-5" />
-            </button>
-          } />
+          <Link
+            to="/contact?topic=Class%20Enrollment&program=Recreational%20Classes"
+            className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2"
+            data-testid="rec-request-pricing"
+          >
+            Request Pricing <ArrowUpRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
     </section>

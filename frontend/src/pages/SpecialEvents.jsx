@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
 import { IMG, SPECIAL_EVENTS } from "@/data/site";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
 
@@ -35,11 +34,13 @@ const SpecialEvents = () => (
                 <p className="text-white/60 mt-4 flex-1">{ev.desc}</p>
                 <div className="mt-6">
                   {isRequestOnly(ev.price) ? (
-                    <QuoteRequestDialog program={ev.name} trigger={
-                      <button className="w-full border border-lime text-lime font-display uppercase py-3 hover:bg-lime hover:text-ink transition-colors flex items-center justify-center gap-2" data-testid={`event-inquire-${i}`}>
-                        Inquire <ArrowUpRight className="w-4 h-4" />
-                      </button>
-                    } />
+                    <Link
+                      to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(ev.name)}`}
+                      className="w-full border border-lime text-lime font-display uppercase py-3 hover:bg-lime hover:text-ink transition-colors flex items-center justify-center gap-2"
+                      data-testid={`event-inquire-${i}`}
+                    >
+                      Inquire <ArrowUpRight className="w-4 h-4" />
+                    </Link>
                   ) : (
                     <Link
                       to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(ev.name)}`}

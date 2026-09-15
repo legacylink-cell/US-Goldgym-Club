@@ -5,7 +5,7 @@ import os
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends
+from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, BackgroundTasks
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import BaseModel, Field, EmailStr, BeforeValidator
@@ -20,6 +20,7 @@ import secrets
 import re
 import httpx
 import icalendar
+import mailer
 import recurring_ical_events
 from zoneinfo import ZoneInfo
 
@@ -307,11 +308,17 @@ async def refresh(request: Request, response: Response):
 
 # ---------------- Leads (Request Pricing) ----------------
 @api_router.post("/leads")
-async def create_lead(data: LeadInput):
+async def create_lead(data: LeadInput, background: BackgroundTasks):
     doc = data.model_dump()
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
     doc["status"] = "new"
     res = await db.leads.insert_one(doc)
+    background.add_task(mailer.notify_staff, "lead", {
+        "Name": data.name, "Email": data.email, "Phone": data.phone,
+        "Child": data.child_name, "Child age": data.child_age,
+        "Program": data.program, "Frequency": data.frequency, "Message": data.message,
+    }, data.email)
+    background.add_task(mailer.confirm_to_parent, data.email, data.name, "lead")
     return {"id": str(res.inserted_id), "message": "Request received"}
 
 
@@ -325,10 +332,15 @@ async def list_leads(admin: dict = Depends(require_admin)):
 
 # ---------------- Contact ----------------
 @api_router.post("/contact")
-async def create_contact(data: ContactInput):
+async def create_contact(data: ContactInput, background: BackgroundTasks):
     doc = data.model_dump()
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
     res = await db.contacts.insert_one(doc)
+    background.add_task(mailer.notify_staff, "contact", {
+        "Topic": data.topic, "Name": data.name, "Email": data.email,
+        "Phone": data.phone, "Message": data.message,
+    }, data.email)
+    background.add_task(mailer.confirm_to_parent, data.email, data.name, "contact")
     return {"id": str(res.inserted_id), "message": "Message sent"}
 
 
@@ -345,7 +357,7 @@ async def report_client_error(data: ClientErrorInput):
 
 # ---------------- Newsletter / Email List ----------------
 @api_router.post("/newsletter")
-async def subscribe_newsletter(data: NewsletterInput):
+async def subscribe_newsletter(data: NewsletterInput, background: BackgroundTasks):
     email = data.email.lower()
     existing = await db.newsletter_subscribers.find_one({"email": email})
     if existing:
@@ -355,6 +367,8 @@ async def subscribe_newsletter(data: NewsletterInput):
         "name": data.name or "",
         "created_at": datetime.now(timezone.utc).isoformat(),
     })
+    background.add_task(mailer.notify_staff, "newsletter", {"Email": email, "Name": data.name or ""}, email)
+    background.add_task(mailer.confirm_to_parent, email, data.name or "", "newsletter")
     return {"message": "You're on the list!", "already": False}
 
 
@@ -376,7 +390,7 @@ async def list_contacts(admin: dict = Depends(require_admin)):
 
 # ---------------- Bookings ----------------
 @api_router.post("/bookings")
-async def create_booking(data: BookingInput, user: dict = Depends(get_current_user)):
+async def create_booking(data: BookingInput, background: BackgroundTasks, user: dict = Depends(get_current_user)):
     if not data.waiver_agreed:
         raise HTTPException(status_code=400, detail="Waiver must be signed to complete booking")
     doc = data.model_dump()
@@ -386,6 +400,13 @@ async def create_booking(data: BookingInput, user: dict = Depends(get_current_us
     doc["status"] = "confirmed"
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
     res = await db.bookings.insert_one(doc)
+    background.add_task(mailer.notify_staff, "booking", {
+        "Type": data.booking_type, "Item": data.item_name, "Date": data.date,
+        "Time": data.time_slot, "Child": data.child_name, "Kids": data.num_kids,
+        "Price": data.price, "Notes": data.notes,
+        "Name": doc["user_name"], "Email": doc["user_email"],
+    }, doc["user_email"])
+    background.add_task(mailer.confirm_to_parent, doc["user_email"], doc["user_name"], "booking")
     return {"id": str(res.inserted_id), "message": "Booking confirmed"}
 
 
@@ -813,6 +834,25 @@ async def export_csv(kind: str, admin: dict = Depends(require_admin)):
         media_type="text/csv",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
+
+
+@api_router.post("/admin/email/test")
+async def test_email(admin: dict = Depends(require_admin)):
+    """Sends a test notification so staff can confirm SMTP works."""
+    if not mailer.email_enabled():
+        raise HTTPException(status_code=400, detail="Email is not configured yet (SMTP settings missing).")
+    await mailer.notify_staff("contact", {
+        "Topic": "SMTP test",
+        "Name": "Website test",
+        "Email": os.environ.get("STAFF_TO", ""),
+        "Message": "If you can read this, website form notifications are working.",
+    }, os.environ.get("STAFF_TO", ""))
+    return {"ok": True, "sent_to": os.environ.get("STAFF_TO", "")}
+
+
+@api_router.get("/admin/email/status")
+async def email_status(admin: dict = Depends(require_admin)):
+    return {"configured": mailer.email_enabled(), "staff_to": os.environ.get("STAFF_TO", "")}
 
 
 @api_router.post("/admin/reset-data")

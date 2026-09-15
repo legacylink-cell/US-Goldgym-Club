@@ -1,6 +1,6 @@
+import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
 import { MagneticButton } from "@/components/common/MagneticButton";
 import { IMG, CHEER_TRACKS } from "@/data/site";
 import { Check, ArrowUpRight } from "lucide-react";
@@ -40,11 +40,13 @@ const Cheer = () => (
                   </ul>
                   <div className="mt-7">
                     {track.cta === "quote" ? (
-                      <QuoteRequestDialog program="Cheer Tumble Classes" trigger={
-                        <button className="bg-lime text-ink font-display uppercase px-6 py-3 hover:bg-white transition-colors flex items-center gap-2" data-testid="cheer-request-pricing">
-                          Request Pricing <ArrowUpRight className="w-5 h-5" />
-                        </button>
-                      } />
+                      <Link
+                        to="/contact?topic=Class%20Enrollment&program=Cheer%20Tumble%20Classes"
+                        className="inline-flex bg-lime text-ink font-display uppercase px-6 py-3 hover:bg-white transition-colors items-center gap-2"
+                        data-testid="cheer-request-pricing"
+                      >
+                        Request Pricing <ArrowUpRight className="w-5 h-5" />
+                      </Link>
                     ) : (
                       <MagneticButton as="link" to="/contact" variant="coral" className="px-6 py-3 text-base" data-testid="cheer-tryout">
                         Tryout Info <ArrowUpRight className="w-5 h-5" />

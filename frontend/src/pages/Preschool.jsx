@@ -1,7 +1,6 @@
+import { Link } from "react-router-dom";
 import { PageHero } from "@/components/common/PageHero";
 import { Reveal, SectionHeading } from "@/components/common/Reveal";
-import { QuoteRequestDialog } from "@/components/common/QuoteRequestDialog";
-import { BookingDialog } from "@/components/common/BookingDialog";
 import { IMG, PRESCHOOL_TIERS, PRESCHOOL_EXTRAS } from "@/data/site";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
@@ -54,11 +53,13 @@ const Preschool = () => (
             <h3 className="font-display text-3xl md:text-4xl uppercase text-white">Tuition varies by weekly frequency</h3>
             <p className="text-white/60 mt-2 max-w-xl">Preschool pricing depends on how many days per week your child attends. Request a personalized quote and we'll get right back to you.</p>
           </div>
-          <QuoteRequestDialog program="Preschool" trigger={
-            <button className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2" data-testid="preschool-request-pricing">
-              Request Class Pricing <ArrowUpRight className="w-5 h-5" />
-            </button>
-          } />
+          <Link
+            to="/contact?topic=Class%20Enrollment&program=Preschool"
+            className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors whitespace-nowrap flex items-center gap-2"
+            data-testid="preschool-request-pricing"
+          >
+            Request Class Pricing <ArrowUpRight className="w-5 h-5" />
+          </Link>
         </div>
       </div>
     </section>
@@ -75,9 +76,13 @@ const Preschool = () => (
                 <div className="text-coral font-bold uppercase text-sm tracking-wide mt-1">{ex.price}</div>
                 <p className="text-ink/70 mt-4 flex-1">{ex.desc}</p>
                 <div className="mt-6">
-                  <BookingDialog bookingType="event" itemName={ex.name} price={ex.price} trigger={
-                    <button className="bg-ink text-white font-display uppercase px-6 py-3 hover:bg-lime hover:text-ink transition-colors" data-testid={`preschool-book-${ex.name}`}>Book Now</button>
-                  } />
+                  <Link
+                    to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(ex.name)}`}
+                    className="inline-block bg-ink text-white font-display uppercase px-6 py-3 hover:bg-lime hover:text-ink transition-colors"
+                    data-testid={`preschool-book-${ex.name}`}
+                  >
+                    Request Info
+                  </Link>
                 </div>
               </div>
             </Reveal>
