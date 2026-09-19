@@ -54,7 +54,7 @@ const Login = () => {
               <Label className="text-white/70 text-xs uppercase">Password</Label>
               <Input required type="password" value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} className="bg-white/5 border-white/20 rounded-none text-white mt-1 h-12" data-testid="login-password" />
             </div>
-            <button type="submit" disabled={loading} className="w-full bg-lime text-ink font-display uppercase text-lg py-4 hover:bg-white transition-colors disabled:opacity-60" data-testid="login-submit">
+            <button type="submit" disabled={loading} className="w-full bg-lime text-ink font-display uppercase text-base md:text-lg py-3 md:py-4 hover:bg-white transition-colors disabled:opacity-60" data-testid="login-submit">
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>

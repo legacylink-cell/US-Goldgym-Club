@@ -30,7 +30,7 @@ export const PricingDiscounts = ({ program, note }) => (
     <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4">
       <Link
         to={`/contact?topic=Class%20Enrollment&program=${encodeURIComponent(program)}`}
-        className="bg-lime text-ink font-display uppercase text-lg px-8 py-4 hover:bg-white transition-colors inline-flex items-center justify-center gap-2"
+        className="bg-lime text-ink font-display uppercase text-base md:text-lg px-6 py-3 md:px-8 md:py-4 hover:bg-white transition-colors inline-flex items-center justify-center gap-2"
         data-testid="pricing-discounts-cta"
       >
         Ask about discounts <ArrowUpRight className="w-5 h-5" />

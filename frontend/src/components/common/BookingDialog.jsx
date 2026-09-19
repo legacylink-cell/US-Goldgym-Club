@@ -123,7 +123,7 @@ export const BookingDialog = ({ bookingType, itemName, price = "", trigger }) =>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-lime text-ink font-display uppercase text-lg py-4 hover:bg-white transition-colors disabled:opacity-60"
+              className="w-full bg-lime text-ink font-display uppercase text-base md:text-lg py-3 md:py-4 hover:bg-white transition-colors disabled:opacity-60"
               data-testid="booking-submit"
             >
               {loading ? "Confirming..." : "Confirm Booking"}

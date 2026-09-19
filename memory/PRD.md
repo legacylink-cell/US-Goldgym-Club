@@ -342,3 +342,13 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
 - 2026-06: College Recruits — added Karter Neal (ETBU, Acro & Tumble, first year, no class year listed)
   alongside Norah Collins, and corrected "Linwood University" to "Lindenwood University". Header count now
   reads 23 alumni - 15 programs (auto-derived). Verified on /college-recruits.
+
+- 2026-06 (mobile polish): CTA sizing is now responsive — MagneticButton base is px-5 py-3 text-base on
+  mobile and px-8 py-4 text-lg from md up, and every hardcoded "text-lg px-8 py-4" CTA across pages/dialogs
+  (Contact, Login, Register, BirthdayParties, PricingDiscounts, Quote/Booking dialogs) was swapped to the
+  same responsive pair. Desktop appearance unchanged.
+  Mobile reviews rebuilt as a CROSS-FADE carousel: all 8 cards stacked absolutely in a min-h-[340px]
+  container, opacity-animated (0.45s ease-in-out), auto-advance every 5s, pause while the user is touching,
+  dots remain tappable (32px targets). The old horizontal snap-scroll (which showed half-cut neighbouring
+  cards on phones) is gone, and there is no horizontal page overflow.
+  Verified at 390x844 (fade always shows a card, no blank frame) and 1440px (desktop 4-up carousel intact).

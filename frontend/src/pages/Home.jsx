@@ -66,42 +66,40 @@ const TestimonialCard = ({ t }) => (
 );
 
 const MobileTestimonials = ({ items }) => {
-  const ref = useRef(null);
   const [active, setActive] = useState(0);
-  const onScroll = () => {
-    const el = ref.current;
-    if (!el) return;
-    setActive(Math.round(el.scrollLeft / el.clientWidth));
-  };
-  const go = (i) => {
-    const el = ref.current;
-    if (el) el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
-  };
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
-    const id = setInterval(() => {
-      setActive((a) => {
-        const next = (a + 1) % items.length;
-        const el = ref.current;
-        if (el) el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
-        return next;
-      });
-    }, 4500);
+    if (paused) return;
+    const id = setInterval(() => setActive((a) => (a + 1) % items.length), 5000);
     return () => clearInterval(id);
-  }, [items.length]);
+  }, [items.length, paused]);
+
   return (
-    <div className="md:hidden">
-      <div ref={ref} onScroll={onScroll} className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-5 px-5 pb-1" data-testid="testimonials-mobile">
-        {items.map((t) => (
-          <div key={t.name} className="snap-center shrink-0 w-[88%]">
+    <div className="md:hidden" data-testid="testimonials-mobile">
+      <div
+        className="relative min-h-[340px]"
+        onTouchStart={() => setPaused(true)}
+        onTouchEnd={() => setPaused(false)}
+      >
+        {items.map((t, i) => (
+          <motion.div
+            key={t.name}
+            className="absolute inset-0"
+            initial={false}
+            animate={{ opacity: active === i ? 1 : 0 }}
+            transition={{ duration: 0.45, ease: "easeInOut" }}
+            style={{ pointerEvents: active === i ? "auto" : "none" }}
+          >
             <TestimonialCard t={t} />
-          </div>
+          </motion.div>
         ))}
       </div>
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center flex-wrap mt-3">
         {items.map((_, i) => (
           <button
             key={i}
-            onClick={() => go(i)}
+            onClick={() => setActive(i)}
             aria-label={`Go to review ${i + 1}`}
             className="w-8 h-8 flex items-center justify-center"
             data-testid={`testimonial-dot-${i}`}

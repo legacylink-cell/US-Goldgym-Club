@@ -87,7 +87,7 @@ const Contact = () => {
                 <Label className="text-white/70 text-xs uppercase">Message</Label>
                 <Textarea required value={form.message} onChange={upd("message")} rows={5} className="bg-white/5 border-white/20 rounded-none text-white mt-1" data-testid="contact-message" />
               </div>
-              <button type="submit" disabled={loading} className="w-full bg-lime text-ink font-display uppercase text-lg py-4 hover:bg-white transition-colors disabled:opacity-60" data-testid="contact-submit">
+              <button type="submit" disabled={loading} className="w-full bg-lime text-ink font-display uppercase text-base md:text-lg py-3 md:py-4 hover:bg-white transition-colors disabled:opacity-60" data-testid="contact-submit">
                 {loading ? "Sending..." : "Send Message"}
               </button>
 
@@ -98,7 +98,7 @@ const Contact = () => {
               </div>
               <a
                 href={`tel:${BUSINESS.phoneRaw}`}
-                className="w-full border-2 border-lime text-lime font-display uppercase text-lg py-4 hover:bg-lime hover:text-ink transition-colors flex items-center justify-center gap-2"
+                className="w-full border-2 border-lime text-lime font-display uppercase text-base md:text-lg py-3 md:py-4 hover:bg-lime hover:text-ink transition-colors flex items-center justify-center gap-2"
                 data-testid="contact-form-call"
               >
                 <Phone className="w-5 h-5" /> Call {BUSINESS.phone}

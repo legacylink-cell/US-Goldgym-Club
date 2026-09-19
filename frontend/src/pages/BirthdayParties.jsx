@@ -34,7 +34,7 @@ const BirthdayParties = () => (
                 <div className="mt-8">
                   <Link
                     to={`/contact?topic=Birthday%20Party&package=${encodeURIComponent(tier.name)}`}
-                    className={`w-full font-display uppercase text-lg py-4 transition-colors flex items-center justify-center ${tier.featured ? "bg-lime text-ink hover:bg-white" : "bg-white/10 text-white hover:bg-lime hover:text-ink"}`}
+                    className={`w-full font-display uppercase text-base md:text-lg py-3 md:py-4 transition-colors flex items-center justify-center ${tier.featured ? "bg-lime text-ink hover:bg-white" : "bg-white/10 text-white hover:bg-lime hover:text-ink"}`}
                     data-testid={`party-book-${tier.name}`}
                   >
                     Book This Party
