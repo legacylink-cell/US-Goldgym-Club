@@ -247,8 +247,8 @@ export const RECRUIT_SCHOOLS = [
     ],
   },
   {
-    school: "Linwood University",
-    short: "Linwood",
+    school: "Lindenwood University",
+    short: "Lindenwood",
     logo: null,
     athletes: [
       { name: "Aleah Turon", sport: "Gymnastics", note: "Now Head Coach — McMurray Gymnastics" },
@@ -306,7 +306,10 @@ export const RECRUIT_SCHOOLS = [
     school: "East Texas Baptist University",
     short: "ETBU",
     logo: null,
-    athletes: [{ name: "Norah Collins", sport: "Acro & Tumble", year: "2027" }],
+    athletes: [
+      { name: "Karter Neal", sport: "Acro & Tumble" },
+      { name: "Norah Collins", sport: "Acro & Tumble", year: "2027" },
+    ],
   },
   {
     school: "Central Michigan University",

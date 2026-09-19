@@ -205,8 +205,8 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   day" — user still owes final "Meet the team" and "Rooted in the community" wording + photos.
 - College Recruits: photos removed; 22 alumni now grouped into 15 school cards (RECRUIT_SCHOOLS in site.js,
   each with a `logo: null` slot ready for the school logos the user is sourcing). Aleah Turon carries the
-  note "Now Head Coach — McMurray Gymnastics". SPELLING TO CONFIRM with user: "Linwood University"
-  (likely Lindenwood) and "McMurray" (likely McMurry).
+  note "Now Head Coach — McMurray Gymnastics". Spelling corrected 2026-06 per user:
+  Linwood -> "Lindenwood University". "McMurray" left as the user wrote it.
 - Camps: added "Summer 2027 camp info coming early 2027!" callout (data-testid=camps-2027-note).
 - Special Events: "Sign Up" no longer opens the booking dialog — it deep-links to
   /contact?topic=Event Sign Up&event=<event>.
@@ -338,3 +338,7 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   Used on Recreational (replaces the earlier inline copy), Preschool (replaces "Tuition varies by weekly
   frequency"), and Cheer (new, after the tracks grid). Competitive keeps its "Inquire About Team" CTA since
   team fees are quoted individually. Verified on all three pages.
+
+- 2026-06: College Recruits — added Karter Neal (ETBU, Acro & Tumble, first year, no class year listed)
+  alongside Norah Collins, and corrected "Linwood University" to "Lindenwood University". Header count now
+  reads 23 alumni - 15 programs (auto-derived). Verified on /college-recruits.
