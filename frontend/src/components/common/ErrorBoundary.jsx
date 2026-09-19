@@ -50,7 +50,7 @@ export class ErrorBoundary extends React.Component {
         <div style={{ minHeight: "100vh", background: "#2C0A4E", color: "#fff", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "Inter, sans-serif", padding: "24px", textAlign: "center" }}>
           <div style={{ fontFamily: "Anton, sans-serif", fontSize: "44px", textTransform: "uppercase", color: "#FF1D8E" }}>Something went wrong</div>
           <p style={{ color: "rgba(255,255,255,0.7)", maxWidth: 520, marginTop: 12 }}>
-            We've logged the details. Please tap reload — if it keeps happening, send us this message:
+            We've logged the details. Please tap reload - if it keeps happening, send us this message:
           </p>
           <pre style={{ marginTop: 16, maxWidth: 640, width: "100%", overflow: "auto", background: "#1E0838", border: "1px solid #4A2A6E", color: "#FFB3D9", fontSize: 12, padding: 14, textAlign: "left", whiteSpace: "pre-wrap" }}>
             {this.state.message}

@@ -352,3 +352,9 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   dots remain tappable (32px targets). The old horizontal snap-scroll (which showed half-cut neighbouring
   cards on phones) is gone, and there is no horizontal page overflow.
   Verified at 390x844 (fade always shows a card, no blank frame) and 1440px (desktop 4-up carousel intact).
+
+- 2026-06: user asked to remove all em dashes from the site. Every "—" in frontend copy (20 files: pages,
+  components, data/site.js, index.html meta, llms.txt) and in backend/mailer.py email templates was
+  replaced with a plain hyphen "-". Verified 0 em dashes rendering on /, /about, /recreational, /contact,
+  /calendar. NOTE: en dashes (–) are still used in numeric ranges only ("9:00 AM – 8:30 PM", "4 – 5 yrs")
+  and in Google Calendar event time labels; ask before changing those.

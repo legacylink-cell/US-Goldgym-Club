@@ -11,7 +11,7 @@ const CollegeRecruits = () => (
     <PageHero
       overline="From our gym to the NCAA"
       title={<>College<br />Recruits</>}
-      subtitle="Our optional-level athletes don't just compete — they get recruited. Meet the alumni taking their skills to the collegiate stage."
+      subtitle="Our optional-level athletes don't just compete - they get recruited. Meet the alumni taking their skills to the collegiate stage."
       image={IMG.beamHandstand}
     />
 

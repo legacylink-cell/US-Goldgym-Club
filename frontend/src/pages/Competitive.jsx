@@ -43,7 +43,7 @@ const Competitive = () => (
         <div className="mt-8 border border-lime/40 bg-lime/[0.05] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
             <h3 className="font-display text-3xl md:text-4xl uppercase text-white">Team fees are by invitation</h3>
-            <p className="text-white/60 mt-2 max-w-xl">Competitive team placement is by evaluation and invite. Fees are custom to each level and season — reach out to learn more or schedule an assessment.</p>
+            <p className="text-white/60 mt-2 max-w-xl">Competitive team placement is by evaluation and invite. Fees are custom to each level and season - reach out to learn more or schedule an assessment.</p>
           </div>
           <MagneticButton as="link" to="/contact" variant="lime" data-testid="comp-contact">Inquire About Team</MagneticButton>
         </div>

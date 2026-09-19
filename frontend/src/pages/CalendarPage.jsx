@@ -64,7 +64,7 @@ const CalendarPage = () => {
       <PageHero
         overline="Live schedule"
         title={<>Calendar<span className="text-lime">.</span></>}
-        subtitle="Everything happening at the gym — clinics, open gyms, camps, and special events, straight from our own calendar."
+        subtitle="Everything happening at the gym - clinics, open gyms, camps, and special events, straight from our own calendar."
         image={IMG.facilityEquip}
         height="min-h-[45vh]"
       />
@@ -158,7 +158,7 @@ const CalendarPage = () => {
                           <span className="block font-normal normal-case opacity-80">{e.time}</span>
                         </button>
                       ))}
-                      {dayEvents.length === 0 && <div className="text-white/20 text-xs">—</div>}
+                      {dayEvents.length === 0 && <div className="text-white/20 text-xs">-</div>}
                     </div>
                   </div>
                 );
@@ -190,7 +190,7 @@ const CalendarPage = () => {
           )}
 
           <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-2 text-white/50 text-sm">
-            <span>Dates and times are subject to change — call the front desk to confirm.</span>
+            <span>Dates and times are subject to change - call the front desk to confirm.</span>
             <a href={`tel:${BUSINESS.phone.replace(/[^\d]/g, "")}`} className="inline-flex items-center gap-2 text-pinklt font-bold hover:text-white transition-colors" data-testid="calendar-call-link">
               <Phone className="w-4 h-4" /> {BUSINESS.phone}
             </a>

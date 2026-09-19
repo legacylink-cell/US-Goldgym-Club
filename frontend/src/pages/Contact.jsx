@@ -47,7 +47,7 @@ const Contact = () => {
       <PageHero
         overline="Get in touch"
         title={<>Let's talk<span className="text-lime">.</span></>}
-        subtitle="Questions, enrollment, tryouts, or a free trial — reach out and one of our team members will get back to you."
+        subtitle="Questions, enrollment, tryouts, or a free trial - reach out and one of our team members will get back to you."
         image={IMG.facilityEquip}
       />
 

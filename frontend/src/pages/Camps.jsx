@@ -9,7 +9,7 @@ const Camps = () => (
     <PageHero
       overline="Summer 2026"
       title={<>Summer<br />Camps<span className="text-lime">.</span></>}
-      subtitle="Nine weeks of themed, high-energy fun — gymnastics, games, crafts, and new friends. Book by the day or the week."
+      subtitle="Nine weeks of themed, high-energy fun - gymnastics, games, crafts, and new friends. Book by the day or the week."
       image={IMG.preschoolGroup}
     />
 
@@ -26,7 +26,7 @@ const Camps = () => (
             <CalendarDays className="w-6 h-6 text-pinklt shrink-0" />
             <div>
               <div className="font-display text-xl md:text-2xl uppercase text-white leading-none">Summer 2027 camp info coming early 2027!</div>
-              <p className="text-white/60 text-sm mt-2">Dates, themes, and registration will be posted here — call 817.491.9996 to be first to know.</p>
+              <p className="text-white/60 text-sm mt-2">Dates, themes, and registration will be posted here - call 817.491.9996 to be first to know.</p>
             </div>
           </div>
         </Reveal>

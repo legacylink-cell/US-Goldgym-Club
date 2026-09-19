@@ -48,7 +48,7 @@ const Preschool = () => (
           ))}
         </div>
 
-        <PricingDiscounts program="Preschool" note="Preschool families often add a second morning or bring a sibling along — both come with a discount." />
+        <PricingDiscounts program="Preschool" note="Preschool families often add a second morning or bring a sibling along - both come with a discount." />
       </div>
     </section>
 

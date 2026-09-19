@@ -8,7 +8,7 @@ import { IMG, PROGRAM_TILES, TESTIMONIALS, BUSINESS } from "@/data/site";
 import api from "@/lib/api";
 
 const SPOTLIGHT_COPY = {
-  best_converting: { tag: "Families' Favorite", line: "Our most-loved program right now — families are signing up fast." },
+  best_converting: { tag: "Families' Favorite", line: "Our most-loved program right now - families are signing up fast." },
   most_popular: { tag: "Most Popular", line: "The program families are exploring the most this season." },
   default: { tag: "Program Spotlight", line: "A favorite pathway for building strength, confidence, and skill." },
 };
@@ -191,7 +191,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.25 }}
             className="mt-6 text-white/80 text-lg md:text-xl max-w-xl leading-relaxed"
           >
-            Youth gymnastics & cheer for every age and every level — from first cartwheels
+            Youth gymnastics & cheer for every age and every level - from first cartwheels
             to college recruiting. Your athlete's journey starts here.
           </motion.p>
 

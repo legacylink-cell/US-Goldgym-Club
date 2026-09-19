@@ -80,8 +80,8 @@ const BirthdayParties = () => (
           <div className="mt-10 bg-ink text-white p-8 md:p-10 flex items-start gap-4">
             <ShieldCheck className="w-8 h-8 text-lime shrink-0" />
             <div>
-              <h4 className="font-display text-2xl uppercase">Digital waiver — coming soon!</h4>
-              <p className="text-white/60 mt-2 max-w-2xl">We're setting up online waivers so there's no printing and no scrambling on party day. For now we'll send the waiver over with your party details — give us a call at 817.491.9996 with any questions.</p>
+              <h4 className="font-display text-2xl uppercase">Digital waiver - coming soon!</h4>
+              <p className="text-white/60 mt-2 max-w-2xl">We're setting up online waivers so there's no printing and no scrambling on party day. For now we'll send the waiver over with your party details - give us a call at 817.491.9996 with any questions.</p>
             </div>
           </div>
         </Reveal>

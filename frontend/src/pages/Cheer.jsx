@@ -11,7 +11,7 @@ const Cheer = () => (
     <PageHero
       overline="Tumble & All-Star"
       title={<>Cheer<span className="text-lime">.</span></>}
-      subtitle="From your first back handspring to competitive all-star squads — bring the energy, we'll bring the coaching."
+      subtitle="From your first back handspring to competitive all-star squads - bring the energy, we'll bring the coaching."
       image={IMG.cheerJump}
     />
 
@@ -67,7 +67,7 @@ const Cheer = () => (
           </div>
         </Reveal>
 
-        <PricingDiscounts program="Cheer Tumble Classes" note="Tumble athletes often train twice a week, and cheer siblings are common around here — both earn a discount." />
+        <PricingDiscounts program="Cheer Tumble Classes" note="Tumble athletes often train twice a week, and cheer siblings are common around here - both earn a discount." />
       </div>
     </section>
   </div>

@@ -71,7 +71,7 @@ const AnalyticsPanel = () => {
     <div className="space-y-6" data-testid="analytics-panel">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-ink/50 text-sm max-w-xl">
-          First-party website insights — real visitor traffic only (your own admin browsing, search bots, and automated tests are excluded). Every number below counts Texas visitors only; out-of-state and overseas traffic is filtered out.
+          First-party website insights - real visitor traffic only (your own admin browsing, search bots, and automated tests are excluded). Every number below counts Texas visitors only; out-of-state and overseas traffic is filtered out.
         </p>
         <div className="flex gap-1 bg-ink/5 border border-ink/10 p-1" data-testid="analytics-range">
           {RANGES.map((r) => (
@@ -115,12 +115,12 @@ const AnalyticsPanel = () => {
       </div>
 
       {/* TRIAL FUNNEL */}
-      <Card title="Trial Funnel — Program → Book Trial → Submitted" testid="trial-funnel">
+      <Card title="Trial Funnel - Program → Book Trial → Submitted" testid="trial-funnel">
         <Funnel steps={data.funnel || []} />
       </Card>
 
       {/* FUNNEL BY PROGRAM */}
-      <Card title="Trial Funnel by Program — Which Programs Convert Best" testid="funnel-by-program">
+      <Card title="Trial Funnel by Program - Which Programs Convert Best" testid="funnel-by-program">
         {(data.funnel_by_program || []).length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm min-w-[520px]">
@@ -158,10 +158,10 @@ const AnalyticsPanel = () => {
 
       {/* LOAD TIME + DEVICE */}
       <div className="grid lg:grid-cols-3 gap-4">
-        <Card title="Avg. Page Load — Web" testid="load-web">
+        <Card title="Avg. Page Load - Web" testid="load-web">
           <LoadStat icon={Monitor} ms={webLoad} samples={data.load_time?.web?.samples} />
         </Card>
-        <Card title="Avg. Page Load — Mobile" testid="load-mobile">
+        <Card title="Avg. Page Load - Mobile" testid="load-mobile">
           <LoadStat icon={Smartphone} ms={mobileLoad} samples={data.load_time?.mobile?.samples} />
         </Card>
         <Card title="Device Split" testid="device-split">
@@ -259,13 +259,13 @@ const AnalyticsPanel = () => {
       </div>
 
       {/* PEAK TIMES HEATMAP */}
-      <Card title="Peak Times — Busiest Days & Hours (visitor local time)" testid="peak-heatmap">
+      <Card title="Peak Times - Busiest Days & Hours (visitor local time)" testid="peak-heatmap">
         <PeakHeatmap peaks={data.peak_times || []} />
       </Card>
 
       {/* SCROLL DEPTH + EXIT PAGES */}
       <div className="grid lg:grid-cols-2 gap-4">
-        <Card title="Scroll Depth — How Far Visitors Read" testid="scroll-depth">
+        <Card title="Scroll Depth - How Far Visitors Read" testid="scroll-depth">
           {(data.scroll_depth || []).length ? (
             <div className="space-y-4">
               {(data.scroll_depth || []).map((s) => (
@@ -285,7 +285,7 @@ const AnalyticsPanel = () => {
           ) : <Muted>No scroll data yet.</Muted>}
         </Card>
 
-        <Card title="Exit Pages — Where Visitors Leave" testid="exit-pages">
+        <Card title="Exit Pages - Where Visitors Leave" testid="exit-pages">
           <MiniTable
             head={["Page", "Exits"]}
             rows={(data.exit_pages || []).map((p) => [<span className="capitalize">{prettyPath(p.path)}</span>, p.exits])}
@@ -334,7 +334,7 @@ const LoadStat = ({ icon: Icon, ms, samples }) => (
     <Icon className="w-9 h-9 text-ink/30" />
     <div>
       <div className="font-display text-4xl text-ink leading-none">
-        {ms ? `${(ms / 1000).toFixed(2)}s` : "—"}
+        {ms ? `${(ms / 1000).toFixed(2)}s` : "-"}
       </div>
       <div className="text-ink/50 text-xs mt-1">{samples ? `${samples} sample${samples === 1 ? "" : "s"}` : "No data yet"}</div>
     </div>
@@ -365,7 +365,7 @@ const MiniTable = ({ head, rows, empty }) => (
 
 const Funnel = ({ steps }) => {
   const top = steps[0]?.sessions || 0;
-  if (!top) return <Muted>No funnel data yet — this fills in as visitors browse programs and start a trial or pricing request.</Muted>;
+  if (!top) return <Muted>No funnel data yet - this fills in as visitors browse programs and start a trial or pricing request.</Muted>;
   return (
     <div className="space-y-4">
       {steps.map((s, i) => {
@@ -422,7 +422,7 @@ const PeakHeatmap = ({ peaks }) => {
                 return (
                   <div
                     key={h}
-                    title={`${day} ${fmtHour(h)} — ${count} view${count === 1 ? "" : "s"}`}
+                    title={`${day} ${fmtHour(h)} - ${count} view${count === 1 ? "" : "s"}`}
                     className="h-5 flex-1 rounded-sm"
                     style={{ backgroundColor: count ? `rgba(255,29,142,${intensity})` : "rgba(44,10,78,0.06)" }}
                   />

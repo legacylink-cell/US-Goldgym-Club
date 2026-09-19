@@ -85,7 +85,7 @@ def _shell(title: str, body_html: str) -> str:
 async def notify_staff(form_type: str, fields: dict, reply_to: str = "") -> None:
     """Email the gym about a new form submission. Reply-To is the parent's address."""
     if not email_enabled():
-        logger.info("Email not configured — skipped staff notification for %s", form_type)
+        logger.info("Email not configured - skipped staff notification for %s", form_type)
         return
     c = _cfg()
     label = FORM_LABELS.get(form_type, form_type.replace("_", " ").title())
@@ -93,7 +93,7 @@ async def notify_staff(form_type: str, fields: dict, reply_to: str = "") -> None
     text, html_rows = _rows(fields)
 
     msg = EmailMessage()
-    msg["Subject"] = f"[Website] {label}{f' — {who}' if who else ''}"
+    msg["Subject"] = f"[Website] {label}{f' - {who}' if who else ''}"
     msg["From"] = c["mail_from"]
     msg["To"] = c["staff_to"]
     if reply_to:
@@ -129,7 +129,7 @@ async def confirm_to_parent(to_email: str, name: str = "", form_type: str = "con
                 "If you need us right away, call 817.491.9996.")
 
     msg = EmailMessage()
-    msg["Subject"] = "We got your message — U.S. Gold Gymnastics & Cheer"
+    msg["Subject"] = "We got your message - U.S. Gold Gymnastics & Cheer"
     msg["From"] = c["mail_from"]
     msg["To"] = to_email
     msg["Reply-To"] = c["staff_to"]

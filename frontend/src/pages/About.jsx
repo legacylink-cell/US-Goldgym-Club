@@ -25,7 +25,7 @@ const About = () => (
             </p>
             <p>
               We continuously strive to enhance our academy while ensuring the best possible experience for every
-              family — from a preschooler's first cartwheel to competitive and cheer athletes chasing their goals.
+              family - from a preschooler's first cartwheel to competitive and cheer athletes chasing their goals.
             </p>
           </div>
           <div className="mt-8">
@@ -78,7 +78,7 @@ const About = () => (
               Families come from every surrounding town
             </h3>
             <p className="mt-5 text-white/70 text-lg leading-relaxed">
-              From Roanoke and every surrounding town — parents trust us with their kids
+              From Roanoke and every surrounding town - parents trust us with their kids
               because we treat every athlete like our own. When your child walks in, they're home.
             </p>
           </div>

@@ -10,7 +10,7 @@ export const Footer = () => (
         <div>
           <div className="text-pinklt text-xs uppercase tracking-[0.25em] font-bold mb-2">Stay in the loop</div>
           <h3 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">Join our email list</h3>
-          <p className="text-white/60 mt-2 max-w-md text-sm">Camp openings, events, and gym news — straight to your inbox.</p>
+          <p className="text-white/60 mt-2 max-w-md text-sm">Camp openings, events, and gym news - straight to your inbox.</p>
         </div>
         <NewsletterSignup />
       </div>

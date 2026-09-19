@@ -42,7 +42,7 @@ export const QuoteRequestDialog = ({ program, trigger }) => {
           <DialogTitle className="font-display text-3xl uppercase text-white">
             Request Pricing<span className="text-lime">.</span>
           </DialogTitle>
-          <p className="text-white/60 text-sm">{program} — tuition varies by weekly frequency. Tell us about your athlete and we'll send a personalized quote.</p>
+          <p className="text-white/60 text-sm">{program} - tuition varies by weekly frequency. Tell us about your athlete and we'll send a personalized quote.</p>
         </DialogHeader>
         <form onSubmit={submit} className="space-y-4 mt-2" data-testid="quote-form">
           <div className="grid grid-cols-2 gap-3">

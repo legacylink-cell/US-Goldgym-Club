@@ -7,7 +7,7 @@ export const PricingDiscounts = ({ program, note }) => (
     <div className="text-pinklt text-xs uppercase tracking-[0.25em] font-bold mb-2">Family friendly pricing</div>
     <h3 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">More classes, more savings</h3>
     <p className="text-white/60 mt-3 max-w-2xl">
-      {note || "We want your athlete in the gym as often as they love it — and we don't want a second child to be the reason you hold back."}
+      {note || "We want your athlete in the gym as often as they love it - and we don't want a second child to be the reason you hold back."}
     </p>
 
     <div className="grid md:grid-cols-2 gap-4 mt-8">
@@ -15,7 +15,7 @@ export const PricingDiscounts = ({ program, note }) => (
         <div className="w-11 h-11 bg-lime text-ink flex items-center justify-center mb-4"><Layers className="w-5 h-5" /></div>
         <div className="font-display text-2xl uppercase text-white leading-none">Multi-class discount</div>
         <p className="text-white/60 mt-3">
-          Add a second class each week — gymnastics, tumble, or cheer — and every additional class comes at a reduced rate.
+          Add a second class each week - gymnastics, tumble, or cheer - and every additional class comes at a reduced rate.
         </p>
       </div>
       <div className="border border-white/15 bg-ink/40 p-6" data-testid="discount-sibling">

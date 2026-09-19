@@ -171,8 +171,8 @@ const AdminDashboard = () => {
           <TabsContent value="subscribers" className="mt-6">
             <Table headers={["Email", "Name", "Joined"]} rows={subscribers.map((s) => [
               s.email,
-              s.name || "—",
-              s.created_at ? new Date(s.created_at).toLocaleDateString() : "—",
+              s.name || "-",
+              s.created_at ? new Date(s.created_at).toLocaleDateString() : "-",
             ])} testid="admin-subscribers-table" empty="No email subscribers yet." />
           </TabsContent>
         </Tabs>

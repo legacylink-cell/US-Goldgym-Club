@@ -22,7 +22,7 @@ export const IMG = {
 export const SITE_NOTICE = {
   enabled: true,
   version: "2026-06",
-  text: "Fresh look in progress — we're adding new photos and details all week. Thanks for your patience!",
+  text: "Fresh look in progress - we're adding new photos and details all week. Thanks for your patience!",
 };
 
 export const GOOGLE_CALENDAR = {
@@ -106,11 +106,11 @@ export const TESTIMONIALS = [
   { name: "Bill Vincent", role: "Gym parent · 14 years", quote: "My daughter has been a gymnast at US Gold for 14 years. She started in recreational classes and later tried out and made the competitive team." },
   { name: "Kerri Pfuehler", role: "Gym parent", quote: "We couldn't be happier with this facility. The coaches and staff are incredibly knowledgeable, supportive and truly care about every gymnast both inside and outside the gym." },
   { name: "Sophie Schmitz", role: "Alumni · 18 years", quote: "US Gold has been my gym and home for the past 18 years! The coaches are always so supportive and want the best for you in and outside of gymnastics." },
-  { name: "Candice Eldred", role: "Gym parent · 8 years", quote: "We have been with US Gold for 8 years. My daughter has grown tremendously thanks to the coaches and teammates guiding her to be her best — it's been great for her confidence and self esteem." },
+  { name: "Candice Eldred", role: "Gym parent · 8 years", quote: "We have been with US Gold for 8 years. My daughter has grown tremendously thanks to the coaches and teammates guiding her to be her best - it's been great for her confidence and self esteem." },
   { name: "Lindsey", role: "Former competitive gymnast · 10 years", quote: "I was a competitive gymnast at U.S. Gold for 10 years, and I truly cannot say enough positive things. The coaches are incredibly knowledgeable and genuinely care about helping each athlete." },
-  { name: "Juli James", role: "Team parent since 2017", quote: "It's been one of the best decisions we've made for our daughter. She started in rec and has grown into the team program — more than gymnastics, the coaches have instilled real character." },
+  { name: "Juli James", role: "Team parent since 2017", quote: "It's been one of the best decisions we've made for our daughter. She started in rec and has grown into the team program - more than gymnastics, the coaches have instilled real character." },
   { name: "Sharon S", role: "Local Guide · 13 years", quote: "We love U.S. Gold! My daughter trained there for 13 years. She learned a lot about responsibility, discipline, commitment, and time management, and formed meaningful relationships with her teammates and coaches." },
-  { name: "Allison Bissell", role: "Team parent · 7 years", quote: "My daughter has been on the gymnastics team at US Gold for the past 7 years and has grown so much. The coaches helped her overcome physical and mental challenges — this gym has become her second home." },
+  { name: "Allison Bissell", role: "Team parent · 7 years", quote: "My daughter has been on the gymnastics team at US Gold for the past 7 years and has grown so much. The coaches helped her overcome physical and mental challenges - this gym has become her second home." },
 ];
 
 export const PRESCHOOL_TIERS = [
@@ -149,21 +149,21 @@ export const COMPETITIVE_PATH = [
 
 export const CHEER_TRACKS = [
   { name: "Cheer Tumble Classes", tag: "All Skill Levels", img: "cheerPose", blurb: "The perfect way to build skills whether you're tumbling for fun or hoping to make a competitive or school squad. Skills are taught with proper progressions, giving each athlete a strong foundation to build on.", points: ["Standing and running tumbling", "Jumps, motions, and technique", "Progressions from cartwheel to full", "Great add-on for all-star or school cheer"], cta: "quote" },
-  { name: "All-Star Competitive Cheer", tag: "Tryout Required", img: "cheerSquad", blurb: "A great way for your child to grow as an individual and an athlete. All-star cheer encompasses teamwork, athleticism, dedication, and performance ability — building confidence and self-esteem in a loving, positive environment.", points: ["Teamwork, performance, and stunting", "Choreographed competition routines", "Travel to regional competitions", "Builds discipline and confidence"], cta: "tryout" },
+  { name: "All-Star Competitive Cheer", tag: "Tryout Required", img: "cheerSquad", blurb: "A great way for your child to grow as an individual and an athlete. All-star cheer encompasses teamwork, athleticism, dedication, and performance ability - building confidence and self-esteem in a loving, positive environment.", points: ["Teamwork, performance, and stunting", "Choreographed competition routines", "Travel to regional competitions", "Builds discipline and confidence"], cta: "tryout" },
 ];
 
 export const SPECIAL_EVENTS = [
-  { name: "Open Gym", price: "$5 members / $7 non-members", meta: "Ages 5+ • 24-hr signup", desc: "Enjoy fun free time in the gym to play. Great any time of year, whatever the weather — bring your friends!", cat: "open_gym" },
+  { name: "Open Gym", price: "$5 members / $7 non-members", meta: "Ages 5+ • 24-hr signup", desc: "Enjoy fun free time in the gym to play. Great any time of year, whatever the weather - bring your friends!", cat: "open_gym" },
   { name: "Friday Night Fun", price: "See Calendar", meta: "Parents' night out • Ages 5+", desc: "The name says it all! Kids come over for a fun time while parents get 4 hours to have dinner, catch a movie, or whatever they choose. 24-hr signup.", cat: "special_event" },
-  { name: "Tumbling & Bar/Beam Clinics", price: "$25 members / $30 non-members", meta: "30 min each • 24-hr signup", desc: "Extra time to work on the skills you're learning in class. Great for gymnastics and cheer — both tumbling clinics and bar/beam combo clinics offered.", cat: "clinic" },
-  { name: "Field Trips", price: "Request Pricing", meta: "School groups", desc: "1.5 hours of gym time — an obstacle course, the trampoline, the foam pit, and all four gymnastics events!", cat: "special_event" },
-  { name: "Girl Scout Events", price: "Contact for Details", meta: "Patches • Sleepovers • Fundraisers", desc: "Fun and fitness for all ages and skill levels of Girl Scouts — daytime events, sleepovers, and fundraisers. Includes the U.S. Gold Patch on all 'Earn a Patch' and sleepover events.", cat: "special_event" },
+  { name: "Tumbling & Bar/Beam Clinics", price: "$25 members / $30 non-members", meta: "30 min each • 24-hr signup", desc: "Extra time to work on the skills you're learning in class. Great for gymnastics and cheer - both tumbling clinics and bar/beam combo clinics offered.", cat: "clinic" },
+  { name: "Field Trips", price: "Request Pricing", meta: "School groups", desc: "1.5 hours of gym time - an obstacle course, the trampoline, the foam pit, and all four gymnastics events!", cat: "special_event" },
+  { name: "Girl Scout Events", price: "Contact for Details", meta: "Patches • Sleepovers • Fundraisers", desc: "Fun and fitness for all ages and skill levels of Girl Scouts - daytime events, sleepovers, and fundraisers. Includes the U.S. Gold Patch on all 'Earn a Patch' and sleepover events.", cat: "special_event" },
 ];
 
 export const CAMP_INFO = {
   ages: "Entering 1st grade & up (Fall 2026)",
   hours: "Drop-off no more than 5 min before start • Prompt pick-up required",
-  note: "Closed June 29 – July 5 for the 4th of July. A signed waiver must be on file to participate. Registration required 24 hours in advance — walk-ins are not accepted.",
+  note: "Closed June 29 – July 5 for the 4th of July. A signed waiver must be on file to participate. Registration required 24 hours in advance - walk-ins are not accepted.",
 };
 
 export const CAMP_SESSIONS = [
@@ -180,7 +180,7 @@ export const CAMP_SESSIONS = [
 
 export const LITTLE_DOG_DAYS = {
   price: "$120 members / $130 non-members per session",
-  desc: "Our shorter, younger-camper program packed with the same themed fun — gymnastics, games, and crafts.",
+  desc: "Our shorter, younger-camper program packed with the same themed fun - gymnastics, games, and crafts.",
   sessions: [
     { name: "Jungle Safari", dates: "June 8 – 11" },
     { name: "Holiday Hoopla", dates: "July 6 – 9" },
@@ -251,7 +251,7 @@ export const RECRUIT_SCHOOLS = [
     short: "Lindenwood",
     logo: null,
     athletes: [
-      { name: "Aleah Turon", sport: "Gymnastics", note: "Now Head Coach — McMurray Gymnastics" },
+      { name: "Aleah Turon", sport: "Gymnastics", note: "Now Head Coach - McMurray Gymnastics" },
     ],
   },
   {
@@ -374,7 +374,7 @@ export const CAREERS = {
 };
 
 export const PRO_SHOP = {
-  blurb: "Stop by our in-gym Pro Shop for amazing discounted items — leotards, grips, tape, apparel, and gear.",
+  blurb: "Stop by our in-gym Pro Shop for amazing discounted items - leotards, grips, tape, apparel, and gear.",
   note: "In-store only. No online sales. Come see us during business hours!",
 };
 

@@ -10,7 +10,7 @@ const Recreational = () => (
     <PageHero
       overline="Beginner → Advanced"
       title={<>Recreational<br />Classes</>}
-      subtitle="A clear, coached progression from first cartwheels to advanced skills — with a dedicated Boys Gymnastics track."
+      subtitle="A clear, coached progression from first cartwheels to advanced skills - with a dedicated Boys Gymnastics track."
       image={IMG.floorJump}
     />
 
@@ -44,7 +44,7 @@ const Recreational = () => (
               <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold mb-3">Separate track</div>
               <h3 className="font-display text-4xl md:text-5xl uppercase text-white leading-none">Boys Gymnastics</h3>
               <div className="flex items-center gap-2 text-lime text-sm uppercase tracking-wide font-bold mt-3"><Clock className="w-4 h-4" /> 55 min</div>
-              <p className="text-white/70 mt-4 max-w-md">A boys-only class built around the men's events — floor, trampoline, vault, and bars. Strength, power, and serious fun.</p>
+              <p className="text-white/70 mt-4 max-w-md">A boys-only class built around the men's events - floor, trampoline, vault, and bars. Strength, power, and serious fun.</p>
               <div className="flex flex-wrap gap-2 mt-5">
                 {["Floor", "Trampoline", "Vault", "Bars"].map((e) => (
                   <span key={e} className="bg-white/10 text-white text-xs uppercase tracking-wide font-bold px-3 py-1">{e}</span>
@@ -66,7 +66,7 @@ const Recreational = () => (
                 <h3 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">Tumble Classes</h3>
               </div>
               <p className="text-white/60 max-w-md md:text-right">
-                Tumble classes let students of different skill levels train alongside their peers — perfect for gymnastics and cheer athletes building standing and running tumbling.
+                Tumble classes let students of different skill levels train alongside their peers - perfect for gymnastics and cheer athletes building standing and running tumbling.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
