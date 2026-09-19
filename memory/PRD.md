@@ -358,3 +358,9 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   replaced with a plain hyphen "-". Verified 0 em dashes rendering on /, /about, /recreational, /contact,
   /calendar. NOTE: en dashes (–) are still used in numeric ranges only ("9:00 AM – 8:30 PM", "4 – 5 yrs")
   and in Google Calendar event time labels; ask before changing those.
+
+- 2026-06: mobile CTA pairs looked mismatched (wide pink primary next to a narrower outlined secondary).
+  Fix: hero and program-spotlight CTA rows now use `grid grid-cols-1 sm:flex` with `w-full sm:w-auto`
+  buttons, so on phones they stack full-width and equal; from sm up they sit inline as before. Also added
+  `border-2 border-transparent` to the MagneticButton base so filled variants match the outline variant's
+  height exactly (previously 4px shorter). Verified at 390x844 on hero + spotlight.

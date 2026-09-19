@@ -39,7 +39,7 @@ export const MagneticButton = ({
     </motion.span>
   );
 
-  const cls = `relative inline-flex items-center justify-center px-5 py-3 text-base md:px-8 md:py-4 md:text-lg font-display uppercase tracking-wide transition-colors duration-300 ${variants[variant]} ${className}`;
+  const cls = `relative inline-flex items-center justify-center gap-2 border-2 border-transparent px-5 py-3 text-base md:px-8 md:py-4 md:text-lg font-display uppercase tracking-wide transition-colors duration-300 ${variants[variant]} ${className}`;
 
   const motionProps = {
     ref,

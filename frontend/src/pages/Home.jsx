@@ -35,11 +35,11 @@ const ProgramSpotlight = () => {
             </div>
             <h3 className="font-display text-4xl md:text-5xl uppercase text-white leading-none">{data.name}</h3>
             <p className="text-white/70 mt-3 max-w-md">{copy.line}</p>
-            <div className="flex flex-wrap gap-3 mt-6">
-              <MagneticButton as="link" to={data.program} variant="lime" className="px-6 py-3" data-testid="spotlight-explore">
+            <div className="grid grid-cols-1 sm:flex sm:flex-wrap gap-3 mt-6">
+              <MagneticButton as="link" to={data.program} variant="lime" className="w-full sm:w-auto px-6 py-3" data-testid="spotlight-explore">
                 Explore {data.name}
               </MagneticButton>
-              <MagneticButton as="link" to="/contact" variant="outline" className="px-6 py-3" data-testid="spotlight-trial">
+              <MagneticButton as="link" to="/contact" variant="outline" className="w-full sm:w-auto px-6 py-3" data-testid="spotlight-trial">
                 Book Free Trial
               </MagneticButton>
             </div>
@@ -197,7 +197,7 @@ const Home = () => {
 
           <motion.div
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.35 }}
-            className="mt-9 flex flex-wrap gap-4"
+            className="mt-9 grid grid-cols-1 sm:flex sm:flex-wrap gap-3 sm:gap-4"
           >
             <MagneticButton as="link" to="/contact" variant="lime" data-testid="hero-book-trial">
               Book Free Trial <ArrowUpRight className="w-5 h-5" />
