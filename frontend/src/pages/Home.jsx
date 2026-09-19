@@ -292,7 +292,7 @@ const Home = () => {
               <span className="font-display text-4xl text-lime leading-none">{BUSINESS.googleRating}</span>
               <span className="text-white/70 text-sm">
                 <span className="flex gap-0.5 text-lime mb-1">{[...Array(5)].map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-lime text-lime" />)}</span>
-                {BUSINESS.googleReviews} Google reviews
+                {BUSINESS.googleReviews}+ Google reviews
               </span>
             </a>
           </div>
