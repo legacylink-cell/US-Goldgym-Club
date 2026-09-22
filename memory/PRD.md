@@ -364,3 +364,18 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   buttons, so on phones they stack full-width and equal; from sm up they sit inline as before. Also added
   `border-2 border-transparent` to the MagneticButton base so filled variants match the outline variant's
   height exactly (previously 4px shorter). Verified at 390x844 on hero + spotlight.
+
+## Changelog — 2026-06 (Filterable class schedule on the Calendar page)
+- User request: reuse the calendar's filter-chip pattern for classes. New component
+  /app/frontend/src/components/common/ClassSchedule.jsx rendered at the bottom of /calendar (below the
+  events calendar, separated by a divider).
+- Filters: All classes / Preschool / Recreational / Cheer Tumble / Boys (colour-dotted chips matching the
+  calendar legend styling). 14 class cards built from existing site.js data — PRESCHOOL_TIERS (Boys Sport
+  routed to the Boys filter), REC_LEVELS, TUMBLE_CLASSES, plus the Boys Gymnastics 55-min class.
+  Each card shows class name, age/level, length, description and a "Program details" link to the matching
+  program page. Counts verified: preschool 5, recreational 4, cheer tumble 3, boys 2, all 14.
+- Per user: NO day/time data (they don't have it finalized) — instead a note "Days and times are set each
+  session and can change seasonally - call the front desk ... A full day-by-day schedule is coming soon."
+  plus an "Ask about day & time options" tap-to-call button. USER TO CONFIRM LATER whether the schedule is
+  seasonal (then we can label it e.g. "Fall 2026") and whether to add real day/time rows.
+- Verified desktop 1440px and mobile 390px (single column, no horizontal overflow).

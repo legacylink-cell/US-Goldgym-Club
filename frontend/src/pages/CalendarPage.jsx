@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 import api from "@/lib/api";
 import { PageHero } from "@/components/common/PageHero";
+import { ClassSchedule } from "@/components/common/ClassSchedule";
 import { IMG, EVENT_CATEGORIES, BUSINESS } from "@/data/site";
 import { ChevronLeft, ChevronRight, Clock, MapPin, Phone } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -194,6 +195,10 @@ const CalendarPage = () => {
             <a href={`tel:${BUSINESS.phone.replace(/[^\d]/g, "")}`} className="inline-flex items-center gap-2 text-pinklt font-bold hover:text-white transition-colors" data-testid="calendar-call-link">
               <Phone className="w-4 h-4" /> {BUSINESS.phone}
             </a>
+          </div>
+
+          <div className="mt-16 pt-12 border-t border-white/10">
+            <ClassSchedule />
           </div>
         </div>
       </section>
