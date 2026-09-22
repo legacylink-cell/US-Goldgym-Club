@@ -23,6 +23,8 @@ const buildClasses = () => {
   PRESCHOOL_TIERS.forEach((t) => {
     rows.push({
       key: t.name === "Boys Sport" ? "boys" : "preschool",
+      // Boys Sport is filtered under Boys but is described on the Preschool page
+      link: "/preschool",
       name: t.name,
       age: t.age,
       length: t.length,
@@ -110,7 +112,7 @@ export const ClassSchedule = () => {
             </div>
             <p className="text-white/60 text-sm mt-3 flex-1">{c.desc}</p>
             <Link
-              to={LINKS[c.key]}
+              to={c.link || LINKS[c.key]}
               className="inline-flex items-center gap-1.5 text-lime text-xs uppercase tracking-wide font-bold mt-4 hover:text-white transition-colors"
             >
               Program details <ArrowUpRight className="w-3.5 h-3.5" />

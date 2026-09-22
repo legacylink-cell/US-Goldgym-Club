@@ -390,3 +390,8 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
 - FUTURE AGENT ACTION: when picking up this project on/after 2026-11-01, migrate mailer.py off
   smtp.office365.com basic auth. Verified the banner stays hidden before its date (dashboard checked
   2026-09-22, 0 banners, no console errors).
+
+- 2026-06: ClassSchedule "Program details" links audited. One was wrong - "Boys Sport" (ages 4-5, lives in
+  PRESCHOOL_TIERS but filtered under Boys) pointed at /recreational; now overridden to /preschool via an
+  optional per-row `link` field. All 14 verified: 6 preschool classes -> /preschool, 4 rec levels + Boys
+  Gymnastics -> /recreational, Tumble 1-3 -> /cheer, and click-through navigation confirmed.
