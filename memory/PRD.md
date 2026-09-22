@@ -395,3 +395,16 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   PRESCHOOL_TIERS but filtered under Boys) pointed at /recreational; now overridden to /preschool via an
   optional per-row `link` field. All 14 verified: 6 preschool classes -> /preschool, 4 rec levels + Boys
   Gymnastics -> /recreational, Tumble 1-3 -> /cheer, and click-through navigation confirmed.
+
+## Changelog — 2026-06 (Admin follow-up tracking)
+- Every admin list (Pricing Requests, Messages, Bookings, Email List) now shows a **Received** column
+  (date + time, from created_at) and a **Follow-up** toggle that flips between NEW (pink) and CONTACTED
+  (green check). One click, optimistic UI, rolls back + toasts on failure.
+- Backend: PATCH /api/admin/{kind}/{id}/status with {"status": "new"|"contacted"} where kind is
+  leads|contacts|bookings|newsletter. Writes `contact_status` + `contact_status_at` - deliberately a
+  SEPARATE field from a booking's own `status` ("confirmed") so nothing collides. Items without the field
+  read as "new". New contact submissions also store status "new".
+- Filter chips above each table: All / Needs contact / Contacted, each with a live count.
+- CSV exports now include contact_status as the second column.
+- Verified: toggle flips + persists across reload, counts update, filters work, no console errors.
+  Also purged leftover QA test records from the preview DB (5 contacts, 1 lead, 2 subscribers).

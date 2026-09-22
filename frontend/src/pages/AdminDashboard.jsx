@@ -4,7 +4,7 @@ import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { BUSINESS } from "@/data/site";
 import { AdminReminders } from "@/components/admin/AdminReminders";
-import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download, Trash2 } from "lucide-react";
+import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download, Trash2, Check, Clock } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   const [contacts, setContacts] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [subscribers, setSubscribers] = useState([]);
+  const [flt, setFlt] = useState("all");
 
   const loadAll = () => {
     api.get("/admin/stats").then(({ data }) => setStats(data));
@@ -33,6 +34,19 @@ const AdminDashboard = () => {
   useEffect(() => {
     loadAll();
   }, []);
+
+  const setters = { leads: setLeads, contacts: setContacts, bookings: setBookings, newsletter: setSubscribers };
+
+  const toggleStatus = async (kind, item) => {
+    const next = statusOf(item) === "new" ? "contacted" : "new";
+    setters[kind]((prev) => prev.map((r) => (r.id === item.id ? { ...r, contact_status: next } : r)));
+    try {
+      await api.patch(`/admin/${kind}/${item.id}/status`, { status: next });
+    } catch {
+      setters[kind]((prev) => prev.map((r) => (r.id === item.id ? { ...r, contact_status: statusOf(item) } : r)));
+      toast.error("Could not update status. Please try again.");
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -142,7 +156,10 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="leads" className="mt-6">
-            <Table headers={["Name", "Contact", "Program", "Child / Freq", "Message"]} rows={leads.map((l) => [
+            <FollowUpFilter list={leads} value={flt} onChange={setFlt} testid="filter-leads" />
+            <Table headers={["Received", "Follow-up", "Name", "Contact", "Program", "Child / Freq", "Message"]} rows={applyFilter(leads, flt).map((l) => [
+              <When iso={l.created_at} />,
+              <StatusToggle item={l} onToggle={() => toggleStatus("leads", l)} />,
               l.name,
               <span>{l.email}<br /><span className="text-ink/50">{l.phone}</span></span>,
               l.program,
@@ -152,7 +169,10 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="contacts" className="mt-6">
-            <Table headers={["Name", "Contact", "Topic", "Message"]} rows={contacts.map((c) => [
+            <FollowUpFilter list={contacts} value={flt} onChange={setFlt} testid="filter-contacts" />
+            <Table headers={["Received", "Follow-up", "Name", "Contact", "Topic", "Message"]} rows={applyFilter(contacts, flt).map((c) => [
+              <When iso={c.created_at} />,
+              <StatusToggle item={c} onToggle={() => toggleStatus("contacts", c)} />,
               c.name,
               <span>{c.email}<br /><span className="text-ink/50">{c.phone}</span></span>,
               c.topic,
@@ -161,7 +181,10 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="bookings" className="mt-6">
-            <Table headers={["Parent", "Type", "Item", "Date", "Kids", "Waiver"]} rows={bookings.map((b) => [
+            <FollowUpFilter list={bookings} value={flt} onChange={setFlt} testid="filter-bookings" />
+            <Table headers={["Received", "Follow-up", "Parent", "Type", "Item", "Date", "Kids", "Waiver"]} rows={applyFilter(bookings, flt).map((b) => [
+              <When iso={b.created_at} />,
+              <StatusToggle item={b} onToggle={() => toggleStatus("bookings", b)} />,
               <span>{b.user_name}<br /><span className="text-ink/50">{b.user_email}</span></span>,
               b.booking_type,
               b.item_name,
@@ -172,14 +195,80 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="subscribers" className="mt-6">
-            <Table headers={["Email", "Name", "Joined"]} rows={subscribers.map((s) => [
+            <FollowUpFilter list={subscribers} value={flt} onChange={setFlt} testid="filter-subscribers" />
+            <Table headers={["Joined", "Follow-up", "Email", "Name"]} rows={applyFilter(subscribers, flt).map((s) => [
+              <When iso={s.created_at} />,
+              <StatusToggle item={s} onToggle={() => toggleStatus("newsletter", s)} />,
               s.email,
               s.name || "-",
-              s.created_at ? new Date(s.created_at).toLocaleDateString() : "-",
             ])} testid="admin-subscribers-table" empty="No email subscribers yet." />
           </TabsContent>
         </Tabs>
       </div>
+    </div>
+  );
+};
+
+const statusOf = (item) => (item.contact_status === "contacted" ? "contacted" : "new");
+
+const applyFilter = (list, flt) => (flt === "all" ? list : list.filter((i) => statusOf(i) === flt));
+
+const When = ({ iso }) => {
+  if (!iso) return <span className="text-ink/40">-</span>;
+  const d = new Date(iso);
+  return (
+    <span className="whitespace-nowrap">
+      {d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+      <br />
+      <span className="text-ink/50">{d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })}</span>
+    </span>
+  );
+};
+
+const StatusToggle = ({ item, onToggle }) => {
+  const contacted = statusOf(item) === "contacted";
+  return (
+    <button
+      onClick={onToggle}
+      title={contacted ? "Mark as new" : "Mark as contacted"}
+      data-testid={`status-toggle-${item.id}`}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] uppercase font-bold tracking-wide whitespace-nowrap border transition-colors ${
+        contacted
+          ? "bg-emerald-50 border-emerald-500 text-emerald-700 hover:bg-emerald-100"
+          : "bg-lime border-lime text-ink hover:bg-coral hover:border-coral hover:text-white"
+      }`}
+    >
+      {contacted ? <Check className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+      {contacted ? "Contacted" : "New"}
+    </button>
+  );
+};
+
+const FollowUpFilter = ({ list, value, onChange, testid }) => {
+  const counts = {
+    all: list.length,
+    new: list.filter((i) => statusOf(i) === "new").length,
+    contacted: list.filter((i) => statusOf(i) === "contacted").length,
+  };
+  const opts = [
+    { key: "all", label: "All" },
+    { key: "new", label: "Needs contact" },
+    { key: "contacted", label: "Contacted" },
+  ];
+  return (
+    <div className="flex flex-wrap gap-2 mb-4" data-testid={testid}>
+      {opts.map((o) => (
+        <button
+          key={o.key}
+          onClick={() => onChange(o.key)}
+          data-testid={`${testid}-${o.key}`}
+          className={`px-4 py-2 text-xs uppercase font-bold tracking-wide border transition-colors ${
+            value === o.key ? "bg-ink text-white border-ink" : "bg-white text-ink/60 border-ink/15 hover:border-ink/40"
+          }`}
+        >
+          {o.label} <span className="opacity-60">({counts[o.key]})</span>
+        </button>
+      ))}
     </div>
   );
 };

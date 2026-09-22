@@ -335,6 +335,7 @@ async def list_leads(admin: dict = Depends(require_admin)):
 async def create_contact(data: ContactInput, background: BackgroundTasks):
     doc = data.model_dump()
     doc["created_at"] = datetime.now(timezone.utc).isoformat()
+    doc["status"] = "new"
     res = await db.contacts.insert_one(doc)
     background.add_task(mailer.notify_staff, "contact", {
         "Topic": data.topic, "Name": data.name, "Email": data.email,
@@ -424,6 +425,38 @@ async def list_bookings(admin: dict = Depends(require_admin)):
     for d in docs:
         d["id"] = str(d.pop("_id"))
     return docs
+
+
+STATUS_COLLECTIONS = {
+    "leads": "leads",
+    "contacts": "contacts",
+    "bookings": "bookings",
+    "newsletter": "newsletter_subscribers",
+}
+
+
+class StatusInput(BaseModel):
+    status: str  # "new" | "contacted" - follow-up state, separate from a booking's own status
+
+
+@api_router.patch("/admin/{kind}/{item_id}/status")
+async def set_status(kind: str, item_id: str, data: StatusInput, admin: dict = Depends(require_admin)):
+    if kind not in STATUS_COLLECTIONS:
+        raise HTTPException(status_code=404, detail="Unknown list")
+    if data.status not in ("new", "contacted"):
+        raise HTTPException(status_code=400, detail="Status must be 'new' or 'contacted'")
+    try:
+        oid = ObjectId(item_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid id")
+    now = datetime.now(timezone.utc).isoformat()
+    res = await db[STATUS_COLLECTIONS[kind]].update_one(
+        {"_id": oid},
+        {"$set": {"contact_status": data.status, "contact_status_at": now}},
+    )
+    if res.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return {"ok": True, "contact_status": data.status, "contact_status_at": now}
 
 
 @api_router.get("/admin/stats")
@@ -813,9 +846,9 @@ async def export_csv(kind: str, admin: dict = Depends(require_admin)):
     import io
 
     configs = {
-        "leads": (db.leads, ["created_at", "name", "email", "phone", "program", "child_name", "child_age", "frequency", "message"]),
-        "contacts": (db.contacts, ["created_at", "name", "email", "phone", "topic", "message"]),
-        "subscribers": (db.newsletter_subscribers, ["created_at", "email", "name"]),
+        "leads": (db.leads, ["created_at", "contact_status", "name", "email", "phone", "program", "child_name", "child_age", "frequency", "message"]),
+        "contacts": (db.contacts, ["created_at", "contact_status", "name", "email", "phone", "topic", "message"]),
+        "subscribers": (db.newsletter_subscribers, ["created_at", "contact_status", "email", "name"]),
     }
     if kind not in configs:
         raise HTTPException(status_code=404, detail="Unknown export type")
