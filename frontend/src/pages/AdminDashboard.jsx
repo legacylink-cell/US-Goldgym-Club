@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import { BUSINESS } from "@/data/site";
+import { AdminReminders } from "@/components/admin/AdminReminders";
 import { Ticket, MessageSquare, Inbox, Mail, LogOut, Download, Trash2 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -81,6 +82,8 @@ const AdminDashboard = () => {
       </header>
 
       <div className="max-w-[1300px] mx-auto px-5 md:px-8 py-10">
+        <AdminReminders />
+
         <div className="text-coral text-xs uppercase tracking-[0.2em] font-bold mb-2">Admin Control</div>
         <h1 className="font-display text-5xl uppercase text-ink leading-none mb-10">Dashboard<span className="text-lime">.</span></h1>
 

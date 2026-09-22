@@ -379,3 +379,14 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
   plus an "Ask about day & time options" tap-to-call button. USER TO CONFIRM LATER whether the schedule is
   seasonal (then we can label it e.g. "Fall 2026") and whether to add real day/time rows.
 - Verified desktop 1440px and mobile 390px (single column, no horizontal overflow).
+
+## Reminder system (added 2026-06)
+- /app/frontend/src/components/admin/AdminReminders.jsx renders dated notices at the top of /admin.
+  Entries have {id, showFrom, title, body}; they appear automatically once today >= showFrom and can be
+  dismissed per-browser (localStorage key usg_admin_reminders).
+- ACTIVE ENTRY: id "smtp-retirement-2026", showFrom 2026-11-01 - warns the gym that Microsoft is retiring
+  the SMTP method used for form notifications and that the site must move to Microsoft Graph Mail.Send or
+  Resend. The user explicitly asked to be reminded "when the time comes".
+- FUTURE AGENT ACTION: when picking up this project on/after 2026-11-01, migrate mailer.py off
+  smtp.office365.com basic auth. Verified the banner stays hidden before its date (dashboard checked
+  2026-09-22, 0 banners, no console errors).
