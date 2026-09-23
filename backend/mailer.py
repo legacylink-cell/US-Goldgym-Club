@@ -151,5 +151,6 @@ async def confirm_to_parent(to_email: str, name: str = "", form_type: str = "con
     )
     try:
         await _send(msg)
+        logger.info("Parent confirmation sent to %s", to_email)
     except Exception as exc:
         logger.error("Parent confirmation FAILED to %s: %s", to_email, exc)

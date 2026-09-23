@@ -58,3 +58,16 @@ FIXES:
      used for the gym's Google Calendar - so notifications are readable today. Switch back to staff@
      once MX is corrected.
 Password: only Manage -> Password (set a fresh one) is needed; SMTP AUTH is already on for the mailbox.
+
+
+## 2026-09-23 LIVE - email notifications are WORKING
+- DNS verified from outside: MX -> usgoldgymclub-com.mail.protection.outlook.com (prio 0),
+  autodiscover CNAME -> autodiscover.outlook.com, SPF unchanged, old homesteadmail CNAMEs gone.
+  Microsoft's MX answered "250 2.1.5 Recipient OK" for staff@usgoldgymclub.com, so inbound works.
+- SMTP AUTH verified with the mailbox password the user supplied; SMTP_PASSWORD now set in backend/.env.
+- End-to-end: POST /api/admin/email/test, /api/contact, /api/leads, /api/newsletter all logged
+  "Staff notification sent" and "Parent confirmation sent". Test rows deleted from Mongo afterwards.
+- STILL REQUIRED FOR PRODUCTION: add SMTP_PASSWORD (and SMTP_HOST/PORT/USERNAME/MAIL_FROM/STAFF_TO)
+  to Emergent deployment secrets, then re-publish - .env only covers preview.
+- Credentials note: password is the staff@ mailbox password (user-supplied, not an app password).
+  If the gym ever rotates it, SMTP_PASSWORD must be updated in .env AND deployment secrets.
