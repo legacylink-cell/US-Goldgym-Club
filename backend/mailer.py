@@ -30,6 +30,8 @@ def _cfg() -> dict:
         "password": os.environ.get("SMTP_PASSWORD", ""),
         "mail_from": os.environ.get("MAIL_FROM", ""),
         "staff_to": os.environ.get("STAFF_TO", ""),
+        # optional safety net inbox while staff@ mail routing is being fixed
+        "staff_cc": os.environ.get("STAFF_CC", ""),
     }
 
 
@@ -96,6 +98,8 @@ async def notify_staff(form_type: str, fields: dict, reply_to: str = "") -> None
     msg["Subject"] = f"[Website] {label}{f' - {who}' if who else ''}"
     msg["From"] = c["mail_from"]
     msg["To"] = c["staff_to"]
+    if c["staff_cc"]:
+        msg["Cc"] = c["staff_cc"]
     if reply_to:
         msg["Reply-To"] = reply_to
     msg.set_content(f"{label}\n\n{text}\n\nSent from usgoldgymclub.com")
