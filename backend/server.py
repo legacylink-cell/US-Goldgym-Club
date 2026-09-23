@@ -459,6 +459,21 @@ async def set_status(kind: str, item_id: str, data: StatusInput, admin: dict = D
     return {"ok": True, "contact_status": data.status, "contact_status_at": now}
 
 
+@api_router.delete("/admin/{kind}/{item_id}")
+async def delete_item(kind: str, item_id: str, admin: dict = Depends(require_admin)):
+    """Remove a single request/message (spam or test entries)."""
+    if kind not in STATUS_COLLECTIONS:
+        raise HTTPException(status_code=404, detail="Unknown list")
+    try:
+        oid = ObjectId(item_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid id")
+    res = await db[STATUS_COLLECTIONS[kind]].delete_one({"_id": oid})
+    if res.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Item not found")
+    return {"ok": True, "deleted": item_id}
+
+
 @api_router.get("/admin/stats")
 async def admin_stats(admin: dict = Depends(require_admin)):
     return {

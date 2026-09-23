@@ -48,6 +48,19 @@ const AdminDashboard = () => {
     }
   };
 
+  const removeItem = async (kind, item, label) => {
+    if (!window.confirm(`Delete this entry${label ? ` from ${label}` : ""}? This cannot be undone.`)) return;
+    const prev = { leads, contacts, bookings, newsletter: subscribers }[kind];
+    setters[kind]((rows) => rows.filter((r) => r.id !== item.id));
+    try {
+      await api.delete(`/admin/${kind}/${item.id}`);
+      toast.success("Entry deleted");
+    } catch {
+      setters[kind](prev);
+      toast.error("Could not delete. Please try again.");
+    }
+  };
+
   const handleLogout = async () => {
     await logout();
     navigate("/login", { replace: true });
@@ -157,7 +170,7 @@ const AdminDashboard = () => {
 
           <TabsContent value="leads" className="mt-6">
             <FollowUpFilter list={leads} value={flt} onChange={setFlt} testid="filter-leads" />
-            <Table headers={["Received", "Follow-up", "Name", "Contact", "Program", "Child / Freq", "Message"]} rows={applyFilter(leads, flt).map((l) => [
+            <Table headers={["Received", "Follow-up", "Name", "Contact", "Program", "Child / Freq", "Message", ""]} rows={applyFilter(leads, flt).map((l) => [
               <When iso={l.created_at} />,
               <StatusToggle item={l} onToggle={() => toggleStatus("leads", l)} />,
               l.name,
@@ -165,24 +178,26 @@ const AdminDashboard = () => {
               l.program,
               <span>{l.child_name} {l.child_age && `(${l.child_age})`}<br /><span className="text-ink/50">{l.frequency}</span></span>,
               l.message,
+              <RemoveBtn onClick={() => removeItem("leads", l, "pricing requests")} id={l.id} />,
             ])} testid="admin-leads-table" empty="No pricing requests yet." />
           </TabsContent>
 
           <TabsContent value="contacts" className="mt-6">
             <FollowUpFilter list={contacts} value={flt} onChange={setFlt} testid="filter-contacts" />
-            <Table headers={["Received", "Follow-up", "Name", "Contact", "Topic", "Message"]} rows={applyFilter(contacts, flt).map((c) => [
+            <Table headers={["Received", "Follow-up", "Name", "Contact", "Topic", "Message", ""]} rows={applyFilter(contacts, flt).map((c) => [
               <When iso={c.created_at} />,
               <StatusToggle item={c} onToggle={() => toggleStatus("contacts", c)} />,
               c.name,
               <span>{c.email}<br /><span className="text-ink/50">{c.phone}</span></span>,
               c.topic,
               c.message,
+              <RemoveBtn onClick={() => removeItem("contacts", c, "messages")} id={c.id} />,
             ])} testid="admin-contacts-table" empty="No messages yet." />
           </TabsContent>
 
           <TabsContent value="bookings" className="mt-6">
             <FollowUpFilter list={bookings} value={flt} onChange={setFlt} testid="filter-bookings" />
-            <Table headers={["Received", "Follow-up", "Parent", "Type", "Item", "Date", "Kids", "Waiver"]} rows={applyFilter(bookings, flt).map((b) => [
+            <Table headers={["Received", "Follow-up", "Parent", "Type", "Item", "Date", "Kids", "Waiver", ""]} rows={applyFilter(bookings, flt).map((b) => [
               <When iso={b.created_at} />,
               <StatusToggle item={b} onToggle={() => toggleStatus("bookings", b)} />,
               <span>{b.user_name}<br /><span className="text-ink/50">{b.user_email}</span></span>,
@@ -191,16 +206,18 @@ const AdminDashboard = () => {
               <span>{b.date}<br /><span className="text-ink/50">{b.time_slot}</span></span>,
               b.num_kids,
               <span className="text-emerald-600 font-semibold">{b.waiver_signed_name}</span>,
+              <RemoveBtn onClick={() => removeItem("bookings", b, "bookings")} id={b.id} />,
             ])} testid="admin-bookings-table" empty="No bookings yet." />
           </TabsContent>
 
           <TabsContent value="subscribers" className="mt-6">
             <FollowUpFilter list={subscribers} value={flt} onChange={setFlt} testid="filter-subscribers" />
-            <Table headers={["Joined", "Follow-up", "Email", "Name"]} rows={applyFilter(subscribers, flt).map((s) => [
+            <Table headers={["Joined", "Follow-up", "Email", "Name", ""]} rows={applyFilter(subscribers, flt).map((s) => [
               <When iso={s.created_at} />,
               <StatusToggle item={s} onToggle={() => toggleStatus("newsletter", s)} />,
               s.email,
               s.name || "-",
+              <RemoveBtn onClick={() => removeItem("newsletter", s, "the email list")} id={s.id} />,
             ])} testid="admin-subscribers-table" empty="No email subscribers yet." />
           </TabsContent>
         </Tabs>
@@ -208,6 +225,17 @@ const AdminDashboard = () => {
     </div>
   );
 };
+
+const RemoveBtn = ({ onClick, id }) => (
+  <button
+    onClick={onClick}
+    title="Delete entry"
+    data-testid={`delete-row-${id}`}
+    className="text-ink/30 hover:text-red-600 transition-colors p-1"
+  >
+    <Trash2 className="w-4 h-4" />
+  </button>
+);
 
 const statusOf = (item) => (item.contact_status === "contacted" ? "contacted" : "new");
 

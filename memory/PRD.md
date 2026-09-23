@@ -408,3 +408,22 @@ Gather feedback on content accuracy, then consider Stripe deposits + email notif
 - CSV exports now include contact_status as the second column.
 - Verified: toggle flips + persists across reload, counts update, filters work, no console errors.
   Also purged leftover QA test records from the preview DB (5 contacts, 1 lead, 2 subscribers).
+
+## 2026-09-23 PRODUCTION VERIFICATION (usgoldgymclub.com)
+All verified live after the user published:
+- Homepage: notice bar present, stats band gone, "67+ Google reviews", 0 em dashes, no console errors.
+- /calendar: SEPTEMBER 2026 header, 14 Google Calendar events, MONTH/WEEK/LIST + legend, 14 class cards.
+- /college-recruits: Karter Neal present, Lindenwood spelling fixed, 0 baseball links anywhere.
+- /recreational: shared PricingDiscounts panel rendering.
+- Backend prod: GET /api/gcal/events 200, robots.txt served, admin login 200,
+  /api/admin/email/status -> configured:true staff_to staff@usgoldgymclub.com,
+  POST /api/admin/email/test -> sent, /api/contact + /api/leads accepted,
+  PATCH follow-up status works and persists.
+- EMAIL IS LIVE IN PROD. Two test rows remain in the prod dashboard ("Website Delivery Test" contact and
+  lead) - the user can remove them with the new per-row delete once they publish again.
+
+## 2026-09-23 New: per-row delete in admin
+- Backend DELETE /api/admin/{kind}/{id} (leads|contacts|bookings|newsletter), admin-only, 404 on missing.
+- Frontend: trash icon on every row (data-testid=delete-row-<id>) with a confirm dialog, optimistic
+  removal + rollback and toast on failure. Verified in preview: row deleted, gone after reload,
+  repeat delete returns 404.
