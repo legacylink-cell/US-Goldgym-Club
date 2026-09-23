@@ -33,3 +33,28 @@ That is the WRONG-PASSWORD error, not 535 5.7.139 "SmtpClientAuthentication is d
    - the mailbox's normal password works if MFA isn't enforced on that account
    - an app password is only needed if 2-step is on
 Re-run this probe after any change to confirm which failure we're facing.
+
+
+## 2026-09-23 ROOT CAUSE of "staff@usgoldgymclub.com can't receive mail yet" (read the video frames)
+GoDaddy page productivity.godaddy.com/#/mailbox/15641450 shows:
+  - yellow banner "staff@usgoldgymclub.com can't receive mail yet" + "Help me fix this"
+  - Manage: Password | Aliases | Forwarding | Set mail destination
+  - Setup: mobile | desktop | Create email signature | Recheck DNS
+  - Account information: First name "staff", Account type "Email Essentials",
+    Administrator permissions: No, plus an "Advanced Settings" link
+DNS check (2026-09-23):
+  NS      -> ns1/ns2/ns3.mdnsservice.com  (old host's DNS, NOT Cloudflare/GoDaddy)
+  MX      -> 0 smtp.secureserver.net / 10 mailstore1.secureserver.net  (legacy GoDaddy Workspace)
+  SPF TXT -> v=spf1 include:spf.protection.outlook.com -all  (already Microsoft)
+  autodiscover CNAME -> NXDOMAIN ; DKIM selector1 -> NXDOMAIN ; _dmarc -> NXDOMAIN
+=> The mailbox is Microsoft-backed but MX still routes inbound mail to GoDaddy's legacy servers, so the
+   new mailbox receives nothing. SENDING via smtp.office365.com is unaffected (auth probe succeeded),
+   which is why the website could still send while staff sees nothing.
+FIXES:
+  A) Point MX at Microsoft (GoDaddy banner "Help me fix this" / "Set mail destination" shows the exact
+     value, normally usgoldgymclub-com.mail.protection.outlook.com) + add autodiscover CNAME
+     autodiscover.outlook.com. Must be done wherever ns*.mdnsservice.com is managed (old web host).
+  B) INTERIM (recommended, zero DNS work): set STAFF_TO=usgoldgym@gmail.com - the Gmail account already
+     used for the gym's Google Calendar - so notifications are readable today. Switch back to staff@
+     once MX is corrected.
+Password: only Manage -> Password (set a fresh one) is needed; SMTP AUTH is already on for the mailbox.
