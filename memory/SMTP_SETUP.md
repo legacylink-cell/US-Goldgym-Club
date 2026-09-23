@@ -21,3 +21,15 @@ Decision tree given to the user:
    record, ~5 min, better deliverability). RECOMMENDED if step 2 stalls.
 4. Alternative discussed: a dedicated website@ mailbox with its own password (no MFA needed) forwarding
    to staff@ - avoids sharing the staff mailbox password.
+
+
+## 2026-06 DIAGNOSTIC (important, saves a lot of GoDaddy hunting)
+Direct probe of smtp.office365.com:587 with staff@usgoldgymclub.com and a deliberately wrong password:
+  AUTH advertised: LOGIN XOAUTH2
+  535 5.7.3 Authentication unsuccessful
+That is the WRONG-PASSWORD error, not 535 5.7.139 "SmtpClientAuthentication is disabled for the mailbox".
+=> Authenticated SMTP is ALREADY ENABLED for this mailbox and basic AUTH LOGIN is available.
+=> No GoDaddy toggle and no admin change is required. All that's missing is a valid password:
+   - the mailbox's normal password works if MFA isn't enforced on that account
+   - an app password is only needed if 2-step is on
+Re-run this probe after any change to confirm which failure we're facing.
