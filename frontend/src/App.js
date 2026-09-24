@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import Layout from "@/components/layout/Layout";
 import AnalyticsTracker from "@/components/common/AnalyticsTracker";
+import { applyPageHead } from "@/lib/pageMeta";
 
 import Home from "@/pages/Home";
 const About = lazy(() => import("@/pages/About"));
@@ -28,13 +29,7 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
-    let link = document.querySelector('link[rel="canonical"]');
-    if (!link) {
-      link = document.createElement("link");
-      link.rel = "canonical";
-      document.head.appendChild(link);
-    }
-    link.href = `https://www.usgoldgymclub.com${pathname === "/" ? "/" : pathname}`;
+    applyPageHead(pathname);
   }, [pathname]);
   return null;
 };

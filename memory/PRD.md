@@ -427,3 +427,24 @@ All verified live after the user published:
 - Frontend: trash icon on every row (data-testid=delete-row-<id>) with a confirm dialog, optimistic
   removal + rollback and toast on failure. Verified in preview: row deleted, gone after reload,
   repeat delete returns 404.
+
+## Changelog - 2026-09-24 (Per-route titles + meta descriptions, host canonicalization)
+- NEW /app/frontend/src/lib/pageMeta.js: PAGE_META map (13 public routes) + applyPageHead(pathname).
+  Sets document.title, meta[name=description], og:title/og:description/og:url, twitter:title/description
+  and the canonical link. App.js ScrollToTop now calls applyPageHead(pathname) on every route change
+  (replaces the old canonical-only effect). Falls back to the "/" entry for unlisted paths
+  (/login, /register, /admin, /dashboard).
+- All 13 titles <=60 chars ending in "| U.S. Gold"; all 13 descriptions 140-160 chars, page-specific,
+  Roanoke/DFW mentioned, each ending in a CTA. Verified in a real browser: 13/13 unique titles,
+  13/13 unique descriptions, og/twitter synced on every route, SPA nav updates the title without reload.
+- HOST CANONICALIZATION - the task brief was based on stale data. www.usgoldgymclub.com does NOT return
+  200; it already returns **308 permanent -> apex**, preserving path AND query (verified on /, /preschool,
+  /contact?topic=...). The duplicate host is therefore already collapsed, in the APEX direction.
+  Adding the requested apex -> www 301 would fight the existing rule and loop, so it was NOT done.
+  Instead the real defect was fixed: canonicals + og:url pointed at the www host that redirects, so
+  canonical never equalled location.href. SITE constant in pageMeta.js and the static canonical/og:url in
+  public/index.html now use https://usgoldgymclub.com (apex).
+- LEFT ALONE per instruction, but still wrong: public/sitemap.xml lists all 14 URLs on the www host (each
+  308s to apex) and the JSON-LD "url" in index.html is www. Flagged to the user; one-line host swap when
+  they approve.
+- No visual/copy changes. Screenshot of /preschool confirms identical layout.
