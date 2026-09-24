@@ -472,3 +472,35 @@ All verified live after the user published:
 - Verified in a real browser across all 13 routes: schema present and JSON-parseable everywhere,
   every item has name + description, ages/prices resolve as expected, canonical host has no www,
   static files 200 with 0 www refs, no visual change (birthday-parties screenshot).
+
+## Changelog - 2026-09-24 (Build-time prerender of per-route head)
+- PROBLEM: the platform serves build/index.html for every path (verified: /zzz-not-real returns 200),
+  so the per-route head from applyPageHead only existed after JS ran. Googlebot renders JS, but Bingbot
+  and the AI crawlers (GPTBot, ClaudeBot, PerplexityBot) largely do not - they all saw the homepage title.
+- NEW /app/frontend/scripts/prerender.js + package.json build script is now
+  "craco build && node scripts/prerender.js". After the CRA build it writes a REAL html file per route:
+  build/index.html for "/" and build/<route>/index.html for the other 12. Each file has that route's
+  <title>, meta description, og:title/og:description/og:url, twitter:title/description, canonical and its
+  JSON-LD <script id="page-schema"> baked into the markup.
+- Single source of truth kept: the script esbuild-bundles src/lib/pageMeta.js + src/lib/pageSchema.js
+  (they use the "@/" alias and ESM) to CJS in node_modules/.cache and requires them, so PAGE_META and
+  buildPageSchema are never duplicated. New devDependency: esbuild (build-time only).
+  The script exits non-zero if the emitted files do not have 13 unique titles.
+- Runtime is unchanged and does not duplicate anything: applyPageHead looks the schema tag up by
+  id="page-schema" and overwrites it (verified 1 description tag, 1 canonical, 1 page-schema,
+  2 total ld+json blocks = LocalBusiness + page schema).
+- BUG FOUND AND FIXED during verification: visiting a trailing-slash URL (/preschool/) missed the
+  PAGE_META lookup and fell back to the HOMEPAGE title/canonical, overwriting correct prerendered HTML.
+  applyPageHead now normalizes the pathname (strips trailing slashes) before the lookup and passes the
+  normalized route to buildPageSchema, so /preschool/ and /preschool resolve identically and the
+  canonical never carries a trailing slash.
+- VERIFIED end-to-end by serving the real build output as static files on :3000 through the preview
+  domain: /, /preschool/, /birthday-parties/, /contact/ all render (root not blank), keep their own
+  title after JS boots, emit the right schema, and the canonical is slash-normalized. Dev server restored
+  afterwards. NOTE: preview runs the CRA dev server, so preview HTML still shows the generic title -
+  prerender only exists in build output. MUST be confirmed with curl after the next publish.
+- REMAINING LIMITATION (told to user): only the HEAD is prerendered. <div id="root"> is still empty in
+  the served HTML, so non-rendering crawlers get titles/descriptions/schema but no body copy. Full
+  body prerender (puppeteer snapshot per route, or react-snap) is the next step if AI-crawler visibility
+  of page text matters; it carries hydration/staleness risk (the calendar fetches live Google data), so
+  it was not done unprompted.

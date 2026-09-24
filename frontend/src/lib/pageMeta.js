@@ -85,8 +85,11 @@ const setMeta = (selector, attr, value) => {
 };
 
 export const applyPageHead = (pathname) => {
-  const meta = PAGE_META[pathname] || PAGE_META["/"];
-  const url = `${SITE}${pathname === "/" ? "/" : pathname}`;
+  // Trailing-slash URLs (/preschool/) must resolve to the same entry as /preschool,
+  // otherwise the lookup misses and the page falls back to the homepage head.
+  const route = pathname !== "/" ? pathname.replace(/\/+$/, "") || "/" : "/";
+  const meta = PAGE_META[route] || PAGE_META["/"];
+  const url = `${SITE}${route === "/" ? "/" : route}`;
 
   document.title = meta.title;
 
@@ -112,5 +115,5 @@ export const applyPageHead = (pathname) => {
     schema.id = "page-schema";
     document.head.appendChild(schema);
   }
-  schema.textContent = JSON.stringify(buildPageSchema(pathname));
+  schema.textContent = JSON.stringify(buildPageSchema(route));
 };
