@@ -448,3 +448,27 @@ All verified live after the user published:
   308s to apex) and the JSON-LD "url" in index.html is www. Flagged to the user; one-line host swap when
   they approve.
 - No visual/copy changes. Screenshot of /preschool confirms identical layout.
+
+## Changelog - 2026-09-24 (Apex host everywhere + per-program structured data)
+- HOST FLIP to apex (www 308s to apex, so www URLs were all redirect hops):
+  public/sitemap.xml (14 locs), public/robots.txt (Sitemap: line), public/llms.txt (12 links),
+  public/index.html (canonical, og:url, og:image, twitter:image, JSON-LD "url").
+  Verified 0 remaining "www.usgoldgymclub.com" strings in /app/frontend/public.
+- NEW /app/frontend/src/lib/pageSchema.js -> buildPageSchema(pathname), injected by applyPageHead into a
+  single <script type="application/ld+json" id="page-schema"> that is rewritten on every route change.
+  * BreadcrumbList on all 13 routes (Home > Page).
+  * /preschool: ItemList of 6 Course nodes, PeopleAudience suggestedMin/MaxAge from an AGES map
+    (site copy stores ages as prose like "3.5 - 4.5 yrs"), courseWorkload from the class length.
+  * /recreational: 4 Courses (USAG levels in the name), ages 5-18. /competitive: 4 Courses.
+    /cheer: 2 Courses. /camps: 2 Courses (Little Dog Days carries AggregateOffer 120-130).
+  * /birthday-parties: 2 Service nodes with real Offers ($245 / $225) + areaServed Roanoke.
+  * /special-events: 5 Service nodes; Offer/AggregateOffer only where a real price exists
+    (Open Gym 5-7, Clinics 25-30); "See Calendar" / "Request Pricing" items correctly carry NO offer.
+- DELIBERATELY NO PRICES on class Courses: recreational/preschool/cheer/competitive tuition is not
+  published anywhere on the site (PricingDiscounts panel is intentionally figure-free), so inventing
+  price data would be structured-data spam. Add prices to site.js first and schema will follow.
+- /careers has NO JobPosting schema on purpose: Google requires datePosted + validThrough and the
+  listings have neither. Needs real posting dates from the user before it can be added safely.
+- Verified in a real browser across all 13 routes: schema present and JSON-parseable everywhere,
+  every item has name + description, ages/prices resolve as expected, canonical host has no www,
+  static files 200 with 0 www refs, no visual change (birthday-parties screenshot).

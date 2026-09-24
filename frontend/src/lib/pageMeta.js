@@ -1,3 +1,5 @@
+import { buildPageSchema } from "@/lib/pageSchema";
+
 // Apex host: www.usgoldgymclub.com issues a permanent redirect to this host,
 // so canonicals/og:url must use the apex to stay self-referential.
 const SITE = "https://usgoldgymclub.com";
@@ -102,4 +104,13 @@ export const applyPageHead = (pathname) => {
   setMeta('meta[property="og:url"]', "content", url);
   setMeta('meta[name="twitter:title"]', "content", meta.title);
   setMeta('meta[name="twitter:description"]', "content", meta.description);
+
+  let schema = document.getElementById("page-schema");
+  if (!schema) {
+    schema = document.createElement("script");
+    schema.type = "application/ld+json";
+    schema.id = "page-schema";
+    document.head.appendChild(schema);
+  }
+  schema.textContent = JSON.stringify(buildPageSchema(pathname));
 };

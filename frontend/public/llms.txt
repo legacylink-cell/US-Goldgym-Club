@@ -4,21 +4,21 @@
 
 ## Programs
 
-- [Preschool Gymnastics](https://www.usgoldgymclub.com/preschool): Classes for our youngest athletes, ages 18 months to 5 years.
-- [Recreational Gymnastics](https://www.usgoldgymclub.com/recreational): Skill-based classes for boys and girls of all levels.
-- [Competitive Team](https://www.usgoldgymclub.com/competitive): USAG competitive gymnastics training and meets.
-- [All-Star Cheer](https://www.usgoldgymclub.com/cheer): Cheer and tumbling teams and classes.
-- [College Recruits](https://www.usgoldgymclub.com/college-recruits): Recruiting guidance for collegiate-bound athletes.
+- [Preschool Gymnastics](https://usgoldgymclub.com/preschool): Classes for our youngest athletes, ages 18 months to 5 years.
+- [Recreational Gymnastics](https://usgoldgymclub.com/recreational): Skill-based classes for boys and girls of all levels.
+- [Competitive Team](https://usgoldgymclub.com/competitive): USAG competitive gymnastics training and meets.
+- [All-Star Cheer](https://usgoldgymclub.com/cheer): Cheer and tumbling teams and classes.
+- [College Recruits](https://usgoldgymclub.com/college-recruits): Recruiting guidance for collegiate-bound athletes.
 
 ## Events & Booking
 
-- [Camps](https://www.usgoldgymclub.com/camps): School-break and summer camps.
-- [Birthday Parties](https://www.usgoldgymclub.com/birthday-parties): Private gym birthday party packages.
-- [Special Events](https://www.usgoldgymclub.com/special-events): Parents' night out, clinics, and open gyms.
-- [Calendar](https://www.usgoldgymclub.com/calendar): Upcoming gym events and closures.
-- [Contact & Free Trial](https://www.usgoldgymclub.com/contact): Book a free trial class or ask a question.
+- [Camps](https://usgoldgymclub.com/camps): School-break and summer camps.
+- [Birthday Parties](https://usgoldgymclub.com/birthday-parties): Private gym birthday party packages.
+- [Special Events](https://usgoldgymclub.com/special-events): Parents' night out, clinics, and open gyms.
+- [Calendar](https://usgoldgymclub.com/calendar): Upcoming gym events and closures.
+- [Contact & Free Trial](https://usgoldgymclub.com/contact): Book a free trial class or ask a question.
 
 ## About
 
-- [About the Academy](https://www.usgoldgymclub.com/about): Facility, coaching staff, and philosophy.
-- [Careers](https://www.usgoldgymclub.com/careers): Coaching and staff openings.
+- [About the Academy](https://usgoldgymclub.com/about): Facility, coaching staff, and philosophy.
+- [Careers](https://usgoldgymclub.com/careers): Coaching and staff openings.
