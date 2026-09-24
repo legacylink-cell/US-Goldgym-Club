@@ -109,3 +109,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
 }
+
+/* Prerender only. scripts/prerender.js snapshots the DOM while framer-motion's
+   scroll-reveal elements may still hold their initial opacity:0 / translate state.
+   The class is stamped on <html> in the built files and removed by index.js the
+   moment React mounts, so real visitors still get the full animations. */
+html.react-snap [style*="opacity:0"],
+html.react-snap [style*="opacity: 0"] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+html.react-snap .marquee-track {
+  animation: none;
+}

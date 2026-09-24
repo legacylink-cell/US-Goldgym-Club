@@ -504,3 +504,37 @@ All verified live after the user published:
   body prerender (puppeteer snapshot per route, or react-snap) is the next step if AI-crawler visibility
   of page text matters; it carries hydration/staleness risk (the calendar fetches live Google data), so
   it was not done unprompted.
+
+## Changelog - 2026-09-24 (Body prerender via jsdom - full static HTML per route)
+- scripts/prerender.js now has TWO phases. Phase 1 (head) as before. Phase 2 (body): starts an ephemeral
+  local static http server over build/, then for each of the 13 routes boots the REAL built bundle inside
+  jsdom (JSDOM.fromURL, runScripts:"dangerously", pretendToBeVisual), waits for #root markup to settle,
+  and bakes root.innerHTML into that route's file. Only #root innerHTML is transplanted - the head stays
+  exactly as phase 1 wrote it, so jsdom can never corrupt meta/schema.
+- jsdom shims injected via beforeParse: IntersectionObserver (reports every observed element as fully
+  intersecting, otherwise framer-motion's whileInView reveals never fire and the snapshot is empty),
+  ResizeObserver, Element.prototype.animate, window.scrollTo. A custom ResourceLoader blocks every
+  non-localhost URL, so Google Fonts / PostHog / emergent CDN / Unsplash are never fetched during build.
+  /api/* is answered 503 immediately so a render never blocks on the backend.
+- ANIMATION OVERRIDES (explicitly required): src/index.css gained a prerender-only block -
+  html.react-snap [style*="opacity:0"], html.react-snap [style*="opacity: 0"] { opacity:1 !important;
+  transform:none !important } plus html.react-snap .marquee-track { animation:none }.
+  prerender.js stamps class="react-snap" on <html> in every emitted file, and src/index.js calls
+  document.documentElement.classList.remove("react-snap") immediately before createRoot, so the overrides
+  apply ONLY to the pre-JS paint and real visitors keep every animation.
+  This is load-bearing, not decorative: 12 elements in /preschool still carry inline opacity:0 in the
+  snapshot; with the bundle blocked all 12 compute to opacity 1 because of this rule.
+- ROUTE_TIMEOUT_MS tuned 12000 -> 7000 after diffing both builds: output is byte-identical on 10/13 routes
+  and differs by <= 153 bytes on the other 3 (carousel index / animation tick noise). Build 174s -> 108s.
+- VERIFIED by serving the real build output through the preview domain:
+  * All 13 routes: exactly 1 <h1>, 0 empty roots, class="react-snap" present, real copy in raw HTML
+    (spot-checked "Karter Neal", "Dedicated Party Host", "67+", "Preschool Gymnastics Coaches").
+  * JS blocked (crawler simulation): h1 renders, 3008 chars of visible body text, 12 inline-faded
+    elements all computed visible -> override confirmed.
+  * JS enabled: react-snap class removed, title correct, 1 h1, no duplicate render, no error boundary.
+  * Scroll reveal: below-fold element opacity 0 before scroll -> 1 after scroll, so animations still play.
+  * /, /college-recruits/, /calendar/ all clean (calendar renders SEPTEMBER 2026 with live events).
+- KNOWN TRADE-OFF: /calendar's baked markup contains whatever Google Calendar returned at BUILD time, so
+  the static copy of the event grid goes stale between publishes. JS replaces it on load, so visitors
+  always see live data; only a non-rendering crawler could read a stale month. Acceptable; flagged.
+- Build-time-only devDependencies added: esbuild, jsdom@25 (jsdom latest needs Node >=22, pod runs 20).

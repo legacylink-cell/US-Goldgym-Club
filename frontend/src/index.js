@@ -21,6 +21,10 @@ const queryClient = new QueryClient({
   },
 });
 
+// Prerendered files ship <html class="react-snap"> so the static markup is visible
+// before JS. Drop it now that React is taking over, so animations run normally.
+document.documentElement.classList.remove("react-snap");
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
