@@ -79,7 +79,7 @@ def _shell(title: str, body_html: str) -> str:
         f"<div style='background:#2C0A4E;padding:18px 24px;color:#fff;font-size:18px;font-weight:700'>{escape(title)}</div>"
         f"<div style='padding:24px'>{body_html}</div>"
         "<div style='padding:16px 24px;border-top:1px solid #eee;color:#8a7c99;font-size:12px'>"
-        "U.S. Gold Gymnastics &amp; Cheer Academy &middot; 1301 Bluebonnet Dr, Roanoke, TX &middot; 817.491.9996</div>"
+        "U.S. Gold Gymnastics &amp; Cheer Academy &middot; 4000 Haslet-Roanoke Rd Ste 100, Roanoke, TX 76262 &middot; 817.491.9996</div>"
         "</div></div>"
     )
 
@@ -116,41 +116,3 @@ async def notify_staff(form_type: str, fields: dict, reply_to: str = "") -> None
         logger.info("Staff notification sent for %s", form_type)
     except Exception as exc:
         logger.error("Staff notification FAILED for %s: %s", form_type, exc)
-
-
-async def confirm_to_parent(to_email: str, name: str = "", form_type: str = "contact") -> None:
-    """Short 'we got it' acknowledgement to the person who filled the form."""
-    if not email_enabled() or not to_email:
-        return
-    c = _cfg()
-    first = (name or "").split(" ")[0]
-    greeting = f"Hi {first}," if first else "Hi there,"
-    if form_type == "newsletter":
-        body = "You're on the U.S. Gold email list. We'll send camp openings, events, and gym news your way."
-    else:
-        body = ("Thanks for reaching out to U.S. Gold Gymnastics &amp; Cheer Academy. "
-                "We've got your message and someone from our team will get back to you shortly. "
-                "If you need us right away, call 817.491.9996.")
-
-    msg = EmailMessage()
-    msg["Subject"] = "We got your message - U.S. Gold Gymnastics & Cheer"
-    msg["From"] = c["mail_from"]
-    msg["To"] = to_email
-    msg["Reply-To"] = c["staff_to"]
-    msg.set_content(f"{greeting}\n\n{body.replace('&amp;', '&')}\n\nU.S. Gold Gymnastics & Cheer Academy\n817.491.9996")
-    msg.add_alternative(
-        _shell(
-            "Thanks for reaching out!",
-            f"<p style='color:#2C0A4E;font-size:16px'>{escape(greeting)}</p>"
-            f"<p style='color:#4a3d5c;font-size:15px;line-height:1.5'>{body}</p>"
-            "<p style='margin-top:24px'><a href='https://www.usgoldgymclub.com' "
-            "style='background:#FF1D8E;color:#2C0A4E;text-decoration:none;padding:12px 22px;"
-            "font-weight:700;display:inline-block'>Visit our website</a></p>",
-        ),
-        subtype="html",
-    )
-    try:
-        await _send(msg)
-        logger.info("Parent confirmation sent to %s", to_email)
-    except Exception as exc:
-        logger.error("Parent confirmation FAILED to %s: %s", to_email, exc)

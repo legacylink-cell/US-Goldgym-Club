@@ -318,7 +318,6 @@ async def create_lead(data: LeadInput, background: BackgroundTasks):
         "Child": data.child_name, "Child age": data.child_age,
         "Program": data.program, "Frequency": data.frequency, "Message": data.message,
     }, data.email)
-    background.add_task(mailer.confirm_to_parent, data.email, data.name, "lead")
     return {"id": str(res.inserted_id), "message": "Request received"}
 
 
@@ -341,7 +340,6 @@ async def create_contact(data: ContactInput, background: BackgroundTasks):
         "Topic": data.topic, "Name": data.name, "Email": data.email,
         "Phone": data.phone, "Message": data.message,
     }, data.email)
-    background.add_task(mailer.confirm_to_parent, data.email, data.name, "contact")
     return {"id": str(res.inserted_id), "message": "Message sent"}
 
 
@@ -369,7 +367,6 @@ async def subscribe_newsletter(data: NewsletterInput, background: BackgroundTask
         "created_at": datetime.now(timezone.utc).isoformat(),
     })
     background.add_task(mailer.notify_staff, "newsletter", {"Email": email, "Name": data.name or ""}, email)
-    background.add_task(mailer.confirm_to_parent, email, data.name or "", "newsletter")
     return {"message": "You're on the list!", "already": False}
 
 
@@ -407,7 +404,6 @@ async def create_booking(data: BookingInput, background: BackgroundTasks, user: 
         "Price": data.price, "Notes": data.notes,
         "Name": doc["user_name"], "Email": doc["user_email"],
     }, doc["user_email"])
-    background.add_task(mailer.confirm_to_parent, doc["user_email"], doc["user_name"], "booking")
     return {"id": str(res.inserted_id), "message": "Booking confirmed"}
 
 

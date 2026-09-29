@@ -538,3 +538,21 @@ All verified live after the user published:
   the static copy of the event grid goes stale between publishes. JS replaces it on load, so visitors
   always see live data; only a non-rendering crawler could read a stale month. Acceptable; flagged.
 - Build-time-only devDependencies added: esbuild, jsdom@25 (jsdom latest needs Node >=22, pod runs 20).
+
+## Changelog - 2026-09-29 (Correct address in email + all parent auto-replies OFF)
+- ADDRESS: the only wrong instance was backend/mailer.py _shell() footer, which read
+  "1301 Bluebonnet Dr, Roanoke, TX". Now "4000 Haslet-Roanoke Rd Ste 100, Roanoke, TX 76262".
+  Audited the whole repo for "Bluebonnet" - 0 remaining. The website was already correct everywhere
+  (site.js BUSINESS.address + mapEmbed, lib/pageSchema.js PROVIDER, public/index.html JSON-LD,
+  public/llms.txt). _shell() is shared, so the staff notification footer is fixed by the same change.
+- AUTO-REPLIES REMOVED (user: the on-screen confirmation is enough). Deleted the four
+  background.add_task(mailer.confirm_to_parent, ...) calls in server.py (/api/leads, /api/contact,
+  /api/newsletter, /api/bookings) AND deleted the confirm_to_parent() function from mailer.py entirely,
+  so it cannot be re-wired by accident. mailer's public surface is now just email_enabled + notify_staff.
+  Parents receive NO email from the site at all; staff still get every submission with the parent's
+  address as Reply-To.
+- Verified: ruff F/E9 clean for the change (only 2 pre-existing unused imports in server.py remain);
+  backend restarted clean; mailer._shell() footer string asserted in a python shell; real contact form
+  POSTed to the preview API -> log shows ONLY "Staff notification sent for contact" with no
+  "Parent confirmation" line after it (the older Parent confirmation lines in the log are from 2026-09-23,
+  before this change). Test row deleted afterwards via the admin delete endpoint (contacts back to 0).
