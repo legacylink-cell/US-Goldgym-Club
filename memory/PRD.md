@@ -556,3 +556,54 @@ All verified live after the user published:
   POSTed to the preview API -> log shows ONLY "Staff notification sent for contact" with no
   "Parent confirmation" line after it (the older Parent confirmation lines in the log are from 2026-09-23,
   before this change). Test row deleted afterwards via the admin delete endpoint (contacts back to 0).
+
+## Changelog - 2026-10-08 (Fall 2026 class schedule - days, times AND tuition)
+- User supplied "USG - 2026 FALL SCHEDULE (1).pdf" (first time; no day/time data existed before).
+  PDF is the RECREATIONAL schedule: a 6-column grid (Mon-Sat) of START TIMES + class names only.
+  No ages and no end times are printed. Duration/price come from footnotes under the grid.
+- site.js: new FALL_SCHEDULE export (term "Fall 2026", registration $35 individual / $50 family,
+  rates, and days[] with 69 classes transcribed cell by cell). PDFS.fallSchedule added for download.
+- NEW components/common/WeeklySchedule.jsx: desktop 6-column week grid, mobile day tabs with per-day
+  counts, category filter chips (All/Preschool/Recreational/Cheer Tumble/Boys), per-class duration +
+  monthly price, note support ("Must have RO BHS"), tuition/registration panel, Printable PDF link,
+  and a Book a free trial call CTA. Category derived from class name (Cheer*/Boys*/Gym* else rec).
+- ClassSchedule.jsx now renders <WeeklySchedule/> first, then the old level cards retitled
+  "What each class covers"; the "A full day-by-day schedule is coming soon" line is GONE, replaced by
+  a Fall 2026 session note. PLACEHOLDER #6 FROM THE AUDIT IS CLOSED, and class tuition (#7) is now
+  published for rec/cheer/boys.
+- Verified in browser: 69 pills on desktop grid, 5 filters work (Cheer Tumble -> 10), mobile day tabs
+  switch days (Sat -> 7), desktop grid hidden on mobile, 1 h1, "coming soon" string gone, PDF link ok,
+  category border colours distinct (preschool pink / rec purple / boys sky / cheer coral).
+- MISTAKE TO AVOID: while editing site.js I twice used search_replace with an old_str that was only the
+  FIRST line of a block and a new_str that dropped the following line, silently deleting
+  "Tumble 1" and "Developmental / Pre-Team". Both caught by re-reading and restored, then verified with
+  an export-integrity check. Use insert_text for additions; never truncate a block like that.
+- AWAITING USER PROOFREAD (flagged, do not treat as confirmed): Wed 6:30 Intermediate listed twice;
+  Mon 7:30 Cheer Tumble listed twice (second has the RO BHS note); Mon 2:00 PM Beginner I/II is an
+  unusually early slot; "Gym I & II" and "Gym III" are shown at $90/55min but the footnote only covers
+  "Gym III - Intermediate", so Gym I & II pricing is INFERRED. Two independent PDF extraction passes
+  disagreed on a few cells, so the user must confirm before publishing.
+- USER DIRECTION FOR THE FUTURE: wants the class schedule driven by Google Calendar like the events
+  calendar, so the front desk can edit without a republish. Plan proposed (not built): a SECOND
+  "Class Schedule" Google Calendar with weekly recurring events; backend already has ICS parsing with
+  recurring_ical_events so it can be reused; keep price/duration/category rules in code and take only
+  day/time/class name from the feed; offer to generate an importable .ics from FALL_SCHEDULE so setup
+  is one import instead of 69 manual entries.
+
+## 2026-10-08 Filter verification (user asked to confirm filters work)
+Ground truth computed from site.js FALL_SCHEDULE: all=69, preschool=8, recreational=51,
+cheer_tumble=8, boys=2. Per day: Mon 14 / Tue 13 / Wed 14 / Thu 15 / Fri 6 / Sat 7.
+Browser-verified on desktop (1600px) and mobile (390px):
+- Every filter shows the exact expected count, and the per-column "N classes" header counts match
+  per-day-per-category truth for all 5 filters x 6 days.
+- Zero category leakage - checked by reading each pill's data-testid slug, not its text:
+  preschool -> only gym-iii / gym-i-ii; recreational -> beginner, beginner-ii, beginner-i-ii,
+  intermediate, advanced; cheer_tumble -> only cheer-tumble; boys -> only boys-sport.
+- Active chip highlight correct for all 5 filters.
+- Mobile day tabs: pill count == tab badge == expected for every day x filter combo, and the
+  "No classes in this category on <Day>" empty state appears exactly when the count is 0 (Fri/Sat boys,
+  Fri/Sat cheer, Fri preschool).
+- "Must have RO BHS" note renders on exactly 1 pill under the Cheer Tumble filter.
+- Rapid filter switching (boys->all->preschool->all->cheer->all) returns to 69, no accumulation/loss.
+NOTE: a first test run reported "leakage" of the string "55 MIN - $90/MO"; that was a BAD TEST SELECTOR
+(querySelectorAll('div')[2] grabbed the duration line, not the class name), not an app bug.

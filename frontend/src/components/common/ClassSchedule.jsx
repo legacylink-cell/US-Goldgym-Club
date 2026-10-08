@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Clock, Users, ArrowUpRight, Phone } from "lucide-react";
 import { PRESCHOOL_TIERS, REC_LEVELS, TUMBLE_CLASSES, BUSINESS } from "@/data/site";
+import WeeklySchedule from "@/components/common/WeeklySchedule";
 
 const FILTERS = [
   { key: "all", label: "All classes", dot: "bg-white" },
@@ -66,17 +67,19 @@ export const ClassSchedule = () => {
 
   return (
     <div data-testid="class-schedule">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <WeeklySchedule />
+
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 mt-16">
         <div>
-          <div className="text-pinklt text-xs uppercase tracking-[0.25em] font-bold mb-2">Weekly classes</div>
-          <h2 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">Class schedule</h2>
+          <div className="text-pinklt text-xs uppercase tracking-[0.25em] font-bold mb-2">Class levels</div>
+          <h2 className="font-display text-3xl md:text-4xl uppercase text-white leading-none">What each class covers</h2>
         </div>
         <a
           href={`tel:${BUSINESS.phoneRaw}`}
           className="inline-flex items-center gap-2 border border-white/20 text-white px-5 py-3 hover:border-lime hover:text-lime transition-colors self-start"
           data-testid="class-schedule-call"
         >
-          <Phone className="w-4 h-4" /> Ask about day &amp; time options
+          <Phone className="w-4 h-4" /> Not sure which level?
         </a>
       </div>
 
@@ -122,9 +125,11 @@ export const ClassSchedule = () => {
       </div>
 
       <p className="text-white/45 text-sm mt-6 max-w-3xl">
-        Days and times are set each session and can change seasonally - call the front desk at{" "}
+        Schedule shown is the {" "}
+        <span className="text-white/70">Fall 2026</span> session. Days and times can change between sessions and
+        enrollment is subject to space availability - call the front desk at{" "}
         <a href={`tel:${BUSINESS.phoneRaw}`} className="text-pinklt hover:text-white transition-colors">{BUSINESS.phone}</a>{" "}
-        for the current openings. A full day-by-day schedule is coming soon.
+        to confirm current openings.
       </p>
     </div>
   );

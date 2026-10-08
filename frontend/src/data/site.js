@@ -140,6 +140,131 @@ export const TUMBLE_CLASSES = [
   { name: "Tumble 3", level: "Advanced" },
 ];
 
+
+// Fall 2026 weekly schedule, transcribed from the gym's printed PDF schedule.
+// Times are start times exactly as printed (weekdays PM, Saturday AM).
+// Duration/price come from the PDF footnotes, not from the grid itself.
+export const FALL_SCHEDULE = {
+  term: "Fall 2026",
+  registration: [
+    { label: "Individual", price: "$35" },
+    { label: "Family", price: "$50" },
+  ],
+  rates: [
+    { label: "Gym III, Beginner, Beginner II, Intermediate & Cheer Tumble", length: "55 min", price: "$90 / month" },
+    { label: "Advanced", length: "85 min", price: "$120 / month" },
+    { label: "Boys Sport", length: "55 min", price: "$90 / month" },
+  ],
+  days: [
+    {
+      day: "Monday",
+      short: "Mon",
+      classes: [
+        { time: "2:00", name: "Beginner I/II" },
+        { time: "3:30", name: "Gym III" },
+        { time: "3:30", name: "Beginner II" },
+        { time: "4:00", name: "Advanced" },
+        { time: "4:30", name: "Beginner II" },
+        { time: "4:30", name: "Boys Sport" },
+        { time: "5:30", name: "Gym III" },
+        { time: "5:30", name: "Beginner II" },
+        { time: "5:30", name: "Intermediate" },
+        { time: "6:30", name: "Beginner" },
+        { time: "6:30", name: "Beginner II" },
+        { time: "6:30", name: "Intermediate" },
+        { time: "7:30", name: "Cheer Tumble" },
+        { time: "7:30", name: "Cheer Tumble", note: "Must have RO BHS" },
+      ],
+    },
+    {
+      day: "Tuesday",
+      short: "Tue",
+      classes: [
+        { time: "3:30", name: "Beginner II" },
+        { time: "3:30", name: "Intermediate" },
+        { time: "4:30", name: "Gym III" },
+        { time: "4:30", name: "Beginner II" },
+        { time: "4:30", name: "Intermediate" },
+        { time: "4:30", name: "Cheer Tumble" },
+        { time: "5:30", name: "Beginner" },
+        { time: "5:30", name: "Beginner II" },
+        { time: "5:30", name: "Intermediate" },
+        { time: "6:30", name: "Beginner" },
+        { time: "6:30", name: "Beginner II" },
+        { time: "6:30", name: "Intermediate" },
+        { time: "7:30", name: "Cheer Tumble" },
+      ],
+    },
+    {
+      day: "Wednesday",
+      short: "Wed",
+      classes: [
+        { time: "3:30", name: "Beginner" },
+        { time: "3:30", name: "Beginner II" },
+        { time: "4:30", name: "Beginner II" },
+        { time: "4:30", name: "Intermediate" },
+        { time: "4:30", name: "Cheer Tumble" },
+        { time: "5:30", name: "Gym III" },
+        { time: "5:30", name: "Beginner" },
+        { time: "5:30", name: "Beginner II" },
+        { time: "6:00", name: "Advanced" },
+        { time: "6:30", name: "Beginner" },
+        { time: "6:30", name: "Beginner II" },
+        { time: "6:30", name: "Boys Sport" },
+        { time: "6:30", name: "Intermediate" },
+        { time: "6:30", name: "Intermediate" },
+      ],
+    },
+    {
+      day: "Thursday",
+      short: "Thu",
+      classes: [
+        { time: "3:30", name: "Beginner II" },
+        { time: "3:30", name: "Intermediate" },
+        { time: "4:30", name: "Gym III" },
+        { time: "4:30", name: "Beginner" },
+        { time: "4:30", name: "Beginner II" },
+        { time: "4:30", name: "Intermediate" },
+        { time: "5:30", name: "Beginner II" },
+        { time: "5:30", name: "Intermediate" },
+        { time: "5:30", name: "Advanced" },
+        { time: "5:30", name: "Cheer Tumble" },
+        { time: "6:00", name: "Advanced" },
+        { time: "6:30", name: "Beginner II" },
+        { time: "6:30", name: "Intermediate" },
+        { time: "6:30", name: "Cheer Tumble" },
+        { time: "7:30", name: "Cheer Tumble" },
+      ],
+    },
+    {
+      day: "Friday",
+      short: "Fri",
+      classes: [
+        { time: "4:00", name: "Beginner" },
+        { time: "4:00", name: "Beginner II" },
+        { time: "4:00", name: "Intermediate" },
+        { time: "5:00", name: "Beginner II" },
+        { time: "5:00", name: "Intermediate" },
+        { time: "5:00", name: "Advanced" },
+      ],
+    },
+    {
+      day: "Saturday",
+      short: "Sat",
+      morning: true,
+      classes: [
+        { time: "9:00", name: "Beginner I / II" },
+        { time: "9:00", name: "Gym III" },
+        { time: "10:00", name: "Gym I & II" },
+        { time: "10:00", name: "Intermediate" },
+        { time: "11:00", name: "Gym III" },
+        { time: "11:00", name: "Beginner II" },
+        { time: "11:00", name: "Advanced" },
+      ],
+    },
+  ],
+};
+
 export const COMPETITIVE_PATH = [
   { name: "Developmental / Pre-Team", detail: "Invite-only • Ages 4–7 • Year-round commitment", desc: "Our talent pipeline. Young athletes build the strength and skills to join a competitive team." },
   { name: "Compulsory Team", detail: "USAG Levels 3–5 • Fall competition season", desc: "Athletes compete standardized routines and travel to meets across the region." },
@@ -349,6 +474,8 @@ export const ANNOUNCEMENT =
   "★  Call or Email us to Schedule your FREE Trial Class!  ★  817.491.9996  ★  staff@usgoldgymclub.com  ★";
 
 export const PDFS = {
+  fallSchedule:
+    "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/25c1cdac74db614b_USG%20-%202026%20FALL%20SCHEDULE%20%281%29.pdf",
   enrollmentPacket:
     "https://customer-assets-cm19k8pv.emergentagent.net/job_cheer-gym-pro/artifacts/pzscqfao_Enrollment_Packet.pdf",
   waiver:
