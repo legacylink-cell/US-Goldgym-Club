@@ -607,3 +607,19 @@ Browser-verified on desktop (1600px) and mobile (390px):
 - Rapid filter switching (boys->all->preschool->all->cheer->all) returns to 69, no accumulation/loss.
 NOTE: a first test run reported "leakage" of the string "55 MIN - $90/MO"; that was a BAD TEST SELECTOR
 (querySelectorAll('div')[2] grabbed the duration line, not the class name), not an app bug.
+
+## Changelog - 2026-10-09 (Announcement bar: Daytime Playtime closure)
+- SITE_NOTICE.text -> "No Daytime Playtime Monday, October 12. Classes will run as scheduled."
+  This REPLACED the "Fresh look in progress" construction message (user said "include", I replaced
+  rather than stacking two messages in one bar - offered to restore/stack).
+  Softened the user's all-caps to sentence case for readability; offered to restore full caps.
+- SITE_NOTICE.version bumped "2026-06" -> "2026-10-12-playtime". CRITICAL: SiteNotice.jsx persists
+  dismissal as localStorage usg_notice_dismissed == SITE_NOTICE.version, so WITHOUT the version bump
+  every visitor who had closed the old banner would never have seen this one. Always bump version when
+  the notice text changes.
+- Icon Hammer -> CalendarOff (hammer read as "under construction", wrong for a closure notice).
+- Verified in browser: desktop + mobile show the new text; a visitor with the OLD dismissal
+  ("2026-06") still sees it; dismissing stores "2026-10-12-playtime" and persists across reload;
+  mobile notice does not overlap the nav (top 116, nav bottom below it), full width 390.
+- NOTE: this notice is date-specific and has no auto-expiry - it must be changed/disabled manually
+  after Oct 12. Offered to add a hideAfter date field.

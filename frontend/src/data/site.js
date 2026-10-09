@@ -21,8 +21,8 @@ export const IMG = {
 // Bump `version` to re-show it to visitors who previously dismissed it.
 export const SITE_NOTICE = {
   enabled: true,
-  version: "2026-06",
-  text: "Fresh look in progress - we're adding new photos and details all week. Thanks for your patience!",
+  version: "2026-10-12-playtime",
+  text: "No Daytime Playtime Monday, October 12. Classes will run as scheduled.",
 };
 
 export const GOOGLE_CALENDAR = {
