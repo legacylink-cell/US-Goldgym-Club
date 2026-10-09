@@ -190,6 +190,10 @@ const renderBody = async (origin, route) => {
     }
 
     const root = window.document.getElementById("root");
+    // The announcement bar is time-sensitive and client-evaluated. Baking it into static HTML
+    // would serve a stale/expired notice until the next publish, so strip it from the snapshot.
+    const notice = root && root.querySelector('[data-testid="site-notice"]');
+    if (notice) notice.remove();
     const markup = root ? root.innerHTML : "";
     const h1s = (markup.match(/<h1/g) || []).length;
     return { markup, h1s };

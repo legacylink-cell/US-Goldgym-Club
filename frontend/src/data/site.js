@@ -19,10 +19,33 @@ export const IMG = {
 
 // Friendly "we're updating the site" strip. Set enabled:false to turn it off.
 // Bump `version` to re-show it to visitors who previously dismissed it.
+// Announcement bar. `dated` notices win while they are unexpired (soonest expiry first);
+// once they all lapse the bar falls back to `evergreen`. expiresAt is an ISO timestamp WITH a
+// Central-time offset so "end of day" means end of day in Roanoke, not UTC.
+// `version` drives the per-notice dismissal key - change it whenever the text changes.
 export const SITE_NOTICE = {
   enabled: true,
-  version: "2026-10-12-playtime",
-  text: "No Daytime Playtime Monday, October 12. Classes will run as scheduled.",
+  evergreen: {
+    version: "fresh-look-2026-06",
+    icon: "hammer",
+    text: "Fresh look in progress - we're adding new photos and details all week. Thanks for your patience!",
+  },
+  dated: [
+    {
+      version: "2026-10-12-playtime",
+      icon: "calendar",
+      text: "No Daytime Playtime Monday, October 12. Classes will run as scheduled.",
+      expiresAt: "2026-10-12T23:59:59-05:00",
+    },
+  ],
+};
+
+export const activeNotice = (now = new Date()) => {
+  if (!SITE_NOTICE.enabled) return null;
+  const live = (SITE_NOTICE.dated || [])
+    .filter((n) => new Date(n.expiresAt).getTime() > now.getTime())
+    .sort((a, b) => new Date(a.expiresAt) - new Date(b.expiresAt));
+  return live[0] || SITE_NOTICE.evergreen || null;
 };
 
 export const GOOGLE_CALENDAR = {

@@ -623,3 +623,26 @@ NOTE: a first test run reported "leakage" of the string "55 MIN - $90/MO"; that 
   mobile notice does not overlap the nav (top 116, nav bottom below it), full width 390.
 - NOTE: this notice is date-specific and has no auto-expiry - it must be changed/disabled manually
   after Oct 12. Offered to add a hideAfter date field.
+
+## Changelog - 2026-10-09 (Auto-expiring announcement notices)
+- site.js SITE_NOTICE restructured: { enabled, evergreen: {version, icon, text},
+  dated: [{version, icon, text, expiresAt}] } plus a new exported helper activeNotice(now = new Date())
+  which returns the soonest-expiring UNEXPIRED dated notice, else the evergreen one, else null.
+- expiresAt is ISO **with a Central offset** ("2026-10-12T23:59:59-05:00") so "end of day" means end of
+  day in Roanoke. Do not store these as bare UTC - 2026-10-13T00:00Z is still Monday evening in Texas.
+- Current config: dated = the Oct 12 "No Daytime Playtime" closure; evergreen = the "Fresh look in
+  progress" message it automatically reverts to after the cutoff.
+- SiteNotice.jsx now resolves the notice at mount via activeNotice(), renders notice.text, and maps
+  notice.icon through an ICONS map (calendar: CalendarOff, hammer: Hammer, announce: Megaphone).
+  Dismissal is still keyed on the ACTIVE notice's version, so dismissing the closure does not hide the
+  evergreen one that follows it (verified).
+- prerender.js now REMOVES [data-testid="site-notice"] from the #root snapshot before baking the body.
+  Without this, static HTML would keep serving an expired dated notice until the next publish and real
+  visitors would see a flash of stale text before React corrected it. Verified: 0 occurrences of
+  "site-notice" or "October 12" in the built index.html / preschool / contact, h1 still 1, 13/13 routes
+  still have body copy.
+- Verified with a node table at the boundary: Oct 9 -> closure; Oct 12 09:00 CT -> closure;
+  Oct 12 23:59:58 CT -> closure; Oct 13 00:00:30 CT -> reverts; Oct 14 and Jan 2027 -> evergreen.
+  Timezone probes: 2026-10-13T02:00Z (9pm CT Mon) -> closure; 2026-10-13T05:30Z (12:30am CT Tue) ->
+  evergreen. Browser-verified today (closure shown) and with a +5 day clock override via
+  add_init_script (reverted to "Fresh look in progress", icon back to the hammer).

@@ -1,27 +1,33 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarOff, Phone, X } from "lucide-react";
-import { SITE_NOTICE, BUSINESS } from "@/data/site";
+import { CalendarOff, Hammer, Megaphone, Phone, X } from "lucide-react";
+import { activeNotice, BUSINESS } from "@/data/site";
 
 const STORAGE_KEY = "usg_notice_dismissed";
+const ICONS = { calendar: CalendarOff, hammer: Hammer, announce: Megaphone };
 
 export const SiteNotice = () => {
+  const [notice, setNotice] = useState(null);
   const [dismissed, setDismissed] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setDismissed(localStorage.getItem(STORAGE_KEY) === SITE_NOTICE.version);
+    // Re-evaluated on mount, so a notice that lapsed while a tab sat open is replaced on next load.
+    const current = activeNotice();
+    setNotice(current);
+    setDismissed(!current || localStorage.getItem(STORAGE_KEY) === current.version);
     const onScroll = () => setScrolled(window.scrollY > 90);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const close = () => {
-    localStorage.setItem(STORAGE_KEY, SITE_NOTICE.version);
+    if (notice) localStorage.setItem(STORAGE_KEY, notice.version);
     setDismissed(true);
   };
 
-  if (!SITE_NOTICE.enabled) return null;
+  if (!notice) return null;
+  const Icon = ICONS[notice.icon] || Megaphone;
 
   return (
     <AnimatePresence>
@@ -35,9 +41,9 @@ export const SiteNotice = () => {
           data-testid="site-notice"
         >
           <div className="pointer-events-auto max-w-[1400px] mx-auto flex items-center gap-3 border border-lime/40 bg-ink/85 backdrop-blur-md px-4 py-2.5 md:px-5">
-            <CalendarOff className="w-4 h-4 text-pinklt shrink-0" />
+            <Icon className="w-4 h-4 text-pinklt shrink-0" />
             <p className="text-white/85 text-xs md:text-sm leading-snug flex-1">
-              {SITE_NOTICE.text}
+              {notice.text}
             </p>
             <a
               href={`tel:${BUSINESS.phoneRaw}`}
