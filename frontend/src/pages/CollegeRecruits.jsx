@@ -51,7 +51,7 @@ const CollegeRecruits = () => (
                           {a.name}
                           {a.year && <span className="text-white/45 font-normal text-sm"> · {a.year}</span>}
                         </span>
-                        <span className="text-pinklt text-[10px] uppercase tracking-[0.15em] font-bold shrink-0">
+                        <span className="text-pinklt text-xs uppercase tracking-[0.15em] font-bold shrink-0">
                           {a.sport}
                         </span>
                       </div>

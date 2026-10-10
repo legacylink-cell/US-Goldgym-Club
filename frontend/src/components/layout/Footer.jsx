@@ -54,11 +54,11 @@ export const Footer = () => (
           <h4 className="text-xs uppercase tracking-[0.2em] text-pinklt font-bold mb-4">Explore</h4>
           <div className="flex flex-col gap-2">
             {NAV_LINKS.flatMap((l) => (l.children ? l.children : [l])).map((l) => (
-              <Link key={l.to} to={l.to} className="text-white/70 hover:text-pinklt text-sm" data-testid={`footer-link-${l.to}`}>
+              <Link key={l.to} to={l.to} className="block text-white/70 hover:text-pinklt text-sm py-2.5" data-testid={`footer-link-${l.to}`}>
                 {l.label}
               </Link>
             ))}
-            <Link to="/careers" className="text-white/70 hover:text-pinklt text-sm" data-testid="footer-link-/careers">Careers</Link>
+            <Link to="/careers" className="block text-white/70 hover:text-pinklt text-sm py-2.5" data-testid="footer-link-/careers">Careers</Link>
           </div>
 
           <h4 className="text-xs uppercase tracking-[0.2em] text-pinklt font-bold mt-8 mb-4">Forms</h4>

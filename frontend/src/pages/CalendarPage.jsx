@@ -97,9 +97,9 @@ const CalendarPage = () => {
 
           {/* Category key */}
           <div className="flex flex-wrap gap-2 mb-7" data-testid="cal-legend">
-            <button onClick={() => setFilter("all")} className={`px-3 py-1.5 text-xs uppercase font-bold tracking-wide border ${filter === "all" ? "bg-white text-ink border-white" : "text-white/70 border-white/20 hover:border-white"}`} data-testid="cal-filter-all">All</button>
+            <button onClick={() => setFilter("all")} className={`px-3.5 py-3 text-xs uppercase font-bold tracking-wide border ${filter === "all" ? "bg-white text-ink border-white" : "text-white/70 border-white/20 hover:border-white"}`} data-testid="cal-filter-all">All</button>
             {Object.entries(EVENT_CATEGORIES).map(([key, cat]) => (
-              <button key={key} onClick={() => setFilter(key)} className={`px-3 py-1.5 text-xs uppercase font-bold tracking-wide border flex items-center gap-2 ${filter === key ? "text-ink border-transparent" : "text-white/70 border-white/20 hover:border-white"}`} style={filter === key ? { background: cat.color } : {}} data-testid={`cal-filter-${key}`}>
+              <button key={key} onClick={() => setFilter(key)} className={`px-3.5 py-3 text-xs uppercase font-bold tracking-wide border flex items-center gap-2 ${filter === key ? "text-ink border-transparent" : "text-white/70 border-white/20 hover:border-white"}`} style={filter === key ? { background: cat.color } : {}} data-testid={`cal-filter-${key}`}>
                 <span className="w-2.5 h-2.5 rounded-full" style={{ background: cat.color }} /> {cat.label}
               </button>
             ))}

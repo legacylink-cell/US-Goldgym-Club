@@ -677,3 +677,21 @@ NOTE: a first test run reported "leakage" of the string "55 MIN - $90/MO"; that 
   applies to future edits automatically (subject to the existing ~10 minute ICS cache).
 - NOTE: the "No Daytime Playtime" Oct 12 event legitimately has no description, so its modal shows
   title/time/CTAs only - that is not a bug (cost one wasted test iteration to work out).
+
+## Changelog - 2026-10-10 (Mobile tap targets + minimum text size)
+Audit at 390px across 7 routes found no horizontal scroll, no bottom-bar overlap (footer bottom 788 vs
+bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues were fixed:
+- Footer nav links were 350x20px. Footer.jsx: added `block ... py-2.5` to both the mapped links and
+  the Careers link -> 40px tall.
+- Calendar legend chips were 50x30px. CalendarPage.jsx: px-3 py-1.5 -> px-3.5 py-3 on cal-filter-all and
+  the mapped category buttons -> 42px.
+- WeeklySchedule chips/tabs were 34px and some labels were 10-11px. Filter chips py-2 -> py-3 and day
+  tabs px-3 py-2 -> px-3.5 py-3 (both 42px); class duration/price line text-[11px] -> text-xs and the
+  "Must have RO BHS" note text-[11px] -> text-xs. CollegeRecruits sport label text-[10px] -> text-xs.
+- NOT changed: the navbar tagline flagged at 10px is `hidden sm:block`, i.e. desktop only - it was a
+  false positive from the DOM scan, so touching it would have risked the desktop lockup for nothing.
+  The 3440px-wide element flagged by the scan is the announcement marquee inside a clipped container,
+  also a false positive (no page had horizontal scroll).
+- Verified after the fix: all six measured targets 40-42px, ZERO visible text under 12px, no horizontal
+  scroll on /, /calendar, /college-recruits, /contact, /recreational, 1 h1 each, nothing blank, and the
+  schedule filters still behave (Boys on Monday = 1).

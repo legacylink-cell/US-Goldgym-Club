@@ -34,10 +34,10 @@ const ClassPill = ({ cls, morning }) => {
         <span className="text-white/35 text-[10px] uppercase font-bold">{morning ? "am" : "pm"}</span>
       </div>
       <div className={`text-sm font-bold mt-1 leading-tight ${cat.text}`}>{cls.name}</div>
-      <div className="text-white/40 text-[11px] uppercase tracking-wide font-bold mt-1">
+      <div className="text-white/40 text-xs uppercase tracking-wide font-bold mt-1">
         {length} &middot; {price}
       </div>
-      {cls.note && <div className="text-pinklt text-[11px] mt-1">{cls.note}</div>}
+      {cls.note && <div className="text-pinklt text-xs mt-1">{cls.note}</div>}
     </div>
   );
 };
@@ -92,7 +92,7 @@ export const WeeklySchedule = () => {
           <button
             key={c.key}
             onClick={() => setCat(c.key)}
-            className={`inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-wide font-bold transition-colors ${
+            className={`inline-flex items-center gap-2 px-4 py-3 text-xs uppercase tracking-wide font-bold transition-colors ${
               cat === c.key ? "bg-white text-ink" : "border border-white/20 text-white/70 hover:text-white hover:border-white/50"
             }`}
             data-testid={`schedule-filter-${c.key}`}
@@ -109,7 +109,7 @@ export const WeeklySchedule = () => {
             <button
               key={d.day}
               onClick={() => setActiveDay(d.day)}
-              className={`px-3 py-2 text-xs uppercase font-bold shrink-0 transition-colors ${
+              className={`px-3.5 py-3 text-xs uppercase font-bold shrink-0 transition-colors ${
                 activeDay === d.day ? "bg-lime text-ink" : "border border-white/20 text-white/60"
               }`}
               data-testid={`schedule-day-${d.short.toLowerCase()}`}
