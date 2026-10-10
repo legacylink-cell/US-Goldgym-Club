@@ -695,3 +695,31 @@ bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues we
 - Verified after the fix: all six measured targets 40-42px, ZERO visible text under 12px, no horizontal
   scroll on /, /calendar, /college-recruits, /contact, /recreational, 1 h1 each, nothing blank, and the
   schedule filters still behave (Boys on Monday = 1).
+
+## Changelog - 2026-10-10 (CRITICAL BUG: event modal trapped mobile users)
+- SYMPTOM (user photo): on a real phone the event modal's content ran off the top and bottom of the
+  screen, the close X was above the viewport, the page would not scroll, and the only escape was closing
+  the browser tab. The announcement bar was also painting ON TOP of the modal.
+- ROOT CAUSES (two, both in shared code):
+  1. components/ui/dialog.jsx DialogContent is `fixed left-[50%] top-[50%] translate-y-[-50%]` with NO
+     max-height and NO overflow. Content taller than the viewport therefore extends past both edges
+     while Radix locks body scroll -> nothing scrolls, close button unreachable. This affected EVERY
+     dialog in the app, not just the calendar.
+  2. z-index stacking: AnnouncementBar is z-[60] and MobileCallBar z-[70], but the dialog overlay and
+     content were both z-50, so the fixed bars rendered above the modal.
+- FIXES in components/ui/dialog.jsx:
+  * DialogContent: added `max-h-[85vh] overflow-y-auto overscroll-contain`, z-50 -> z-[90].
+  * DialogOverlay: z-50 -> z-[80] (above the 60/70 bars, below the content).
+  * Close X: `right-4 top-4` -> `right-2 top-2 p-2.5` so the hit area is 36x36 instead of 16x16
+    (consistent with the tap-target pass done earlier the same day).
+- CalendarPage.jsx: added a full-width "Close" button (data-testid=cal-event-close-bottom) under the
+  CTAs, so a long modal always has an exit without scrolling back up to the X.
+- Verified at 390x844: dialog top 63 / bottom 781 inside an 844 viewport (fits), internal scroll
+  965 -> 715 clientHeight, X on screen on open at 36x36 and closes, bottom Close reachable after
+  scrolling and dismisses without navigating, Escape dismisses, tapping the dim overlay dismisses,
+  window.scrollY reaches 1500 after close (scroll lock released), z-index 90. Desktop 1500x950 unchanged
+  and still fits. Home sanity: no horizontal scroll, 1 h1.
+- TESTING LESSON (cost 4 wasted iterations): (a) cal-event-* testids embed a list INDEX that shifts as
+  dates pass, so never hardcode them - resolve by text at runtime; (b) `dialog.querySelector('button')`
+  returns the bottom Close, NOT the Radix X - select the X via /close/i text + an svg child;
+  (c) force=True clicks can fall through to links behind an open dialog and navigate the page away.

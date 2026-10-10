@@ -240,6 +240,13 @@ const CalendarPage = () => {
                   Call the gym
                 </a>
               </div>
+              <button
+                onClick={() => setSelected(null)}
+                className="mt-1 w-full text-white/50 hover:text-white text-xs uppercase tracking-wide font-bold py-3 border-t border-white/10 transition-colors"
+                data-testid="cal-event-close-bottom"
+              >
+                Close
+              </button>
             </>
           )}
         </DialogContent>
