@@ -646,3 +646,34 @@ NOTE: a first test run reported "leakage" of the string "55 MIN - $90/MO"; that 
   Timezone probes: 2026-10-13T02:00Z (9pm CT Mon) -> closure; 2026-10-13T05:30Z (12:30am CT Tue) ->
   evergreen. Browser-verified today (closure shown) and with a +5 day clock override via
   add_init_script (reverted to "Fresh look in progress", icon back to the hammer).
+
+## Changelog - 2026-10-10 (BUG FIX: Google Calendar HTML descriptions rendered as raw tags)
+- SYMPTOM (user photo): the event modal printed literal markup - "<b><u>First Time
+  Participants</u></b><br><ul><li>Please fill out the <a href=...>Waiver</a>..." - because Google
+  Calendar stores formatted descriptions as HTML and CalendarPage rendered the string as plain text
+  inside <p className="whitespace-pre-line">.
+- BACKEND server.py: new _gcal_description(raw) -> (safe_html, plain_text), applied in gcal_events().
+  * Sanitizes with bleach to an allowlist: b strong i em u br p ul ol li span div + a[href,title].
+  * Detects plain-text descriptions (_HTML_HINT regex) and converts newlines to <br> instead.
+  * bleach.linkify(callbacks=[], parse_email=True) auto-links bare URLs and email addresses;
+    callbacks=[] is REQUIRED - the default nofollow callback produced a DUPLICATE rel attribute.
+  * Then injects target="_blank" rel="noopener noreferrer" on every anchor uniformly (author-supplied
+    target/rel are stripped by the allowlist first).
+  * API now returns BOTH "description_html" (rendered) and "description" (clean plain text, so list
+    views / snippets never leak tags). New dependency: bleach 6.4.0, requirements.txt refreshed via
+    pip freeze.
+- FRONTEND CalendarPage.jsx: renders description_html via dangerouslySetInnerHTML inside a styled
+  container ([&_ul]:list-disc, [&_li], [&_a]:text-pinklt underline break-words, [&_b]/[&_strong]:white,
+  [&_u]:underline), falling back to the plain-text <p> when no HTML exists.
+  data-testid="event-description" added.
+- XSS verified directly against _gcal_description: <script> stripped, <img onerror> removed entirely,
+  href="javascript:" dropped, onclick stripped, <iframe> removed, entities unescaped correctly in the
+  plain variant. 0 script/onerror/javascript: survive.
+- Browser verified on /calendar (Oct 19 Daytime Playtime): 7 <li>, 2 <ul>, 2 <u>, 4 <a>, 0 <script>;
+  zero raw tags visible; bullets list-style disc; links pink/underlined; all 4 links target=_blank with
+  rel="noopener noreferrer"; Drive links + 2 auto-linked mailto: addresses; no overflow of the modal
+  on desktop or the 390px viewport.
+- This is feed-wide: ANY event the gym formats in Google Calendar now renders correctly, and the fix
+  applies to future edits automatically (subject to the existing ~10 minute ICS cache).
+- NOTE: the "No Daytime Playtime" Oct 12 event legitimately has no description, so its modal shows
+  title/time/CTAs only - that is not a bug (cost one wasted test iteration to work out).

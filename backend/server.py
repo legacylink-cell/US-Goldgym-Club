@@ -18,6 +18,8 @@ import bcrypt
 from urllib.parse import urlparse
 import secrets
 import re
+import html as html_lib
+import bleach
 import httpx
 import icalendar
 import mailer
@@ -498,6 +500,40 @@ GYM_TZ = ZoneInfo("America/Chicago")
 _ics_cache: dict = {"fetched_at": None, "text": ""}
 
 
+# Google Calendar descriptions arrive as HTML (bold, lists, links) when staff format an
+# event in the Google UI, and as plain text with newlines when they do not. Sanitize to a
+# small allowlist so the site can render the formatting instead of printing raw tags.
+_GCAL_ALLOWED_TAGS = ["b", "strong", "i", "em", "u", "br", "p", "ul", "ol", "li", "span", "div"]
+_GCAL_ALLOWED_ATTRS = {"a": ["href", "title"]}
+_HTML_HINT = re.compile(r"<(br|b|u|i|p|ul|ol|li|a|strong|em|div|span)\b", re.I)
+
+
+def _gcal_description(raw: str) -> tuple[str, str]:
+    """Return (safe_html, plain_text) for an event description."""
+    raw = (raw or "").strip()
+    if not raw:
+        return "", ""
+
+    plain = html_lib.unescape(bleach.clean(raw, tags=[], strip=True))
+    plain = re.sub(r"[ \t]*\n[ \t]*", "\n", plain).strip()
+
+    if _HTML_HINT.search(raw):
+        safe = bleach.clean(
+            raw,
+            tags=_GCAL_ALLOWED_TAGS + ["a"],
+            attributes=_GCAL_ALLOWED_ATTRS,
+            strip=True,
+        )
+    else:
+        safe = bleach.clean(raw, tags=[], strip=True).replace("\n", "<br>")
+
+    safe = bleach.linkify(safe, callbacks=[], parse_email=True)
+    # Uniform link behaviour; bleach stripped any author-supplied target/rel above.
+    safe = re.sub(r"<a\s+", '<a target="_blank" rel="noopener noreferrer" ', safe)
+    return safe.strip(), plain
+
+
+
 def _gcal_category(title: str) -> str:
     t = (title or "").lower()
     if "open gym" in t:
@@ -549,6 +585,7 @@ async def gcal_events(months_back: int = 2, months_ahead: int = 10):
             dtend = ev.get("DTEND")
             if dtend is not None and isinstance(dtend.dt, datetime):
                 time_label += f" – {dtend.dt.astimezone(GYM_TZ).strftime('%-I:%M %p').lower().replace(':00', '')}"
+        desc_html, desc_plain = _gcal_description(str(ev.get("DESCRIPTION") or ""))
         out.append({
             "id": f"{day.isoformat()}-{re.sub(r'[^a-z0-9]+', '-', title.lower())}-{len(out)}",
             "title": title,
@@ -557,7 +594,8 @@ async def gcal_events(months_back: int = 2, months_ahead: int = 10):
             "all_day": all_day,
             "category": _gcal_category(title),
             "location": str(ev.get("LOCATION") or ""),
-            "description": str(ev.get("DESCRIPTION") or ""),
+            "description": desc_plain,
+            "description_html": desc_html,
         })
     out.sort(key=lambda e: (e["date"], e["time"]))
     return out

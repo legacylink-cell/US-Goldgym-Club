@@ -218,7 +218,19 @@ const CalendarPage = () => {
               <div className="space-y-3 text-white/75 mt-2">
                 <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-lime" /> {dayjs(selected.date).format("dddd, MMMM D")} • {selected.time}</div>
                 {selected.location && <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-lime" /> {selected.location}</div>}
-                {selected.description && <p className="text-white/60 pt-1 whitespace-pre-line">{selected.description}</p>}
+                {selected.description_html ? (
+                  <div
+                    className="text-white/60 pt-1 space-y-2 [&_a]:text-pinklt [&_a]:underline [&_a]:break-words hover:[&_a]:text-white [&_b]:text-white [&_b]:font-bold [&_strong]:text-white [&_u]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:text-white/60 [&_p]:mt-2"
+                    data-testid="event-description"
+                    dangerouslySetInnerHTML={{ __html: selected.description_html }}
+                  />
+                ) : (
+                  selected.description && (
+                    <p className="text-white/60 pt-1 whitespace-pre-line" data-testid="event-description">
+                      {selected.description}
+                    </p>
+                  )
+                )}
               </div>
               <div className="mt-4 flex flex-col sm:flex-row gap-3">
                 <Link to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(selected.title)}`} className="flex-1 bg-lime text-ink font-display uppercase py-3 text-center hover:bg-white transition-colors" data-testid="cal-signup">
