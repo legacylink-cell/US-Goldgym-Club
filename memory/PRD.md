@@ -723,3 +723,32 @@ bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues we
   dates pass, so never hardcode them - resolve by text at runtime; (b) `dialog.querySelector('button')`
   returns the bottom Close, NOT the Radix X - select the X via /close/i text + an svg child;
   (c) force=True clicks can fall through to links behind an open dialog and navigate the page away.
+
+## Changelog - 2026-10-10 (Event modal: full-screen sheet on mobile, "black line" explained)
+- USER REPORT: "what's that black line? seems still broken" with a real iPhone screenshot.
+- DIAGNOSIS: the black bands above/below the modal were NOT an artifact - they were the dimmed page
+  (bg-black/80 overlay) showing through the gaps where the floating card did not reach the screen
+  edges, landing on dark gaps between the event cards behind it. Combined with body text clipped
+  mid-sentence ("Members - FREE / Non Members - $5...") it read as broken.
+- FIX: the event dialog is now a FULL-SCREEN SHEET on phones and stays a centred card on desktop:
+  CalendarPage DialogContent -> `w-screen h-[100dvh] max-w-none max-h-[100dvh]
+  sm:w-full sm:max-w-lg sm:h-auto sm:max-h-[85vh]`. Verified it covers 390x844 exactly (0,0 -> 390,844)
+  so there are no dimmed slivers at all, and desktop is still a 512x805 card.
+- Sticky header with its own close button: DialogHeader -> `sticky -top-6 z-10 bg-ink -mt-6 -mx-6
+  px-6 pt-6 pb-3`, plus a mobile-only 40x40 X (data-testid=cal-event-close-top) so a close control is
+  ALWAYS on screen while scrolling a long event.
+- STICKY GOTCHA (two failed attempts): position:sticky anchors to the scroll container's PADDING BOX,
+  so with DialogContent's p-6 a `top-0` header stuck 24px down and page text slid visibly through that
+  band. Negative margins do NOT move the sticky constraint rect - only a negative offset does.
+  `-top-6` fixed it: gap above header is now 1px on both mobile and desktop.
+- The default Radix X scrolls out of reach inside the scrolling sheet, so index.css hides it on phones
+  only via a deterministic media query:
+  `@media (max-width: 639px) { [data-testid="cal-event-dialog"] > button:last-of-type { display:none } }`.
+  Desktop keeps the Radix X (verified visible) and the mobile X is display:none there.
+  NOTE: an earlier attempt used Tailwind arbitrary variants ([&>button:last-of-type]:fixed) which
+  silently did NOT apply - do not rely on those for overriding shadcn internals.
+- Verified mid-scroll on both sizes: mobile 390x844 full-screen, header flush and full width, X visible
+  and closes, bottom Close reachable, scroll lock released after close (scrollY 1200);
+  desktop 512x805 card, fits, Radix X visible, mobile X hidden.
+- HARNESS LESSON: the screenshot tool rejected several scripts with "invalid syntax" whenever a Python
+  ternary / conditional expression was used. Write flat statements in automation scripts.

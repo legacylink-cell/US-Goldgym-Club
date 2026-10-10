@@ -5,7 +5,7 @@ import api from "@/lib/api";
 import { PageHero } from "@/components/common/PageHero";
 import { ClassSchedule } from "@/components/common/ClassSchedule";
 import { IMG, EVENT_CATEGORIES, BUSINESS } from "@/data/site";
-import { ChevronLeft, ChevronRight, Clock, MapPin, Phone } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, MapPin, Phone, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -205,10 +205,21 @@ const CalendarPage = () => {
 
       {/* EVENT DETAIL DIALOG */}
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DialogContent className="bg-ink border border-white/15 text-white rounded-none max-w-lg" data-testid="cal-event-dialog">
+        <DialogContent
+          className="bg-ink border border-white/15 text-white rounded-none w-screen h-[100dvh] max-w-none max-h-[100dvh] sm:w-full sm:max-w-lg sm:h-auto sm:max-h-[85vh]"
+          data-testid="cal-event-dialog"
+        >
           {selected && (
             <>
-              <DialogHeader>
+              <DialogHeader className="sticky -top-6 z-10 bg-ink -mt-6 -mx-6 px-6 pt-6 pb-3">
+                <button
+                  onClick={() => setSelected(null)}
+                  aria-label="Close event details"
+                  className="sm:hidden absolute right-4 top-6 p-2.5 text-white/70 hover:text-white transition-colors"
+                  data-testid="cal-event-close-top"
+                >
+                  <X className="w-5 h-5" />
+                </button>
                 <div className="inline-flex items-center gap-2 text-xs uppercase tracking-wide font-bold mb-1" style={{ color: catColor(selected.category) }}>
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: catColor(selected.category) }} />
                   {EVENT_CATEGORIES[selected.category]?.label}
