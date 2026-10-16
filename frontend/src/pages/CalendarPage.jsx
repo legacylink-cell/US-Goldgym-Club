@@ -206,16 +206,16 @@ const CalendarPage = () => {
       {/* EVENT DETAIL DIALOG */}
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent
-          className="bg-ink border border-white/15 text-white rounded-none w-screen h-[100dvh] max-w-none max-h-[100dvh] sm:w-full sm:max-w-lg sm:h-auto sm:max-h-[85vh]"
+          className="bg-ink border border-white/15 text-white flex flex-col gap-0 left-0 top-auto bottom-0 translate-x-0 translate-y-0 w-full max-w-none h-auto max-h-[88dvh] rounded-t-2xl sm:left-[50%] sm:top-[50%] sm:bottom-auto sm:translate-x-[-50%] sm:translate-y-[-50%] sm:max-w-lg sm:max-h-[85vh] sm:rounded-lg [&>button:last-child]:hidden sm:[&>button:last-child]:block"
           data-testid="cal-event-dialog"
         >
           {selected && (
             <>
-              <DialogHeader className="sticky -top-6 z-10 bg-ink -mt-6 -mx-6 px-6 pt-6 pb-3">
+              <DialogHeader className="shrink-0 relative bg-ink -mt-6 -mx-6 px-6 pt-5 pb-3 rounded-t-2xl sm:rounded-none">
                 <button
                   onClick={() => setSelected(null)}
                   aria-label="Close event details"
-                  className="sm:hidden absolute right-4 top-6 p-2.5 text-white/70 hover:text-white transition-colors"
+                  className="sm:hidden absolute right-4 top-5 p-2.5 text-white/70 hover:text-white transition-colors"
                   data-testid="cal-event-close-top"
                 >
                   <X className="w-5 h-5" />
@@ -224,11 +224,11 @@ const CalendarPage = () => {
                   <span className="w-2.5 h-2.5 rounded-full" style={{ background: catColor(selected.category) }} />
                   {EVENT_CATEGORIES[selected.category]?.label}
                 </div>
-                <DialogTitle className="font-display text-3xl md:text-4xl uppercase text-white text-left">{selected.title}</DialogTitle>
+                <DialogTitle className="font-display text-2xl sm:text-3xl md:text-4xl uppercase text-white text-left pr-12 break-words">{selected.title}</DialogTitle>
               </DialogHeader>
-              <div className="space-y-3 text-white/75 mt-2">
-                <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-lime" /> {dayjs(selected.date).format("dddd, MMMM D")} • {selected.time}</div>
-                {selected.location && <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-lime" /> {selected.location}</div>}
+              <div className="flex-1 overflow-y-auto overscroll-contain space-y-3 text-white/75 mt-3 text-sm sm:text-base">
+                <div className="flex items-start gap-2"><Clock className="w-4 h-4 text-lime mt-0.5 shrink-0" /> <span>{dayjs(selected.date).format("dddd, MMMM D")} • {selected.time}</span></div>
+                {selected.location && <div className="flex items-start gap-2"><MapPin className="w-4 h-4 text-lime mt-0.5 shrink-0" /> <span>{selected.location}</span></div>}
                 {selected.description_html ? (
                   <div
                     className="text-white/60 pt-1 space-y-2 [&_a]:text-pinklt [&_a]:underline [&_a]:break-words hover:[&_a]:text-white [&_b]:text-white [&_b]:font-bold [&_strong]:text-white [&_u]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:text-white/60 [&_p]:mt-2"
@@ -243,21 +243,14 @@ const CalendarPage = () => {
                   )
                 )}
               </div>
-              <div className="mt-4 flex flex-col sm:flex-row gap-3">
-                <Link to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(selected.title)}`} className="flex-1 bg-lime text-ink font-display uppercase py-3 text-center hover:bg-white transition-colors" data-testid="cal-signup">
+              <div className="shrink-0 mt-4 pt-4 border-t border-white/10 flex flex-col sm:flex-row gap-2.5">
+                <Link to={`/contact?topic=Event%20Sign%20Up&event=${encodeURIComponent(selected.title)}`} className="flex-1 bg-lime text-ink font-display uppercase py-3 text-center text-sm hover:bg-white transition-colors" data-testid="cal-signup">
                   Sign up / Ask a question
                 </Link>
-                <a href={`tel:${BUSINESS.phone.replace(/[^\d]/g, "")}`} className="flex-1 border border-lime text-lime font-display uppercase py-3 text-center hover:bg-lime hover:text-ink transition-colors" data-testid="cal-call">
+                <a href={`tel:${BUSINESS.phone.replace(/[^\d]/g, "")}`} className="flex-1 border border-lime text-lime font-display uppercase py-3 text-center text-sm hover:bg-lime hover:text-ink transition-colors" data-testid="cal-call">
                   Call the gym
                 </a>
               </div>
-              <button
-                onClick={() => setSelected(null)}
-                className="mt-1 w-full text-white/50 hover:text-white text-xs uppercase tracking-wide font-bold py-3 border-t border-white/10 transition-colors"
-                data-testid="cal-event-close-bottom"
-              >
-                Close
-              </button>
             </>
           )}
         </DialogContent>
