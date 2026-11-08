@@ -752,3 +752,47 @@ bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues we
   desktop 512x805 card, fits, Radix X visible, mobile X hidden.
 - HARNESS LESSON: the screenshot tool rejected several scripts with "invalid syntax" whenever a Python
   ternary / conditional expression was used. Write flat statements in automation scripts.
+
+## Changelog - 2026-11-08 (Event modal: bottom sheet on mobile; CTA stretch fixed)
+- USER REPORT: "CTAs are all over and the card is all over the page" with an iPhone screenshot showing
+  a giant pink Sign Up button and huge empty bands between title, date and CTAs.
+- ROOT CAUSE: shadcn DialogContent is `grid`, and the previous mobile fix forced `h-[100dvh]`. A grid
+  with a fixed height STRETCHES its implicit rows, so the 4 children (header, body, CTA row, Close)
+  were each inflated - the Sign Up link rendered 106px tall instead of 44px.
+- FIX (CalendarPage.jsx DialogContent):
+  * `flex flex-col gap-0` (tailwind-merge resolves display conflict: flex wins over the base `grid`),
+    so children keep their natural height and never stretch.
+  * Mobile is now a BOTTOM SHEET that hugs its content instead of a full-screen panel:
+    `left-0 top-auto bottom-0 translate-x-0 translate-y-0 w-full max-w-none h-auto max-h-[88dvh]
+     rounded-t-2xl` + `sm:left-[50%] sm:top-[50%] sm:bottom-auto sm:translate-x-[-50%]
+     sm:translate-y-[-50%] sm:max-w-lg sm:max-h-[85vh] sm:rounded-lg`.
+  * Header is `shrink-0 relative` (sticky no longer needed - the scroll now lives in the body), body is
+    `flex-1 overflow-y-auto overscroll-contain`, CTA row is `shrink-0` with a top border.
+  * Removed the duplicate bottom "Close" button (cal-event-close-bottom) - header X is always visible.
+  * Title `text-2xl sm:text-3xl md:text-4xl pr-12 break-words` so it never runs under the X.
+- Verified on preview at 390x844: short event sheet 390x283 at y=561, long event (Daytime Playtime)
+  390x735 with the whole description visible, Sign Up 340x44 (was 340x106), X visible and closes.
+  Desktop 1440x900 unchanged: 512x725 centred card, Radix X visible.
+
+## Changelog - 2026-11-08 (Email: Microsoft 365 SMTP -> Emergent Managed Resend)
+- WHY: Microsoft is deprecating SMTP AUTH Basic Authentication for Client Submission
+  (smtp.office365.com:587 with username+password). Disabled by default for existing tenants at the end
+  of December 2026; final removal announced H2 2027. Error after cutoff:
+  `550 5.7.30 Basic authentication is not supported for Client Submission.`
+- USER CHOSE: Emergent Managed Resend (no Microsoft app registration, no API key from the user).
+- mailer.py rewritten: aiosmtplib/EmailMessage replaced by POST {EMAIL_BASE_URL}/api/v1/email/send
+  with the X-Email-Key header. EMAIL_BASE_URL is a hardcoded constant (NOT an env var) so it survives
+  deployment. Includes the mandatory _assert_safe_email guardrail gate, called on the single send path.
+- New backend/.env keys: EMERGENT_EMAIL_KEY, EMAIL_FROM_NAME ("U.S. Gold Gymnastics & Cheer Academy"),
+  EMAIL_REPLY_TO (staff@usgoldgymclub.com). STAFF_TO / STAFF_CC still drive recipients. Old SMTP_* keys
+  are left in place but are now UNUSED.
+- FROM-ADDRESS LIMIT (user asked for leads@usgoldgymclub.com): the From *address* is platform-managed
+  and CANNOT be changed. Only the display name (from_name) and Reply-To (contact_email) are settable.
+  So notifications show as "U.S. Gold Gymnastics & Cheer Academy" with Reply-To staff@usgoldgymclub.com.
+  A true leads@usgoldgymclub.com From address would require Microsoft Graph instead.
+- Reply-To is now the owner-controlled EMAIL_REPLY_TO, not the parent's address (playbook G4: never take
+  reply-to from request input). The parent's email is still in the body as a mailto link.
+- Verified on preview: /api/admin/email/status -> configured true; /api/admin/email/test -> ok true;
+  a real POST /api/contact -> 201 and "Staff notification sent for contact" in the backend log.
+- PENDING USER ACTION: the old staff@ SMTP mailbox password that was pasted in chat should still be
+  rotated. DKIM (selector1/selector2._domainkey) and _dmarc remain unset for usgoldgymclub.com.

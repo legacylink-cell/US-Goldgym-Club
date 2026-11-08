@@ -920,11 +920,11 @@ async def export_csv(kind: str, admin: dict = Depends(require_admin)):
 
 @api_router.post("/admin/email/test")
 async def test_email(admin: dict = Depends(require_admin)):
-    """Sends a test notification so staff can confirm SMTP works."""
+    """Sends a test notification so staff can confirm email delivery works."""
     if not mailer.email_enabled():
-        raise HTTPException(status_code=400, detail="Email is not configured yet (SMTP settings missing).")
+        raise HTTPException(status_code=400, detail="Email is not configured yet.")
     await mailer.notify_staff("contact", {
-        "Topic": "SMTP test",
+        "Topic": "Email delivery test",
         "Name": "Website test",
         "Email": os.environ.get("STAFF_TO", ""),
         "Message": "If you can read this, website form notifications are working.",
