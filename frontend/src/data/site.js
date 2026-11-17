@@ -66,7 +66,7 @@ export const BUSINESS = {
   phone: "817.491.9996",
   phoneRaw: "+18174919996",
   email: "staff@usgoldgymclub.com",
-  instagram: "https://www.instagram.com/usgoldgym/",
+  instagram: "https://www.instagram.com/u.s.goldgym/",
   facebook: "https://www.facebook.com/129891587058474",
   googleRating: "4.8",
   googleReviews: 67,

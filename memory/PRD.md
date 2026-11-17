@@ -796,3 +796,28 @@ bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues we
   a real POST /api/contact -> 201 and "Staff notification sent for contact" in the backend log.
 - PENDING USER ACTION: the old staff@ SMTP mailbox password that was pasted in chat should still be
   rotated. DKIM (selector1/selector2._domainkey) and _dmarc remain unset for usgoldgymclub.com.
+
+## Changelog - 2026-11-17 (Resend switch REVERTED to backlog; Instagram handle updated)
+- USER: "hold off on Emergent Managed Resend, have not confirmed this yet - move to backlog.
+  I only need the IG handle updated for now."
+- REVERTED: backend/mailer.py restored byte-identical to the pre-Resend SMTP version (verified with
+  `git show 5ffe371:backend/mailer.py | diff`), server.py /admin/email/test wording restored, and the
+  three keys I had added to backend/.env (EMERGENT_EMAIL_KEY, EMAIL_FROM_NAME, EMAIL_REPLY_TO) removed.
+  Backend restarted; /api/admin/email/status still {"configured":true,...} on the Microsoft 365 SMTP path.
+  Confirmed `git diff HEAD -- backend/` contains ONLY the revert, so a deploy ships no email change.
+- SHIPPED: BUSINESS.instagram in frontend/src/data/site.js
+  "https://www.instagram.com/usgoldgym/" -> "https://www.instagram.com/u.s.goldgym/".
+  This one constant feeds every Instagram link: the homepage strip Follow link + all 6 photo tiles
+  (Home.jsx ig-follow) and the footer icon (Footer.jsx footer-instagram). Verified both hrefs on preview.
+
+### BACKLOG (P1) - Microsoft SMTP AUTH deprecation
+- Microsoft disables SMTP AUTH Basic Auth for Client Submission by DEFAULT at the END OF DECEMBER 2026
+  (admins can re-enable manually until the final removal, to be announced H2 2027). After cutoff:
+  `550 5.7.30 Basic authentication is not supported for Client Submission.` Forms keep saving to the
+  admin dashboard either way - only the staff email alert would stop.
+- Two options when the user is ready:
+  1. Emergent Managed Resend - no Microsoft admin work, no key from the user. LIMIT: the From *address*
+     is platform-managed and cannot be leads@usgoldgymclub.com; only display name + Reply-To are settable.
+  2. Microsoft Graph - keeps a real usgoldgymclub.com From address (e.g. leads@), but needs an Entra app
+     registration + client secret from the user.
+- The working Resend implementation is in git history at commit b4c1fa1 if it is picked up again.

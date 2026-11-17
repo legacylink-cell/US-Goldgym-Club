@@ -1,21 +1,17 @@
-"""Staff notification email via Emergent's managed email integration.
+"""Staff notification + parent confirmation email (Microsoft 365 SMTP).
 
-Sending is a no-op until the email key and staff inbox are configured, so forms
-keep working (and keep saving to the database) regardless.
+Sending is a no-op until SMTP_PASSWORD is set, so forms keep working (and keep
+saving to the database) before the mailbox credentials are configured.
 """
-import ipaddress
+import asyncio
 import logging
 import os
-import re
+from email.message import EmailMessage
 from html import escape
-from html.parser import HTMLParser
-from urllib.parse import urlparse
 
-import httpx
+import aiosmtplib
 
 logger = logging.getLogger(__name__)
-
-EMAIL_BASE_URL = "https://integrations.emergentagent.com"
 
 FORM_LABELS = {
     "contact": "Contact form message",
@@ -25,117 +21,55 @@ FORM_LABELS = {
     "newsletter": "Email list signup",
 }
 
-_SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
-_CRED_ASK = ("reply with your password", "reply with the code", "send your password", "cvv",
-             "send us your password", "enter your password below", "confirm your card number",
-             "your full card number", "seed phrase", "recovery phrase", "verify your card",
-             "social security number", "confirm your bank details")
-_HOSTISH = re.compile(r"\b(?:https?://)?((?:[a-z0-9-]+\.)+[a-z]{2,})", re.I)
-
-
-def _host_ok(host: str) -> bool:
-    if not host or "xn--" in host:
-        return False
-    try:
-        ipaddress.ip_address(host)
-        return False
-    except ValueError:
-        pass
-    return not any(host == s or host.endswith("." + s) for s in _SHORTENERS)
-
-
-def _same_site(shown: str, real: str) -> bool:
-    return shown == real or real.endswith("." + shown) or shown.endswith("." + real)
-
-
-class _EmailScan(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.tags, self.urls, self.anchors = set(), [], []
-        self._href, self._text = None, []
-
-    def handle_starttag(self, tag, attrs):
-        self.tags.add(tag.lower())
-        self.urls += [v for k, v in attrs if k.lower() in ("href", "src") and v]
-        if tag.lower() == "a":
-            self._href = dict((k.lower(), v) for k, v in attrs).get("href")
-            self._text = []
-
-    def handle_data(self, data):
-        if self._href is not None:
-            self._text.append(data)
-
-    def handle_endtag(self, tag):
-        if tag.lower() == "a" and self._href is not None:
-            self.anchors.append((self._href, "".join(self._text)))
-            self._href, self._text = None, []
-
-
-def _assert_safe_email(subject: str, html: str) -> None:
-    scan = _EmailScan()
-    scan.feed(html)
-    if scan.tags & {"form", "input", "textarea", "select"}:
-        raise ValueError("No forms or input fields in email (G2)")
-    body = f"{subject}\n{html}".lower()
-    for p in _CRED_ASK:
-        if p in body:
-            raise ValueError(f"Email asks the recipient for credentials: {p!r} (G2)")
-    for url in scan.urls:
-        low = url.strip().lower()
-        if low.startswith(("mailto:", "tel:", "cid:", "#")):
-            continue
-        if not low.startswith("https://"):
-            raise ValueError(f"Email links/assets must be absolute https: {url!r} (G3)")
-        host = urlparse(low).hostname or ""
-        if not _host_ok(host) or urlparse(low).username is not None:
-            raise ValueError(f"Shortened, numeric-host or credential-bearing URL: {url!r} (G3)")
-    for href, text in scan.anchors:
-        real = urlparse(href.strip().lower()).hostname or ""
-        if not real:
-            continue
-        for m in _HOSTISH.finditer(text):
-            if not _same_site(m.group(1).lower(), real):
-                raise ValueError(f"Anchor text {m.group(1)!r} != real link host {real!r} (G3)")
-
 
 def _cfg() -> dict:
     return {
-        "key": os.environ.get("EMERGENT_EMAIL_KEY", ""),
-        "from_name": os.environ.get("EMAIL_FROM_NAME", ""),
-        "reply_to": os.environ.get("EMAIL_REPLY_TO", ""),
+        "host": os.environ.get("SMTP_HOST", ""),
+        "port": int(os.environ.get("SMTP_PORT", "587")),
+        "username": os.environ.get("SMTP_USERNAME", ""),
+        "password": os.environ.get("SMTP_PASSWORD", ""),
+        "mail_from": os.environ.get("MAIL_FROM", ""),
         "staff_to": os.environ.get("STAFF_TO", ""),
+        # optional safety net inbox while staff@ mail routing is being fixed
         "staff_cc": os.environ.get("STAFF_CC", ""),
     }
 
 
 def email_enabled() -> bool:
     c = _cfg()
-    return all([c["key"], c["from_name"], c["staff_to"]])
+    return all([c["host"], c["username"], c["password"], c["mail_from"], c["staff_to"]])
 
 
-async def send_email(*, to: list, subject: str, html: str) -> str | None:
-    _assert_safe_email(subject, html)
+async def _send(msg: EmailMessage, attempts: int = 3) -> None:
     c = _cfg()
-    payload = {"to": to, "subject": subject, "html": html, "from_name": c["from_name"]}
-    if c["reply_to"]:
-        payload["contact_email"] = c["reply_to"]
-    async with httpx.AsyncClient(timeout=30) as client:
-        resp = await client.post(
-            f"{EMAIL_BASE_URL}/api/v1/email/send",
-            headers={"X-Email-Key": c["key"]},
-            json=payload,
-        )
-    resp.raise_for_status()
-    return resp.json().get("id")
+    for attempt in range(attempts):
+        try:
+            await aiosmtplib.send(
+                msg,
+                hostname=c["host"],
+                port=c["port"],
+                username=c["username"],
+                password=c["password"],
+                start_tls=True,
+                timeout=30,
+                validate_certs=True,
+            )
+            return
+        except Exception:
+            if attempt == attempts - 1:
+                raise
+            await asyncio.sleep(2 ** attempt)
 
 
-def _rows(fields: dict) -> str:
-    return "".join(
+def _rows(fields: dict) -> tuple:
+    text = "\n".join(f"{k}: {v}" for k, v in fields.items() if v not in (None, ""))
+    html = "".join(
         f"<tr><td style='padding:6px 14px 6px 0;color:#7a6b8a;font-size:13px;text-transform:uppercase;"
         f"letter-spacing:.06em'>{escape(str(k))}</td>"
         f"<td style='padding:6px 0;color:#2C0A4E;font-size:15px'>{escape(str(v)).replace(chr(10), '<br>')}</td></tr>"
         for k, v in fields.items() if v not in (None, "")
     )
+    return text, f"<table style='border-collapse:collapse'>{html}</table>"
 
 
 def _shell(title: str, body_html: str) -> str:
@@ -151,36 +85,34 @@ def _shell(title: str, body_html: str) -> str:
 
 
 async def notify_staff(form_type: str, fields: dict, reply_to: str = "") -> None:
-    """Email the gym about a new form submission."""
+    """Email the gym about a new form submission. Reply-To is the parent's address."""
     if not email_enabled():
         logger.info("Email not configured - skipped staff notification for %s", form_type)
         return
     c = _cfg()
     label = FORM_LABELS.get(form_type, form_type.replace("_", " ").title())
     who = fields.get("Name") or fields.get("Email") or ""
-    recipients = [c["staff_to"]] + ([c["staff_cc"]] if c["staff_cc"] else [])
+    text, html_rows = _rows(fields)
 
-    note = ""
+    msg = EmailMessage()
+    msg["Subject"] = f"[Website] {label}{f' - {who}' if who else ''}"
+    msg["From"] = c["mail_from"]
+    msg["To"] = c["staff_to"]
+    if c["staff_cc"]:
+        msg["Cc"] = c["staff_cc"]
     if reply_to:
-        note = (
-            "<p style='margin-top:20px;color:#8a7c99;font-size:13px'>Reach this family at "
-            f"<a href='mailto:{escape(reply_to)}' style='color:#2C0A4E'>{escape(reply_to)}</a>.</p>"
-        )
-    html = _shell(label, _rows(fields) + note)
-    subject = f"[Website] {label}{f' - {who}' if who else ''}"
-
+        msg["Reply-To"] = reply_to
+    msg.set_content(f"{label}\n\n{text}\n\nSent from usgoldgymclub.com")
+    msg.add_alternative(
+        _shell(
+            label,
+            html_rows + "<p style='margin-top:20px;color:#8a7c99;font-size:13px'>"
+            "Hit reply to answer this family directly.</p>",
+        ),
+        subtype="html",
+    )
     try:
-        await send_email(to=recipients, subject=subject, html=html)
+        await _send(msg)
         logger.info("Staff notification sent for %s", form_type)
-    except httpx.HTTPStatusError as exc:
-        try:
-            code = exc.response.json().get("code", "")
-            message = exc.response.json().get("message", "")
-        except ValueError:
-            code, message = "", exc.response.text
-        if code in ("insufficient_credits", "integration_disabled", "daily_limit_reached"):
-            logger.warning("Email paused for %s: %s - %s", form_type, code, message)
-        else:
-            logger.error("Staff notification FAILED for %s: %s %s", form_type, exc.response.status_code, message)
     except Exception as exc:
         logger.error("Staff notification FAILED for %s: %s", form_type, exc)
