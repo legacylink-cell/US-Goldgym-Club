@@ -821,3 +821,36 @@ bar top 796), scrollable day-tab strip, and 46px main CTAs. Three real issues we
   2. Microsoft Graph - keeps a real usgoldgymclub.com From address (e.g. leads@), but needs an Entra app
      registration + client secret from the user.
 - The working Resend implementation is in git history at commit b4c1fa1 if it is picked up again.
+
+## Changelog - 2026-11-21 (Font flash on load fixed - self-hosted fonts)
+- USER REPORT: "when the page is loaded, there is a fraction of a second where the page loads up with
+  messy fonts, thinner a bit, then quickly loads up."
+- ROOT CAUSE: classic FOUT. index.html loaded Google Fonts with the JS swap trick
+  `<link rel="preload" as="style" ... onload="this.rel='stylesheet'">`. That makes the font CSS apply
+  AFTER first paint by design, so the prerendered body copy painted in the fallback stack
+  (-apple-system / sans-serif - lighter and narrower than Inter, nothing like Anton for headings) and
+  then reflowed when the real faces arrived. Three round trips were in the way:
+  fonts.googleapis.com CSS -> fonts.gstatic.com woff2 -> repaint.
+- FIX - self-hosted, preloaded, render-blocking:
+  * Downloaded the LATIN SUBSET woff2 only: public/fonts/anton-latin.woff2 (18KB) +
+    public/fonts/inter-latin.woff2 (48KB, variable - one file serves 400/600/700/800).
+  * public/fonts/fonts.css holds the @font-face blocks (copied from Google's own CSS, same
+    unicode-range and font-display:swap) pointing at /fonts/*.woff2.
+  * index.html: removed both fonts.googleapis/gstatic preconnects, the preload-as-style trick and the
+    noscript fallback; added two `rel=preload as=font crossorigin` links + a plain render-blocking
+    `<link rel="stylesheet" href="/fonts/fonts.css">`. Fonts now arrive WITH the first paint.
+- GOTCHA (cost one broken compile): the @font-face blocks CANNOT live in src/index.css - CRA's
+  css-loader tries to resolve `url('/fonts/..')` as a module and fails with
+  "Module not found: Can't resolve '/fonts/anton-latin.woff2' in '/app/frontend/src'". Putting them in
+  a plain CSS file under public/ (webpack never processes it) keeps the stable /fonts/... URLs that the
+  preload hints have to match - a hashed webpack asset name could not be preloaded from index.html.
+- The preview dev server kept serving the OLD index.html until `sudo supervisorctl restart frontend`
+  (public/index.html is not hot-reloaded).
+- VERIFIED: variable-weight check - Inter renders four DISTINCT widths at 400/600/700/800
+  (459/470/474/481px for the same string), so weights are real, not synthetic bold.
+  Zero fonts.gstatic.com requests remain (the leftover fonts.googleapis hits come from the Google Maps
+  embed, unrelated). Production-like test: built, served build/ and throttled to 500kbps/300ms -
+  at first paint on /preschool document.fonts.check already true for Anton AND Inter, h1 in Anton, and
+  h1 width 896px early == 896px settled, i.e. NO reflow. Regression: /calendar, /recreational, /contact
+  all h1 Anton + body Inter, 1 h1 each, zero console errors. Build still prerenders 13/13 routes and
+  every route HTML carries the font preloads + fonts.css.
